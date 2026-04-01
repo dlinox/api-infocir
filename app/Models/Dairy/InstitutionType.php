@@ -10,7 +10,6 @@ class InstitutionType extends Model
     use HasDataTable;
 
     protected $table = 'dairy_institution_types';
-    public $timestamps = false;
 
     protected $fillable = [
         'name',

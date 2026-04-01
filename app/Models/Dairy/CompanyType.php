@@ -10,7 +10,6 @@ class CompanyType extends Model
     use HasDataTable;
 
     protected $table = 'dairy_company_types';
-    public $timestamps = false;
 
     protected $fillable = [
         'name',

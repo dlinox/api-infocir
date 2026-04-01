@@ -16,7 +16,7 @@ class Person extends Model
         'paternal_surname',
         'maternal_surname',
         'date_birth',
-        'phone',
+        'cellphone',
         'email',
         'gender',
         'address',

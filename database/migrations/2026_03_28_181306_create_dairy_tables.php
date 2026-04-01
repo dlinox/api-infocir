@@ -133,18 +133,21 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        //profile - managers
-        Schema::create('dairy_plant_managers', function (Blueprint $table) {
+        //profile - workers
+        Schema::create('dairy_plant_workers', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->primary();
             $table->unsignedBigInteger('plant_id');
-            $table->string('position', 100)->nullable();
+            $table->unsignedBigInteger('position_id')->nullable();
+            $table->boolean('is_manager')->default(false); // si es true se crea un perfil de administrador para la planta role plant_manager
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('core_persons')->onDelete('cascade');
             $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('position_id')->references('id')->on('dairy_positions')->onDelete('set null');
             $table->index('person_id');
             $table->index('plant_id');
+            $table->index('position_id');
             $table->index('is_active');
         });
 
@@ -179,11 +182,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('dairy_suppliers');
-        Schema::dropIfExists('dairy_managers');
+        Schema::dropIfExists('dairy_plant_managers');
+        Schema::dropIfExists('dairy_plant_galeries');
+        Schema::dropIfExists('dairy_plants');
+        Schema::dropIfExists('dairy_product_types');
+        Schema::dropIfExists('dairy_positions');
         Schema::dropIfExists('dairy_institution_types');
         Schema::dropIfExists('dairy_training_levels');
         Schema::dropIfExists('dairy_company_types');
-        Schema::dropIfExists('dairy_plants');
-        Schema::dropIfExists('dairy_galeries');
     }
 };

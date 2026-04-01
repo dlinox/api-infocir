@@ -10,7 +10,6 @@ class Position extends Model
     use HasDataTable;
 
     protected $table = 'dairy_positions';
-    public $timestamps = false;
 
     protected $fillable = [
         'name',

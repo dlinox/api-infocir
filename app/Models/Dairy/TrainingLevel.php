@@ -10,7 +10,6 @@ class TrainingLevel extends Model
     use HasDataTable;
 
     protected $table = 'dairy_training_levels';
-    public $timestamps = false;
 
     protected $fillable = [
         'name',
