@@ -13,6 +13,7 @@ use App\Models\Dairy\InstitutionType;
 use App\Models\Dairy\Position;
 use App\Models\Dairy\ProductType;
 use App\Models\Dairy\Supply;
+use App\Models\Core\UnitMeasure;
 
 class DairySeeder extends Seeder
 {
@@ -166,17 +167,22 @@ class DairySeeder extends Seeder
 
     private function seedSupplies(): void
     {
+        $litro = UnitMeasure::where('abbreviation', 'L')->first()?->id;
+        $ml = UnitMeasure::where('abbreviation', 'mL')->first()?->id;
+        $kg = UnitMeasure::where('abbreviation', 'kg')->first()?->id;
+        $g = UnitMeasure::where('abbreviation', 'g')->first()?->id;
+
         $items = [
-            ['name' => 'Leche fresca', 'description' => 'Leche cruda sin procesar'],
-            ['name' => 'Cuajo líquido', 'description' => 'Enzima para la coagulación de la leche'],
-            ['name' => 'Sal industrial', 'description' => 'Cloruro de sodio para salado de quesos'],
-            ['name' => 'Cultivo láctico', 'description' => 'Bacterias para fermentación de productos lácteos'],
-            ['name' => 'Cloruro de calcio', 'description' => 'Aditivo para mejorar la coagulación'],
-            ['name' => 'Azúcar blanca', 'description' => 'Endulzante para yogurt y manjar blanco'],
-            ['name' => 'Sorbato de potasio', 'description' => 'Conservante para productos lácteos'],
-            ['name' => 'Colorante achiote', 'description' => 'Colorante natural para quesos'],
-            ['name' => 'Pulpa de fruta', 'description' => 'Fruta procesada para yogurt frutado'],
-            ['name' => 'Leche en polvo', 'description' => 'Leche deshidratada para enriquecimiento'],
+            ['name' => 'Leche fresca', 'unit_measure_id' => $litro, 'description' => 'Leche cruda sin procesar'],
+            ['name' => 'Cuajo líquido', 'unit_measure_id' => $ml, 'description' => 'Enzima para la coagulación de la leche'],
+            ['name' => 'Sal industrial', 'unit_measure_id' => $kg, 'description' => 'Cloruro de sodio para salado de quesos'],
+            ['name' => 'Cultivo láctico', 'unit_measure_id' => $g, 'description' => 'Bacterias para fermentación de productos lácteos'],
+            ['name' => 'Cloruro de calcio', 'unit_measure_id' => $g, 'description' => 'Aditivo para mejorar la coagulación'],
+            ['name' => 'Azúcar blanca', 'unit_measure_id' => $kg, 'description' => 'Endulzante para yogurt y manjar blanco'],
+            ['name' => 'Sorbato de potasio', 'unit_measure_id' => $g, 'description' => 'Conservante para productos lácteos'],
+            ['name' => 'Colorante achiote', 'unit_measure_id' => $ml, 'description' => 'Colorante natural para quesos'],
+            ['name' => 'Pulpa de fruta', 'unit_measure_id' => $kg, 'description' => 'Fruta procesada para yogurt frutado'],
+            ['name' => 'Leche en polvo', 'unit_measure_id' => $kg, 'description' => 'Leche deshidratada para enriquecimiento'],
         ];
 
         foreach ($items as $item) {
