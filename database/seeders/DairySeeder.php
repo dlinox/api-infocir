@@ -12,6 +12,7 @@ use App\Models\Dairy\TrainingLevel;
 use App\Models\Dairy\InstitutionType;
 use App\Models\Dairy\Position;
 use App\Models\Dairy\ProductType;
+use App\Models\Dairy\Supply;
 
 class DairySeeder extends Seeder
 {
@@ -26,6 +27,7 @@ class DairySeeder extends Seeder
         $this->seedInstitutionTypes();
         $this->seedPositions();
         $this->seedProductTypes();
+        $this->seedSupplies();
     }
 
     private function seedInstructionDegrees(): void
@@ -159,6 +161,26 @@ class DairySeeder extends Seeder
 
         foreach ($items as $item) {
             ProductType::create($item);
+        }
+    }
+
+    private function seedSupplies(): void
+    {
+        $items = [
+            ['name' => 'Leche fresca', 'description' => 'Leche cruda sin procesar'],
+            ['name' => 'Cuajo líquido', 'description' => 'Enzima para la coagulación de la leche'],
+            ['name' => 'Sal industrial', 'description' => 'Cloruro de sodio para salado de quesos'],
+            ['name' => 'Cultivo láctico', 'description' => 'Bacterias para fermentación de productos lácteos'],
+            ['name' => 'Cloruro de calcio', 'description' => 'Aditivo para mejorar la coagulación'],
+            ['name' => 'Azúcar blanca', 'description' => 'Endulzante para yogurt y manjar blanco'],
+            ['name' => 'Sorbato de potasio', 'description' => 'Conservante para productos lácteos'],
+            ['name' => 'Colorante achiote', 'description' => 'Colorante natural para quesos'],
+            ['name' => 'Pulpa de fruta', 'description' => 'Fruta procesada para yogurt frutado'],
+            ['name' => 'Leche en polvo', 'description' => 'Leche deshidratada para enriquecimiento'],
+        ];
+
+        foreach ($items as $item) {
+            Supply::create($item);
         }
     }
 }

@@ -60,6 +60,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('dairy_supplies', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100)->unique();
+            $table->unsignedBigInteger('unit_measure_id')->nullable();
+            $table->string('description', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('name');
+            $table->index('unit_measure_id');
+            $table->index('is_active');
+        });
+
         Schema::create('dairy_plants', function (Blueprint $table) {
             $table->id();
             $table->char('ruc', 11)->unique();
@@ -178,6 +194,7 @@ return new class extends Migration
         Schema::dropIfExists('dairy_plant_workers');
         Schema::dropIfExists('dairy_plant_galeries');
         Schema::dropIfExists('dairy_plants');
+        Schema::dropIfExists('dairy_supplies');
         Schema::dropIfExists('dairy_product_types');
         Schema::dropIfExists('dairy_positions');
         Schema::dropIfExists('dairy_institution_types');

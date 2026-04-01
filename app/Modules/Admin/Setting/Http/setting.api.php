@@ -11,6 +11,7 @@ use App\Modules\Admin\Setting\Http\Controllers\PositionController;
 use App\Modules\Admin\Setting\Http\Controllers\InstitutionTypeController;
 use App\Modules\Admin\Setting\Http\Controllers\ProductTypeController;
 use App\Modules\Admin\Setting\Http\Controllers\UnitMeasureController;
+use App\Modules\Admin\Setting\Http\Controllers\SupplyController;
 
 Route::middleware(['auth:api'])->prefix('/genders')->group(function () {
     Route::post('/data-table', [GenderController::class, 'dataTable'])->name('genders.dataTable');
@@ -80,4 +81,11 @@ Route::middleware(['auth:api'])->prefix('/unit-measures')->group(function () {
     Route::post('/save', [UnitMeasureController::class, 'save'])->name('unit-measures.save');
     Route::delete('/delete/{id}', [UnitMeasureController::class, 'delete'])->name('unit-measures.delete');
     Route::get('/select-items', [UnitMeasureController::class, 'getSelectItems'])->name('unit-measures.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/supplies')->group(function () {
+    Route::post('/data-table', [SupplyController::class, 'dataTable'])->name('supplies.dataTable');
+    Route::post('/save', [SupplyController::class, 'save'])->name('supplies.save');
+    Route::delete('/delete/{id}', [SupplyController::class, 'delete'])->name('supplies.delete');
+    Route::get('/select-items', [SupplyController::class, 'getSelectItems'])->name('supplies.selectItems');
 });

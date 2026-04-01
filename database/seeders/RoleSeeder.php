@@ -45,7 +45,7 @@ class RoleSeeder extends Seeder
             [
                 'name' => 'supplier_manager',
                 'display_name' => 'Proveedor',
-                'redirect_to' => '/m/sl',
+                'redirect_to' => '/m/sup',
                 'level' => '2',
                 'is_active' => true,
             ],
