@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Core\Admin;
+use App\Models\Dairy\PlantWorker;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::enforceMorphMap([
             'core_admins' => Admin::class,
+            'dairy_plant_workers' => PlantWorker::class,
         ]);
     }
 }

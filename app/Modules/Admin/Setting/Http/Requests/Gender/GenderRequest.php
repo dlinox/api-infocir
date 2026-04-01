@@ -20,8 +20,6 @@ class GenderRequest extends ApiFormRequest
     {
         return [
             'code.required' => 'El campo :attribute es obligatorio.',
-            'code.integer' => 'El campo :attribute debe ser un número entero.',
-            'code.exists' => 'El :attribute especificado no existe.',
             'name.required' => 'El campo :attribute es obligatorio.',
             'name.string' => 'El campo :attribute debe ser una cadena de texto.',
             'name.max' => 'El campo :attribute no debe exceder los 100 caracteres.',

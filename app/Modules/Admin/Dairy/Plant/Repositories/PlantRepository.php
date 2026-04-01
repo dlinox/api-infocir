@@ -40,4 +40,11 @@ class PlantRepository
         $plant->delete();
         return $plant;
     }
+
+    public function getSelectItems()
+    {
+        return Plant::where('is_active', true)
+            ->orderBy('name')
+            ->get(['id as value', 'name as title']);
+    }
 }

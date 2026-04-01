@@ -11,7 +11,7 @@ class SearchByDocumentRequest extends ApiFormRequest
         return [
             'document_type' => ['required', 'string'],
             'document_number' => ['required', 'string', 'max:20'],
-            'profile' => ['required', 'string', 'in:admins,teachers,students,clients,workers,barbers'],
+            'profile' => ['required', 'string', 'in:admins,plant_workers'],
             'id' => ['nullable', 'integer'],
         ];
     }

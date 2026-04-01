@@ -33,7 +33,7 @@ class ProfileMeResource extends JsonResource
                 'paternalSurname'  => $this->person->paternal_surname,
                 'maternalSurname'  => $this->person->maternal_surname,
                 'dateBirth'        => $this->person->date_birth?->format('Y-m-d'),
-                'phone'            => $this->person->phone,
+                'cellphone'        => $this->person->cellphone,
                 'email'            => $this->person->email,
                 'gender'           => $this->person->gender,
                 'address'          => $this->person->address,

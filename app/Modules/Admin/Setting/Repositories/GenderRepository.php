@@ -25,9 +25,6 @@ class GenderRepository
     public function delete(string $code)
     {
         $gender = Gender::where('code', $code)->firstOrFail();
-
-        //si ya existe una relación con otro modelo, no se puede eliminar persoa
-        
         $gender->delete();
         return $gender;
     }

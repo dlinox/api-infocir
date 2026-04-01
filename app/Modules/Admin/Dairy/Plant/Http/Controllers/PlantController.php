@@ -40,4 +40,10 @@ class PlantController
         $this->plantService->delete($id);
         return ApiResponse::success(null, 'Planta eliminada correctamente');
     }
+
+    public function getSelectItems()
+    {
+        $items = $this->plantService->getSelectItems();
+        return ApiResponse::success($items);
+    }
 }

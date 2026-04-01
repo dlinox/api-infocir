@@ -41,7 +41,6 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        //cargos posiciones en la planta
         Schema::create('dairy_positions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
@@ -53,7 +52,6 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        //tipos de productos
         Schema::create('dairy_product_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
@@ -72,26 +70,19 @@ return new class extends Migration
             $table->char('country', 2)->nullable();
             $table->char('city', 6)->nullable();
             $table->string('address', 200)->nullable();
-            $table->string('cellphone', 9)->unique(); // numero de cellular para contacto por whatsapp
+            $table->string('cellphone', 9)->unique();
             $table->string('email', 100)->unique()->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
 
-            //calidad de producto
             $table->enum('product_quality', ['very_low', 'low', 'medium', 'high', 'excellent'])->default('medium');
-            //tiene registro sanitario?
             $table->boolean('has_sanitary_registration')->default(false);
-            //tecnificacion ?
             $table->boolean('has_technification')->default(false);
-            //parametros de produccion ?
             $table->boolean('has_production_parameters')->default(false);
-            //parametros DIGESA ?
             $table->boolean('has_digesa_parameters')->default(false);
-            //capacitacion TDD
             $table->boolean('has_tdd_training')->default(false);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
-            //relaciones
             $table->unsignedBigInteger('company_type_id')->nullable();
             $table->unsignedBigInteger('training_level_id')->nullable();
             $table->unsignedBigInteger('institution_type_id')->nullable();
@@ -133,28 +124,33 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        //profile - workers
         Schema::create('dairy_plant_workers', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->primary();
             $table->unsignedBigInteger('plant_id');
             $table->unsignedBigInteger('position_id')->nullable();
-            $table->boolean('is_manager')->default(false); // si es true se crea un perfil de administrador para la planta role plant_manager
+            $table->unsignedBigInteger('instruction_degree_id')->nullable();
+            $table->unsignedBigInteger('profession_id')->nullable();
+            $table->boolean('is_manager')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('core_persons')->onDelete('cascade');
             $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
             $table->foreign('position_id')->references('id')->on('dairy_positions')->onDelete('set null');
+            $table->foreign('instruction_degree_id')->references('id')->on('core_instruction_degrees')->onDelete('set null');
+            $table->foreign('profession_id')->references('id')->on('core_professions')->onDelete('set null');
             $table->index('person_id');
             $table->index('plant_id');
             $table->index('position_id');
+            $table->index('instruction_degree_id');
+            $table->index('profession_id');
             $table->index('is_active');
         });
 
         Schema::create('dairy_suppliers', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->primary();
             $table->enum('supplier_type', ['individual', 'company'])->default('individual');
-            $table->string('trade_name', 100)->nullable(); // para personas juridicas
+            $table->string('trade_name', 100)->nullable();
             $table->string('cellphone', 9)->unique()->nullable();
             $table->string('email', 100)->unique()->nullable();
             $table->string('address', 200)->nullable();
@@ -176,13 +172,10 @@ return new class extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('dairy_suppliers');
-        Schema::dropIfExists('dairy_plant_managers');
+        Schema::dropIfExists('dairy_plant_workers');
         Schema::dropIfExists('dairy_plant_galeries');
         Schema::dropIfExists('dairy_plants');
         Schema::dropIfExists('dairy_product_types');

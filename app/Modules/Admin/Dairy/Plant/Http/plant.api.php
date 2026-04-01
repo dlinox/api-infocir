@@ -8,4 +8,5 @@ Route::middleware(['auth:api'])->prefix('/plants')->group(function () {
     Route::get('/get/{id}', [PlantController::class, 'getById'])->name('plants.getById');
     Route::post('/save', [PlantController::class, 'save'])->name('plants.save');
     Route::delete('/delete/{id}', [PlantController::class, 'delete'])->name('plants.delete');
+    Route::get('/select-items', [PlantController::class, 'getSelectItems'])->name('plants.selectItems');
 });

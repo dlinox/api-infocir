@@ -42,8 +42,8 @@ class ProfileService
 
         if (!$person) throw new ApiException('Persona no encontrada', 404);
 
-        if (!empty($data['phone'])) {
-            $exists = Person::where('phone', $data['phone'])->where('id', '!=', $person->id)->exists();
+        if (!empty($data['cellphone'])) {
+            $exists = Person::where('cellphone', $data['cellphone'])->where('id', '!=', $person->id)->exists();
             if ($exists) throw new ApiException('El numero de celular ya esta registrado');
         }
 

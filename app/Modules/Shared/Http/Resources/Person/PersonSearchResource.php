@@ -20,7 +20,7 @@ class PersonSearchResource extends JsonResource
                 'paternalSurname' => $person->paternal_surname,
                 'maternalSurname' => $person->maternal_surname,
                 'email' => $person->email,
-                'phone' => $person->phone,
+                'cellphone' => $person->cellphone,
                 'dateBirth' => $person->date_birth?->format('Y-m-d'),
                 'gender' => $person->gender,
                 'address' => $person->address,

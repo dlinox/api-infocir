@@ -9,12 +9,8 @@ use Illuminate\Support\Facades\DB;
 class PersonRepository
 {
     private const PROFILE_TABLES = [
-        'admins'   => ['table' => 'profile_admins',   'column' => 'core_person_id'],
-        'teachers' => ['table' => 'profile_teachers', 'column' => 'core_person_id'],
-        'students' => ['table' => 'profile_students', 'column' => 'core_person_id'],
-        'clients'  => ['table' => 'profile_clients',  'column' => 'id'],
-        'workers'  => ['table' => 'profile_workers',  'column' => 'id'],
-        'barbers'  => ['table' => 'profile_barbers',  'column' => 'id'],
+        'admins'        => ['table' => 'core_admins',          'column' => 'person_id'],
+        'plant_workers' => ['table' => 'dairy_plant_workers',  'column' => 'person_id'],
     ];
 
     public function searchByDocument(string $documentType, string $documentNumber, string $profile, ?int $id = null): ?array
@@ -80,7 +76,7 @@ class PersonRepository
             'core_persons.name',
             'core_persons.paternal_surname',
             'core_persons.maternal_surname',
-            'core_persons.phone',
+            'core_persons.cellphone',
             'core_persons.email',
         );
 

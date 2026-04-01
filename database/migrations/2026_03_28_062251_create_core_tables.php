@@ -30,7 +30,6 @@ return new class extends Migration
             $table->index('country');
         });
 
-        //unidad de medida
         Schema::create('core_unit_measures', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
@@ -112,7 +111,6 @@ return new class extends Migration
             $table->index(['name', 'paternal_surname', 'maternal_surname'], 'core_person_full_name_index');
         });
 
-        //en prueba
         Schema::create('core_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('person_id')->constrained('core_persons')->onDelete('restrict');

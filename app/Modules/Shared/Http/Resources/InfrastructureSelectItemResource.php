@@ -7,8 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class InfrastructureSelectItemResource extends JsonResource
 {
     private const TYPE_LABELS = [
-        'academy_branches' => 'Académica',
-        'barbershop_branches' => 'Barbería',
+        'dairy_plants' => 'Planta lechera',
     ];
 
     public function toArray($request)

@@ -25,7 +25,6 @@ class Gender extends Model
         'is_active' => 'boolean',
     ];
 
-    //relaciones personas
     public function persons()
     {
         return $this->hasMany(Person::class, 'gender', 'code');

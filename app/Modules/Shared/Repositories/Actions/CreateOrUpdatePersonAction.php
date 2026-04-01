@@ -11,11 +11,8 @@ class CreateOrUpdatePersonAction
 
     public function execute(array $data, ?int $id = null): Person
     {
-
-        if ($data['id']) {
+        if (!empty($data['id'])) {
             $person = Person::where('id', $data['id'])->first();
-
-            // throw new ApiException('El id es :' . $person->id);
 
             if (!$person) throw new ApiException('La persona no existe');
 
@@ -31,21 +28,20 @@ class CreateOrUpdatePersonAction
 
     private static function validate(array $data, ?int $id = null): void
     {
-
         $documentExists = Person::where('document_type', $data['document_type'])
             ->where('document_number', $data['document_number'])
             ->where('id', '!=', $id)
             ->exists();
-        if ($documentExists) throw new ApiException('El documento, ya fue registardo.');
+        if ($documentExists) throw new ApiException('El documento ya fue registrado.');
 
         if (!empty($data['email'])) {
             $emailExists = Person::where('email', $data['email'])->where('id', '!=', $id)->exists();
-            if ($emailExists) throw new ApiException('El correo personal, ya fue registardo.');
+            if ($emailExists) throw new ApiException('El correo personal ya fue registrado.');
         }
 
         if (!empty($data['cellphone'])) {
             $phoneExists = Person::where('cellphone', $data['cellphone'])->where('id', '!=', $id)->exists();
-            if ($phoneExists) throw new ApiException('El número de celular, ya fue registrado.');
+            if ($phoneExists) throw new ApiException('El número de celular ya fue registrado.');
         }
     }
 }

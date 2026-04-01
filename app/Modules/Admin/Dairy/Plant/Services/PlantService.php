@@ -30,4 +30,9 @@ class PlantService
     {
         return $this->plantRepository->delete($id);
     }
+
+    public function getSelectItems()
+    {
+        return $this->plantRepository->getSelectItems();
+    }
 }
