@@ -29,6 +29,11 @@ class PlantRepository
         return Plant::create($data);
     }
 
+    public function findById(string $id)
+    {
+        return Plant::findOrFail($id);
+    }
+
     public function delete(string $id)
     {
         $plant = Plant::findOrFail($id);

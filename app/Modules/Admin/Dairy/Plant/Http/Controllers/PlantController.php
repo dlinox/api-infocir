@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Dairy\Plant\Http\Requests\Plant\PlantRequest;
 use App\Modules\Admin\Dairy\Plant\Http\Resources\Plant\PlantDataTableItemResource;
+use App\Modules\Admin\Dairy\Plant\Http\Resources\Plant\PlantFormResource;
 use App\Modules\Admin\Dairy\Plant\Services\PlantService;
 
 class PlantController
@@ -19,6 +20,12 @@ class PlantController
         $items = $this->plantService->dataTable($request);
         $items['data'] = PlantDataTableItemResource::collection($items['data']);
         return ApiResponse::success($items);
+    }
+
+    public function getById(string $id)
+    {
+        $plant = $this->plantService->findById($id);
+        return ApiResponse::success(new PlantFormResource($plant));
     }
 
     public function save(PlantRequest $request)

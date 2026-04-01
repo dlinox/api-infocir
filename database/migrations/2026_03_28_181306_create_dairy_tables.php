@@ -102,12 +102,10 @@ return new class extends Migration
             $table->foreign('institution_type_id')->references('id')->on('dairy_institution_types')->onDelete('set null');
             $table->foreign('country')->references('code')->on('core_countries')->onDelete('set null');
             $table->foreign('city')->references('code')->on('core_cities')->onDelete('set null');
-            
+
             $table->index('ruc');
             $table->index('name');
             $table->index('type');
-            $table->index('country');
-            $table->index('city');
             $table->index('cellphone');
             $table->index('email');
             $table->index('company_type_id');
@@ -122,7 +120,7 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        Schema::create('dairy_galeries', function (Blueprint $table) {
+        Schema::create('dairy_plant_galeries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plant_id');
             $table->string('image_path', 255);
@@ -136,7 +134,7 @@ return new class extends Migration
         });
 
         //profile - managers
-        Schema::create('dairy_managers', function (Blueprint $table) {
+        Schema::create('dairy_plant_managers', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->primary();
             $table->unsignedBigInteger('plant_id');
             $table->string('position', 100)->nullable();
@@ -149,6 +147,30 @@ return new class extends Migration
             $table->index('plant_id');
             $table->index('is_active');
         });
+
+        Schema::create('dairy_suppliers', function (Blueprint $table) {
+            $table->unsignedBigInteger('person_id')->primary();
+            $table->enum('supplier_type', ['individual', 'company'])->default('individual');
+            $table->string('trade_name', 100)->nullable(); // para personas juridicas
+            $table->string('cellphone', 9)->unique()->nullable();
+            $table->string('email', 100)->unique()->nullable();
+            $table->string('address', 200)->nullable();
+            $table->char('country', 2)->nullable();
+            $table->char('city', 6)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('person_id')->references('id')->on('core_persons')->onDelete('cascade');
+            $table->index('person_id');
+            $table->index('supplier_type');
+            $table->index('cellphone');
+            $table->index('email');
+            $table->index('is_active');
+        });
+
     }
 
     /**
@@ -156,6 +178,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('dairy_suppliers');
+        Schema::dropIfExists('dairy_managers');
         Schema::dropIfExists('dairy_institution_types');
         Schema::dropIfExists('dairy_training_levels');
         Schema::dropIfExists('dairy_company_types');

@@ -21,6 +21,11 @@ class PlantService
         return $this->plantRepository->createOrUpdate($data);
     }
 
+    public function findById(string $id)
+    {
+        return $this->plantRepository->findById($id);
+    }
+
     public function delete(string $id)
     {
         return $this->plantRepository->delete($id);
