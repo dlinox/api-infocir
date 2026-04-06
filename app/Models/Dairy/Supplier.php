@@ -19,6 +19,16 @@ class Supplier extends Model
 
     public $incrementing = false;
 
+    public array $searchColumns = [
+        'core_persons.name',
+        'core_persons.paternal_surname',
+        'core_persons.maternal_surname',
+        'core_persons.document_number',
+        'dairy_suppliers.trade_name',
+        'dairy_suppliers.cellphone',
+        'dairy_suppliers.email',
+    ];
+
     protected $fillable = [
         'person_id',
         'supplier_type',

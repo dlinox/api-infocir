@@ -7,6 +7,7 @@ use App\Models\Core\City;
 use App\Models\Core\Country;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Plant extends Model
 {
@@ -74,13 +75,18 @@ class Plant extends Model
         return $this->belongsTo(InstitutionType::class);
     }
 
-    public function country(): BelongsTo
+    public function countryRelation(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country', 'code');
     }
 
-    public function city(): BelongsTo
+    public function cityRelation(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city', 'code');
+    }
+
+    public function plantProducts(): HasMany
+    {
+        return $this->hasMany(PlantProduct::class);
     }
 }

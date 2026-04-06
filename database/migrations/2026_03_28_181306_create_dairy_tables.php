@@ -60,22 +60,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('dairy_supplies', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100)->unique();
-            $table->unsignedBigInteger('unit_measure_id')->nullable();
-            $table->string('description', 255)->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->timestamps();
-
-            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
-            $table->index('name');
-            $table->index('unit_measure_id');
-            $table->index('is_active');
-        });
-
         Schema::create('dairy_plants', function (Blueprint $table) {
             $table->id();
             $table->char('ruc', 11)->unique();
@@ -125,6 +109,131 @@ return new class extends Migration
             $table->index('has_digesa_parameters');
             $table->index('has_tdd_training');
             $table->index('is_active');
+        });
+
+        Schema::create('dairy_supplies', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100)->unique();
+            $table->unsignedBigInteger('unit_measure_id')->nullable();
+            $table->string('description', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('name');
+            $table->index('unit_measure_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->string('description', 255)->nullable();
+            $table->unsignedBigInteger('product_type_id')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('product_type_id')->references('id')->on('dairy_product_types')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('name');
+            $table->index('product_type_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_plant_products', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('product_id');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('dairy_products')->onDelete('cascade');
+            $table->unique(['plant_id', 'product_id']);
+            $table->index('plant_id');
+            $table->index('product_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_product_presentations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_product_id');
+            $table->string('sku', 30)->unique();
+            $table->string('name', 100);
+            $table->unsignedBigInteger('unit_measure_id')->nullable();
+            $table->decimal('content', 10, 3);
+            $table->string('barcode', 50)->unique()->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('plant_product_id')->references('id')->on('dairy_plant_products')->onDelete('cascade');
+            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
+            $table->index('plant_product_id');
+            $table->index('sku');
+            $table->index('unit_measure_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_product_formulas', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('presentation_id');
+            $table->unsignedBigInteger('supply_id');
+            $table->decimal('quantity', 10, 3);
+            $table->decimal('unit_price', 10, 3);
+            $table->unsignedInteger('version')->default(1);
+            $table->boolean('is_current')->default(true);
+            $table->timestamps();
+
+            $table->foreign('presentation_id')->references('id')->on('dairy_product_presentations')->onDelete('cascade');
+            $table->foreign('supply_id')->references('id')->on('dairy_supplies')->onDelete('cascade');
+            $table->unique(['presentation_id', 'supply_id', 'version']);
+            $table->index('presentation_id');
+            $table->index('supply_id');
+            $table->index('version');
+            $table->index('is_current');
+        });
+
+        Schema::create('dairy_product_prices', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('presentation_id');
+            $table->decimal('price', 10, 2);
+            $table->decimal('cost', 10, 2)->nullable();
+            $table->date('effective_from');
+            $table->date('effective_until')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('presentation_id')->references('id')->on('dairy_product_presentations')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('presentation_id');
+            $table->index('effective_from');
+            $table->index('effective_until');
+        });
+
+        Schema::create('dairy_stock_movements', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('presentation_id');
+            $table->unsignedBigInteger('plant_id');
+            $table->enum('type', ['entry', 'exit', 'adjustment', 'loss']);
+            $table->integer('quantity');
+            $table->string('batch_code', 30)->nullable();
+            $table->date('expiration_date')->nullable();
+            $table->string('reason', 255)->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('presentation_id')->references('id')->on('dairy_product_presentations')->onDelete('cascade');
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('presentation_id');
+            $table->index('plant_id');
+            $table->index('type');
+            $table->index('batch_code');
+            $table->index('expiration_date');
         });
 
         Schema::create('dairy_plant_galeries', function (Blueprint $table) {
@@ -185,7 +294,6 @@ return new class extends Migration
             $table->index('email');
             $table->index('is_active');
         });
-
     }
 
     public function down(): void
@@ -193,6 +301,12 @@ return new class extends Migration
         Schema::dropIfExists('dairy_suppliers');
         Schema::dropIfExists('dairy_plant_workers');
         Schema::dropIfExists('dairy_plant_galeries');
+        Schema::dropIfExists('dairy_stock_movements');
+        Schema::dropIfExists('dairy_product_prices');
+        Schema::dropIfExists('dairy_product_formulas');
+        Schema::dropIfExists('dairy_product_presentations');
+        Schema::dropIfExists('dairy_plant_products');
+        Schema::dropIfExists('dairy_products');
         Schema::dropIfExists('dairy_plants');
         Schema::dropIfExists('dairy_supplies');
         Schema::dropIfExists('dairy_product_types');

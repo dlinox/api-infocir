@@ -11,6 +11,7 @@ use App\Models\Dairy\CompanyType;
 use App\Models\Dairy\TrainingLevel;
 use App\Models\Dairy\InstitutionType;
 use App\Models\Dairy\Position;
+use App\Models\Dairy\Product;
 use App\Models\Dairy\ProductType;
 use App\Models\Dairy\Supply;
 use App\Models\Core\UnitMeasure;
@@ -28,6 +29,7 @@ class DairySeeder extends Seeder
         $this->seedInstitutionTypes();
         $this->seedPositions();
         $this->seedProductTypes();
+        $this->seedProducts();
         $this->seedSupplies();
     }
 
@@ -162,6 +164,39 @@ class DairySeeder extends Seeder
 
         foreach ($items as $item) {
             ProductType::create($item);
+        }
+    }
+
+    private function seedProducts(): void
+    {
+        $quesoFresco = ProductType::where('name', 'Queso fresco')->first()?->id;
+        $quesoAndino = ProductType::where('name', 'Queso andino')->first()?->id;
+        $quesoParia = ProductType::where('name', 'Queso paria')->first()?->id;
+        $quesoMozzarella = ProductType::where('name', 'Queso mozzarella')->first()?->id;
+        $yogurtNatural = ProductType::where('name', 'Yogurt natural')->first()?->id;
+        $yogurtFrutado = ProductType::where('name', 'Yogurt frutado')->first()?->id;
+        $mantequilla = ProductType::where('name', 'Mantequilla')->first()?->id;
+        $manjarBlanco = ProductType::where('name', 'Manjar blanco')->first()?->id;
+        $lechePasteurizada = ProductType::where('name', 'Leche pasteurizada')->first()?->id;
+        $cremaDeLeche = ProductType::where('name', 'Crema de leche')->first()?->id;
+
+        $items = [
+            ['name' => 'Queso Fresco Artesanal', 'description' => 'Queso fresco elaborado con leche de vaca pasteurizada', 'product_type_id' => $quesoFresco],
+            ['name' => 'Queso Andino Curado', 'description' => 'Queso semi-madurado con sabor intenso de la sierra', 'product_type_id' => $quesoAndino],
+            ['name' => 'Queso Paria Tradicional', 'description' => 'Queso semi-duro típico del altiplano peruano', 'product_type_id' => $quesoParia],
+            ['name' => 'Mozzarella Fresca', 'description' => 'Queso de pasta hilada ideal para pizzas y ensaladas', 'product_type_id' => $quesoMozzarella],
+            ['name' => 'Yogurt Natural Sin Azúcar', 'description' => 'Yogurt batido natural sin azúcar añadida', 'product_type_id' => $yogurtNatural],
+            ['name' => 'Yogurt de Fresa', 'description' => 'Yogurt frutado con pulpa natural de fresa', 'product_type_id' => $yogurtFrutado],
+            ['name' => 'Yogurt de Aguaymanto', 'description' => 'Yogurt frutado con pulpa de aguaymanto andino', 'product_type_id' => $yogurtFrutado],
+            ['name' => 'Mantequilla con Sal', 'description' => 'Mantequilla elaborada con crema de leche fresca', 'product_type_id' => $mantequilla],
+            ['name' => 'Mantequilla Sin Sal', 'description' => 'Mantequilla sin sal para uso en repostería', 'product_type_id' => $mantequilla],
+            ['name' => 'Manjar Blanco Clásico', 'description' => 'Dulce de leche artesanal concentrado', 'product_type_id' => $manjarBlanco],
+            ['name' => 'Leche Pasteurizada Entera', 'description' => 'Leche entera sometida a pasteurización', 'product_type_id' => $lechePasteurizada],
+            ['name' => 'Crema de Leche Fresca', 'description' => 'Nata fresca para uso culinario y repostería', 'product_type_id' => $cremaDeLeche],
+        ];
+
+        foreach ($items as $item) {
+            Product::create($item);
         }
     }
 

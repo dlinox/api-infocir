@@ -29,13 +29,6 @@ class RoleSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'plant_worker',
-                'display_name' => 'Colaborador de planta',
-                'redirect_to' => '/m/wo',
-                'level' => '2',
-                'is_active' => true,
-            ],
-            [
                 'name' => 'plant_manager',
                 'display_name' => 'Administrador de planta',
                 'redirect_to' => '/m/pl',
@@ -47,6 +40,13 @@ class RoleSeeder extends Seeder
                 'display_name' => 'Proveedor',
                 'redirect_to' => '/m/sup',
                 'level' => '2',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'plant_worker',
+                'display_name' => 'Colaborador de planta',
+                'redirect_to' => '/m/wo',
+                'level' => '3',
                 'is_active' => true,
             ],
         ];
