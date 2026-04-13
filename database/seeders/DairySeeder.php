@@ -155,11 +155,7 @@ class DairySeeder extends Seeder
             ['name' => 'Queso paria', 'description' => 'Queso semi-duro tradicional de la región altiplánica'],
             ['name' => 'Queso mozzarella', 'description' => 'Queso de pasta hilada para uso gastronómico'],
             ['name' => 'Yogurt natural', 'description' => 'Leche fermentada sin saborizantes artificiales'],
-            ['name' => 'Yogurt frutado', 'description' => 'Yogurt con pulpa o sabor de frutas naturales'],
-            ['name' => 'Mantequilla', 'description' => 'Producto obtenido del batido de la crema de leche'],
-            ['name' => 'Manjar blanco', 'description' => 'Dulce de leche concentrado y azucarado'],
-            ['name' => 'Leche pasteurizada', 'description' => 'Leche sometida a tratamiento térmico de pasteurización'],
-            ['name' => 'Crema de leche', 'description' => 'Nata obtenida del descremado de la leche'],
+
         ];
 
         foreach ($items as $item) {

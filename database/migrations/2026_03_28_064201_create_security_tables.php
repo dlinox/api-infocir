@@ -66,11 +66,13 @@ return new class extends Migration
             // 3: undefined
             // 4: undefined
             $table->enum('level', ['0', '1', '2', '3', '4'])->default('1');
+            $table->enum('scope', ['admin', 'plant', 'supplier', 'worker', 'instructor'])->default('admin');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->index('name');
             $table->index('level');
+            $table->index('scope');
             $table->index('is_active');
         });
 

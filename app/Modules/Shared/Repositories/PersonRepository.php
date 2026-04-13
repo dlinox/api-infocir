@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\DB;
 class PersonRepository
 {
     private const PROFILE_TABLES = [
-        'admins'        => ['table' => 'core_admins',          'column' => 'person_id'],
-        'plant_workers' => ['table' => 'dairy_plant_workers',  'column' => 'person_id'],
+        'admins'  => ['table' => 'core_admins',    'column' => 'person_id'],
+        'workers'     => ['table' => 'dairy_workers',        'column' => 'person_id'],
+        'instructors' => ['table' => 'learning_instructors', 'column' => 'person_id'],
     ];
 
     public function searchByDocument(string $documentType, string $documentNumber, string $profile, ?int $id = null): ?array

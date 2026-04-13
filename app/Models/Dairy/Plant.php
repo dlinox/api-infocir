@@ -3,15 +3,15 @@
 namespace App\Models\Dairy;
 
 use App\Common\Traits\HasDataTable;
+use App\Common\Traits\HasEntity;
 use App\Models\Core\City;
-use App\Models\Core\Country;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Plant extends Model
 {
-    use HasDataTable;
+    use HasDataTable, HasEntity;
 
     protected $table = 'dairy_plants';
 
@@ -21,7 +21,6 @@ class Plant extends Model
         'trade_name',
         'type',
         'brand',
-        'country',
         'city',
         'address',
         'cellphone',
@@ -73,11 +72,6 @@ class Plant extends Model
     public function institutionType(): BelongsTo
     {
         return $this->belongsTo(InstitutionType::class);
-    }
-
-    public function countryRelation(): BelongsTo
-    {
-        return $this->belongsTo(Country::class, 'country', 'code');
     }
 
     public function cityRelation(): BelongsTo

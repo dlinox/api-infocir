@@ -62,42 +62,23 @@ class CoreSeeder extends Seeder
     private function seedUnitMeasures(): void
     {
         $units = [
-            // Volumen
+            // Volumen (líquidos y capacidad)
             ['name' => 'Litro', 'abbreviation' => 'L'],
             ['name' => 'Mililitro', 'abbreviation' => 'mL'],
-            ['name' => 'Metro cúbico', 'abbreviation' => 'm³'],
-            ['name' => 'Decilitro', 'abbreviation' => 'dL'],
-            ['name' => 'Centilitro', 'abbreviation' => 'cL'],
             ['name' => 'Galón', 'abbreviation' => 'gal'],
 
-            // Longitud
-            ['name' => 'Metro', 'abbreviation' => 'm'],
-            ['name' => 'Centímetro', 'abbreviation' => 'cm'],
-            ['name' => 'Milímetro', 'abbreviation' => 'mm'],
-            ['name' => 'Kilómetro', 'abbreviation' => 'km'],
-            ['name' => 'Pulgada', 'abbreviation' => 'in'],
-            ['name' => 'Pie', 'abbreviation' => 'ft'],
+            // Masa (ingredientes y productos)
+            ['name' => 'Kilogramo', 'abbreviation' => 'kg'],
+            ['name' => 'Gramo', 'abbreviation' => 'g'],
+            ['name' => 'Tonelada métrica', 'abbreviation' => 't'],
+            ['name' => 'Libra', 'abbreviation' => 'lb'],
+            ['name' => 'Arroba', 'abbreviation' => '@'],
+            ['name' => 'Quintal', 'abbreviation' => 'qq'],
 
-            // Área
-            ['name' => 'Metro cuadrado', 'abbreviation' => 'm²'],
-            ['name' => 'Hectárea', 'abbreviation' => 'ha'],
-            ['name' => 'Centímetro cuadrado', 'abbreviation' => 'cm²'],
-            ['name' => 'Kilómetro cuadrado', 'abbreviation' => 'km²'],
-
-            // Tiempo
-            ['name' => 'Segundo', 'abbreviation' => 's'],
-            ['name' => 'Minuto', 'abbreviation' => 'min'],
-            ['name' => 'Hora', 'abbreviation' => 'h'],
-            ['name' => 'Día', 'abbreviation' => 'd'],
-            ['name' => 'Mes', 'abbreviation' => 'mes'],
-            ['name' => 'Año', 'abbreviation' => 'año'],
-
-            // Temperatura
+            // Temperatura (control de calidad)
             ['name' => 'Grado Celsius', 'abbreviation' => '°C'],
-            ['name' => 'Grado Fahrenheit', 'abbreviation' => '°F'],
-            ['name' => 'Kelvin', 'abbreviation' => 'K'],
 
-            // Unidades específicas lácteas
+            // Unidades de conteo y empaque
             ['name' => 'Unidad', 'abbreviation' => 'und'],
             ['name' => 'Docena', 'abbreviation' => 'doc'],
             ['name' => 'Caja', 'abbreviation' => 'cja'],
@@ -107,20 +88,8 @@ class CoreSeeder extends Seeder
             ['name' => 'Tarro', 'abbreviation' => 'tar'],
             ['name' => 'Poronguito', 'abbreviation' => 'por'],
 
-            // Otras unidades
+            // Otras unidades técnicas
             ['name' => 'Porcentaje', 'abbreviation' => '%'],
-            ['name' => 'Partes por millón', 'abbreviation' => 'ppm'],
-            ['name' => 'Grado alcohólico', 'abbreviation' => '°'],
-
-            // Masa
-            ['name' => 'Kilogramo', 'abbreviation' => 'kg'],
-            ['name' => 'Gramo', 'abbreviation' => 'g'],
-            ['name' => 'Miligramo', 'abbreviation' => 'mg'],
-            ['name' => 'Tonelada métrica', 'abbreviation' => 't'],
-            ['name' => 'Libra', 'abbreviation' => 'lb'],
-            ['name' => 'Onza', 'abbreviation' => 'oz'],
-            ['name' => 'Arroba', 'abbreviation' => '@'],
-            ['name' => 'Quintal', 'abbreviation' => 'qq'],
         ];
 
         foreach ($units as $unit) {

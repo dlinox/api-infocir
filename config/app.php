@@ -33,4 +33,19 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'modules' => [
+        'core' => [
+            'levels' => [0, 1],
+            'origins' => array_filter(array_map('trim', explode(',', env('APP_CORE_ORIGINS', '')))),
+        ],
+        'dairy' => [
+            'levels' => [2],
+            'origins' => array_filter(array_map('trim', explode(',', env('APP_DAIRY_ORIGINS', '')))),
+        ],
+        'training' => [
+            'levels' => [0, 3],
+            'origins' => array_filter(array_map('trim', explode(',', env('APP_TRAINING_ORIGINS', '')))),
+        ],
+    ],
+
 ];

@@ -12,6 +12,8 @@ use App\Modules\Admin\Setting\Http\Controllers\InstitutionTypeController;
 use App\Modules\Admin\Setting\Http\Controllers\ProductTypeController;
 use App\Modules\Admin\Setting\Http\Controllers\UnitMeasureController;
 use App\Modules\Admin\Setting\Http\Controllers\SupplyController;
+use App\Modules\Admin\Setting\Http\Controllers\AreaController;
+use App\Modules\Admin\Setting\Http\Controllers\TrainingTypeController;
 
 Route::middleware(['auth:api'])->prefix('/genders')->group(function () {
     Route::post('/data-table', [GenderController::class, 'dataTable'])->name('genders.dataTable');
@@ -88,4 +90,18 @@ Route::middleware(['auth:api'])->prefix('/supplies')->group(function () {
     Route::post('/save', [SupplyController::class, 'save'])->name('supplies.save');
     Route::delete('/delete/{id}', [SupplyController::class, 'delete'])->name('supplies.delete');
     Route::get('/select-items', [SupplyController::class, 'getSelectItems'])->name('supplies.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/areas')->group(function () {
+    Route::post('/data-table', [AreaController::class, 'dataTable'])->name('areas.dataTable');
+    Route::post('/save', [AreaController::class, 'save'])->name('areas.save');
+    Route::delete('/delete/{id}', [AreaController::class, 'delete'])->name('areas.delete');
+    Route::get('/select-items', [AreaController::class, 'getSelectItems'])->name('areas.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/training-types')->group(function () {
+    Route::post('/data-table', [TrainingTypeController::class, 'dataTable'])->name('training-types.dataTable');
+    Route::post('/save', [TrainingTypeController::class, 'save'])->name('training-types.save');
+    Route::delete('/delete/{id}', [TrainingTypeController::class, 'delete'])->name('training-types.delete');
+    Route::get('/select-items', [TrainingTypeController::class, 'getSelectItems'])->name('training-types.selectItems');
 });

@@ -2,20 +2,23 @@
 
 namespace App\Models\Dairy;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use App\Common\Traits\HasDataTable;
+use App\Models\Core\Entity;
 use App\Models\Core\InstructionDegree;
 use App\Models\Core\Person;
 use App\Models\Core\Profession;
 use App\Models\Core\Profile;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Worker extends Model
 {
     use HasDataTable;
 
-    protected $table = 'dairy_plant_workers';
+    public const ROLE_NAME = 'worker';
+
+    protected $table = 'dairy_workers';
 
     protected $primaryKey = 'person_id';
 
@@ -31,22 +34,20 @@ class Worker extends Model
 
     protected $fillable = [
         'person_id',
-        'plant_id',
+        'entity_id',
         'position_id',
         'instruction_degree_id',
         'profession_id',
-        'is_manager',
         'is_active',
     ];
 
     protected $casts = [
-        'person_id' => 'integer',
-        'plant_id' => 'integer',
-        'position_id' => 'integer',
+        'person_id'            => 'integer',
+        'entity_id'            => 'integer',
+        'position_id'          => 'integer',
         'instruction_degree_id' => 'integer',
-        'profession_id' => 'integer',
-        'is_manager' => 'boolean',
-        'is_active' => 'boolean',
+        'profession_id'        => 'integer',
+        'is_active'            => 'boolean',
     ];
 
     public function person(): BelongsTo
@@ -54,9 +55,9 @@ class Worker extends Model
         return $this->belongsTo(Person::class, 'person_id');
     }
 
-    public function plant(): BelongsTo
+    public function entity(): BelongsTo
     {
-        return $this->belongsTo(Plant::class, 'plant_id');
+        return $this->belongsTo(Entity::class, 'entity_id');
     }
 
     public function position(): BelongsTo
@@ -79,3 +80,4 @@ class Worker extends Model
         return $this->morphOne(Profile::class, 'profileable');
     }
 }
+

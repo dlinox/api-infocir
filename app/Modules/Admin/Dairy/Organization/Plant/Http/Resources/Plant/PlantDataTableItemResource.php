@@ -43,10 +43,6 @@ class PlantDataTableItemResource extends JsonResource
                 'id'   => $this->institutionType->id,
                 'name' => $this->institutionType->name,
             ] : null,
-            'countryInfo'             => ($country = $this->countryRelation) ? [
-                'code' => $country->code,
-                'name' => $country->name,
-            ] : null,
             'cityInfo'                => ($city = $this->cityRelation) ? [
                 'code' => $city->code,
                 'name' => $city->name,

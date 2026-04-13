@@ -20,10 +20,12 @@ class Role extends Model
         'display_name',
         'redirect_to',
         'level',
+        'scope',
         'is_active',
     ];
 
     protected $casts = [
+        'level'     => 'integer',
         'is_active' => 'boolean',
     ];
 

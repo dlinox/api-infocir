@@ -23,13 +23,14 @@ class SupplierService
         return $this->createOrUpdateAction->execute($data);
     }
 
-    public function findByPersonId(int $personId)
+    public function findById(int $id)
     {
-        return $this->supplierRepository->findByPersonId($personId);
+        return $this->supplierRepository->findById($id);
     }
 
-    public function delete(int $personId)
+    public function delete(int $id)
     {
-        return $this->supplierRepository->delete($personId);
+        return $this->supplierRepository->delete($id);
     }
 }
+

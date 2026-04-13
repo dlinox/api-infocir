@@ -77,6 +77,22 @@ return new class extends Migration
             $table->index('is_active');
         });
 
+        //core_file table for storing file metadata, not the files themselves
+        Schema::create('core_files', function (Blueprint $table) {
+            $table->id();
+            $table->string('storage_disk', 20)->default('local'); // Storage disk (e.g., 'local', 's3') 
+            $table->string('filename', 255);       // Original filename
+            $table->string('filepath', 255);       // Path where the file is stored
+            $table->string('mime_type', 100);     // MIME type of the file
+            $table->string('caption', 255)->nullable(); // Optional caption for the file
+            $table->unsignedBigInteger('size');    // Size of the file in bytes
+            $table->timestamps();
+            $table->softDeletes();
+            $table->index('storage_disk');
+            $table->index('filename');
+            $table->index('mime_type');
+        });
+
         Schema::create('core_persons', function (Blueprint $table) {
             $table->id();
             $table->char('document_type', 1);
@@ -124,15 +140,16 @@ return new class extends Migration
             $table->index('person_id');
         });
 
-        Schema::create('core_infrastructures', function (Blueprint $table) {
+        Schema::create('core_entities', function (Blueprint $table) {
             $table->id();
-            $table->string('infrastructurable_type');
-            $table->unsignedBigInteger('infrastructurable_id');
-            $table->unsignedBigInteger('infrastructure_id')->nullable();
+            $table->string('entityable_type', 60);
+            $table->unsignedBigInteger('entityable_id');
+            $table->unsignedBigInteger('entity_id')->nullable();
             $table->timestamps();
-            $table->foreign('infrastructure_id')->references('id')->on('core_infrastructures')->nullOnDelete();
-            $table->unique(['infrastructurable_type', 'infrastructurable_id'], 'core_infra_type_id_unique');
-            $table->index('infrastructurable_type');
+            $table->foreign('entity_id')->references('id')->on('core_entities')->nullOnDelete();
+            $table->unique(['entityable_type', 'entityable_id'], 'core_entity_type_id_unique');
+            $table->index('entityable_type');
+            $table->index('entityable_id');
         });
 
         Schema::create('core_admins', function (Blueprint $table) {
@@ -157,6 +174,5 @@ return new class extends Migration
         Schema::dropIfExists('core_document_types');
         Schema::dropIfExists('core_cities');
         Schema::dropIfExists('core_countries');
-        
     }
 };

@@ -55,7 +55,7 @@ class AuthController
     public function selectProfile(int $profileId): JsonResponse
     {
         $result = $this->authService->selectProfile($profileId);
-        return ApiResponse::success($result, '');
+        return ApiResponse::success((new SignInResource($result)), 'Perfil seleccionado exitosamente');
     }
     /**
      * Refresh token
@@ -72,6 +72,15 @@ class AuthController
     {
         $this->authService->signOut();
         return ApiResponse::success(null, '');
+    }
+
+    /**
+     * Get the entity (plant or supplier) assigned to the current worker profile
+     */
+    public function myEntity(): JsonResponse
+    {
+        $entity = $this->authService->getMyEntity();
+        return ApiResponse::success($entity, '');
     }
 
     /**

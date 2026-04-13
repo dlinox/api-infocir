@@ -9,7 +9,7 @@ class PlantRepository
     public function dataTable($request)
     {
         $query = Plant::query()
-            ->with(['companyType', 'trainingLevel', 'institutionType', 'countryRelation', 'cityRelation']);
+            ->with(['companyType', 'trainingLevel', 'institutionType', 'cityRelation']);
 
         if (empty($request->sortBy) || !isset($request->sortBy)) {
             $query->orderBy('id', 'desc');

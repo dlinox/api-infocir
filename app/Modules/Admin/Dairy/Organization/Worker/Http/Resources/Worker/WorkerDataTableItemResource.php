@@ -18,10 +18,11 @@ class WorkerDataTableItemResource extends JsonResource
                 'cellphone'      => $this->person_cellphone,
                 'email'          => $this->person_email,
             ],
-            'plant' => [
-                'id'   => $this->plant->id,
-                'name' => $this->plant->name,
-            ],
+            'entity' => $this->entity ? [
+                'id'   => $this->entity->id,
+                'name' => $this->entity->entityable?->name ?? '',
+                'type' => $this->entity->entityable_type,
+            ] : null,
             'position' => $this->position ? [
                 'id'   => $this->position->id,
                 'name' => $this->position->name,
@@ -34,8 +35,7 @@ class WorkerDataTableItemResource extends JsonResource
                 'id'   => $this->profession->id,
                 'name' => $this->profession->name,
             ] : null,
-            'isManager' => $this->is_manager,
-            'isActive'  => $this->is_active,
+            'isActive' => $this->is_active,
         ];
     }
 }

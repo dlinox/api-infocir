@@ -2,41 +2,33 @@
 
 namespace App\Models\Dairy;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use App\Common\Traits\HasDataTable;
-use App\Models\Core\Person;
-use App\Models\Core\Profile;
+use App\Common\Traits\HasEntity;
+use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    use HasDataTable;
+    use HasDataTable, HasEntity;
 
     protected $table = 'dairy_suppliers';
 
-    protected $primaryKey = 'person_id';
-
-    public $incrementing = false;
-
     public array $searchColumns = [
-        'core_persons.name',
-        'core_persons.paternal_surname',
-        'core_persons.maternal_surname',
-        'core_persons.document_number',
+        'dairy_suppliers.name',
         'dairy_suppliers.trade_name',
+        'dairy_suppliers.document_number',
         'dairy_suppliers.cellphone',
         'dairy_suppliers.email',
     ];
 
     protected $fillable = [
-        'person_id',
         'supplier_type',
+        'document_type',
+        'document_number',
+        'name',
         'trade_name',
         'cellphone',
         'email',
         'address',
-        'country',
         'city',
         'latitude',
         'longitude',
@@ -45,19 +37,10 @@ class Supplier extends Model
     ];
 
     protected $casts = [
-        'person_id' => 'integer',
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
         'is_active' => 'boolean',
     ];
 
-    public function person(): BelongsTo
-    {
-        return $this->belongsTo(Person::class, 'person_id');
-    }
-
-    public function coreProfile(): MorphOne
-    {
-        return $this->morphOne(Profile::class, 'profileable');
-    }
 }
+

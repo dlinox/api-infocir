@@ -12,15 +12,15 @@ class InfrastructureItemResource extends JsonResource
 
     public function toArray($request)
     {
-        $type = self::TYPE_LABELS[$this->infrastructurable_type] ?? class_basename($this->infrastructurable_type);
-        $name = $this->infrastructurable->name ?? 'Sin nombre';
+        $type = self::TYPE_LABELS[$this->entityable_type] ?? class_basename($this->entityable_type);
+        $name = $this->entityable->name ?? 'Sin nombre';
 
         return [
             'id' => $this->id,
-            'branchId' => $this->infrastructurable->id,
+            'branchId' => $this->entityable->id,
             'type' => $type,
             'name' =>  $name,
-            'isActive' => $this->infrastructurable->is_active ?? false,
+            'isActive' => $this->entityable->is_active ?? false,
         ];
     }
 }

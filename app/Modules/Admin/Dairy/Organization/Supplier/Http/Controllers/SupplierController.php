@@ -24,7 +24,7 @@ class SupplierController
 
     public function getById(string $id)
     {
-        $supplier = $this->supplierService->findByPersonId((int) $id);
+        $supplier = $this->supplierService->findById((int) $id);
         return ApiResponse::success(new SupplierFormResource($supplier));
     }
 
@@ -41,3 +41,4 @@ class SupplierController
         return ApiResponse::success(null, 'Proveedor eliminado correctamente');
     }
 }
+

@@ -60,6 +60,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('dairy_supplies', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100)->unique();
+            $table->unsignedBigInteger('unit_measure_id')->nullable();
+            $table->string('description', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('name');
+            $table->index('unit_measure_id');
+            $table->index('is_active');
+        });
+
         Schema::create('dairy_plants', function (Blueprint $table) {
             $table->id();
             $table->char('ruc', 11)->unique();
@@ -67,7 +83,6 @@ return new class extends Migration
             $table->string('trade_name', 100)->nullable();
             $table->enum('type', ['A', 'B', 'C'])->default('A');
             $table->string('brand', 100)->nullable();
-            $table->char('country', 2)->nullable();
             $table->char('city', 6)->nullable();
             $table->string('address', 200)->nullable();
             $table->string('cellphone', 9)->unique();
@@ -91,7 +106,6 @@ return new class extends Migration
             $table->foreign('company_type_id')->references('id')->on('dairy_company_types')->onDelete('set null');
             $table->foreign('training_level_id')->references('id')->on('dairy_training_levels')->onDelete('set null');
             $table->foreign('institution_type_id')->references('id')->on('dairy_institution_types')->onDelete('set null');
-            $table->foreign('country')->references('code')->on('core_countries')->onDelete('set null');
             $table->foreign('city')->references('code')->on('core_cities')->onDelete('set null');
 
             $table->index('ruc');
@@ -111,19 +125,28 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        Schema::create('dairy_supplies', function (Blueprint $table) {
+        Schema::create('dairy_suppliers', function (Blueprint $table) {
             $table->id();
+            $table->enum('supplier_type', ['individual', 'company'])->default('individual');
+            $table->char('document_type', 1);
+            $table->string('document_number', 20);
             $table->string('name', 100)->unique();
-            $table->unsignedBigInteger('unit_measure_id')->nullable();
-            $table->string('description', 255)->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->timestamps();
+            $table->string('trade_name', 100)->nullable();
 
-            $table->foreign('unit_measure_id')->references('id')->on('core_unit_measures')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->string('cellphone', 9)->unique()->nullable();
+            $table->string('email', 100)->unique()->nullable();
+            $table->string('address', 200)->nullable();
+            $table->char('city', 6)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            $table->index('supplier_type');
             $table->index('name');
-            $table->index('unit_measure_id');
+            $table->index('document_number');
+            $table->index('cellphone');
+            $table->index('email');
             $table->index('is_active');
         });
 
@@ -249,49 +272,25 @@ return new class extends Migration
             $table->index('is_active');
         });
 
-        Schema::create('dairy_plant_workers', function (Blueprint $table) {
+        Schema::create('dairy_workers', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->primary();
-            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('entity_id');
             $table->unsignedBigInteger('position_id')->nullable();
             $table->unsignedBigInteger('instruction_degree_id')->nullable();
             $table->unsignedBigInteger('profession_id')->nullable();
-            $table->boolean('is_manager')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('core_persons')->onDelete('cascade');
-            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('entity_id')->references('id')->on('core_entities')->onDelete('cascade');
             $table->foreign('position_id')->references('id')->on('dairy_positions')->onDelete('set null');
             $table->foreign('instruction_degree_id')->references('id')->on('core_instruction_degrees')->onDelete('set null');
             $table->foreign('profession_id')->references('id')->on('core_professions')->onDelete('set null');
             $table->index('person_id');
-            $table->index('plant_id');
+            $table->index('entity_id');
             $table->index('position_id');
             $table->index('instruction_degree_id');
             $table->index('profession_id');
-            $table->index('is_active');
-        });
-
-        Schema::create('dairy_suppliers', function (Blueprint $table) {
-            $table->unsignedBigInteger('person_id')->primary();
-            $table->enum('supplier_type', ['individual', 'company'])->default('individual');
-            $table->string('trade_name', 100)->nullable();
-            $table->string('cellphone', 9)->unique()->nullable();
-            $table->string('email', 100)->unique()->nullable();
-            $table->string('address', 200)->nullable();
-            $table->char('country', 2)->nullable();
-            $table->char('city', 6)->nullable();
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
-            $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-
-            $table->foreign('person_id')->references('id')->on('core_persons')->onDelete('cascade');
-            $table->index('person_id');
-            $table->index('supplier_type');
-            $table->index('cellphone');
-            $table->index('email');
             $table->index('is_active');
         });
     }
@@ -299,7 +298,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('dairy_suppliers');
-        Schema::dropIfExists('dairy_plant_workers');
+        Schema::dropIfExists('dairy_workers');
         Schema::dropIfExists('dairy_plant_galeries');
         Schema::dropIfExists('dairy_stock_movements');
         Schema::dropIfExists('dairy_product_prices');

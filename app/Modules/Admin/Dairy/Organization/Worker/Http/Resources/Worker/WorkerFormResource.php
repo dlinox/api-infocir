@@ -25,14 +25,18 @@ class WorkerFormResource extends JsonResource
                 'gender'          => $person->gender,
                 'address'         => $person->address,
                 'city'            => $person->city,
-                'country'         => $person->country,
             ],
-            'plantId'    => $this->plant_id,
-            'positionId' => $this->position_id,
+            'entityId'           => $this->entity_id,
+            'entityType'         => match($this->entity?->entityable_type) {
+                'dairy_plants'    => 'plant',
+                'dairy_suppliers' => 'supplier',
+                default           => null,
+            },
+            'roleId'             => $this->behavior_role_id,
+            'positionId'          => $this->position_id,
             'instructionDegreeId' => $this->instruction_degree_id,
-            'professionId' => $this->profession_id,
-            'isManager'  => $this->is_manager,
-            'isActive'   => $this->is_active,
+            'professionId'        => $this->profession_id,
+            'isActive'            => $this->is_active,
         ];
     }
 }
