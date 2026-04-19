@@ -32,6 +32,10 @@ class Supplier extends Model
         'city',
         'latitude',
         'longitude',
+        'community',
+        'total_cows',
+        'cows_in_production',
+        'dry_cows',
         'description',
         'is_active',
     ];
@@ -39,6 +43,9 @@ class Supplier extends Model
     protected $casts = [
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
+        'total_cows' => 'integer',
+        'cows_in_production' => 'integer',
+        'dry_cows' => 'integer',
         'is_active' => 'boolean',
     ];
 

@@ -13,7 +13,7 @@ class ProductPresentationDataTableItemResource extends JsonResource
             'id'             => $this->id,
             'sku'            => $this->sku,
             'name'           => $this->name,
-            'content'        => $this->content,
+            'content'        => (float) $this->content,
             'barcode'        => $this->barcode,
             'isActive'       => $this->is_active,
             'plantProductId' => $this->plant_product_id,

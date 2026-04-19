@@ -23,6 +23,7 @@ class PlantFormResource extends JsonResource
             'email'                   => $this->email,
             'latitude'                => (float) $this->latitude,
             'longitude'               => (float) $this->longitude,
+            'capacityLiters'          => $this->capacity_liters ? (float) $this->capacity_liters : null,
             'productQuality'          => $this->product_quality,
             'hasSanitaryRegistration' => $this->has_sanitary_registration,
             'hasTechnification'       => $this->has_technification,

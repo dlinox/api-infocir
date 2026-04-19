@@ -19,7 +19,7 @@ class CourseRepository
 
     public function findById(int $id): Course
     {
-        return Course::with('area')->findOrFail($id);
+        return Course::with(['area', 'coverImageFile', 'modules.lessons.resources.file', 'modules.lessons.quizQuestions.options'])->findOrFail($id);
     }
 
     public function createOrUpdate(array $data): Course

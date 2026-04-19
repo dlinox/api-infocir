@@ -32,4 +32,9 @@ class InstructorService
     {
         return $this->instructorRepository->delete($personId);
     }
+
+    public function getSelectItems()
+    {
+        return $this->instructorRepository->getSelectItems();
+    }
 }

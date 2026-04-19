@@ -20,6 +20,10 @@ class SupplierDataTableItemResource extends JsonResource
             'email'        => $this->email,
             'address'      => $this->address,
             'city'         => $this->city,
+            'community'    => $this->community,
+            'totalCows'    => $this->total_cows,
+            'cowsInProduction' => $this->cows_in_production,
+            'dryCows'      => $this->dry_cows,
             'isActive'     => $this->is_active,
         ];
     }

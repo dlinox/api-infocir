@@ -7,6 +7,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Learning\Instructor\Http\Requests\Instructor\InstructorRequest;
 use App\Modules\Admin\Learning\Instructor\Http\Resources\Instructor\InstructorDataTableItemResource;
 use App\Modules\Admin\Learning\Instructor\Http\Resources\Instructor\InstructorFormResource;
+use App\Modules\Admin\Learning\Instructor\Http\Resources\Instructor\InstructorSelectItemResource;
 use App\Modules\Admin\Learning\Instructor\Services\InstructorService;
 
 class InstructorController
@@ -39,5 +40,11 @@ class InstructorController
     {
         $this->instructorService->delete((int) $id);
         return ApiResponse::success(null, 'Instructor eliminado correctamente');
+    }
+
+    public function getSelectItems()
+    {
+        $items = $this->instructorService->getSelectItems();
+        return ApiResponse::success(InstructorSelectItemResource::collection($items));
     }
 }

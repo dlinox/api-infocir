@@ -8,4 +8,5 @@ Route::middleware(['auth:api'])->prefix('/instructors')->group(function () {
     Route::get('/get/{id}', [InstructorController::class, 'getById']);
     Route::post('/save', [InstructorController::class, 'save']);
     Route::delete('/delete/{id}', [InstructorController::class, 'delete']);
+    Route::get('/select-items', [InstructorController::class, 'getSelectItems']);
 });

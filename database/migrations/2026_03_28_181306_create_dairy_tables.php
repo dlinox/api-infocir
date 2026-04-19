@@ -89,6 +89,7 @@ return new class extends Migration
             $table->string('email', 100)->unique()->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('capacity_liters', 10, 2)->nullable();
 
             $table->enum('product_quality', ['very_low', 'low', 'medium', 'high', 'excellent'])->default('medium');
             $table->boolean('has_sanitary_registration')->default(false);
@@ -139,6 +140,10 @@ return new class extends Migration
             $table->char('city', 6)->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('community', 100)->nullable();
+            $table->unsignedSmallInteger('total_cows')->default(0);
+            $table->unsignedSmallInteger('cows_in_production')->default(0);
+            $table->unsignedSmallInteger('dry_cows')->default(0);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -293,10 +298,128 @@ return new class extends Migration
             $table->index('profession_id');
             $table->index('is_active');
         });
+
+        Schema::create('dairy_milk_collections', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('supplier_id');
+            $table->date('collection_date');
+            $table->enum('shift', ['morning', 'afternoon'])->default('morning');
+            $table->decimal('quantity_liters', 10, 2);
+            $table->decimal('price_per_liter', 10, 4);
+            $table->decimal('total_amount', 12, 2);
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->unsignedBigInteger('file_id')->nullable();
+            $table->text('observations')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('core_files')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->unique(['plant_id', 'supplier_id', 'collection_date', 'shift'], 'dairy_milk_collections_unique');
+            $table->index('plant_id');
+            $table->index('supplier_id');
+            $table->index('collection_date');
+            $table->index('shift');
+            $table->index('file_id');
+        });
+
+        Schema::create('dairy_milk_quality_tests', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('milk_collection_id')->unique();
+            $table->decimal('fat_percentage', 5, 2)->nullable();
+            $table->decimal('snf_percentage', 5, 2)->nullable();
+            $table->decimal('density', 6, 4)->nullable();
+            $table->decimal('acidity', 5, 2)->nullable();
+            $table->decimal('temperature', 4, 1)->nullable();
+            $table->enum('quality_grade', ['A', 'B', 'C', 'D'])->nullable();
+            $table->unsignedBigInteger('tested_by')->nullable();
+            $table->timestamp('tested_at')->nullable();
+            $table->text('observations')->nullable();
+            $table->timestamps();
+
+            $table->foreign('milk_collection_id')->references('id')->on('dairy_milk_collections')->onDelete('cascade');
+            $table->foreign('tested_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('quality_grade');
+        });
+
+        Schema::create('dairy_production_batches', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->string('batch_code', 30)->unique();
+            $table->date('production_date');
+            $table->decimal('quantity_liters_used', 10, 2);
+            $table->decimal('quantity_kg', 10, 2);
+            $table->decimal('yield_ratio', 5, 2)->nullable();
+            $table->enum('status', ['in_production', 'maturing', 'ready', 'sold', 'rejected'])->default('in_production');
+            $table->unsignedBigInteger('presentation_id')->nullable();
+            $table->date('maturation_start_date')->nullable();
+            $table->date('maturation_end_date')->nullable();
+            $table->text('observations')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('presentation_id')->references('id')->on('dairy_product_presentations')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->index('plant_id');
+            $table->index('batch_code');
+            $table->index('production_date');
+            $table->index('status');
+            $table->index('presentation_id');
+        });
+
+        Schema::create('dairy_batch_suppliers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('supplier_id');
+            $table->decimal('quantity_liters', 10, 2);
+
+            $table->foreign('batch_id')->references('id')->on('dairy_production_batches')->onDelete('cascade');
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->unique(['batch_id', 'supplier_id']);
+            $table->index('batch_id');
+            $table->index('supplier_id');
+        });
+
+        Schema::create('dairy_supplier_payments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('supplier_id');
+            $table->date('period_start');
+            $table->date('period_end');
+            $table->decimal('total_liters', 12, 2);
+            $table->decimal('total_amount', 12, 2);
+            $table->decimal('deductions', 12, 2)->default(0);
+            $table->decimal('net_amount', 12, 2);
+            $table->enum('status', ['pending', 'approved', 'paid', 'cancelled'])->default('pending');
+            $table->timestamp('paid_at')->nullable();
+            $table->text('observations')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->unique(['plant_id', 'supplier_id', 'period_start', 'period_end'], 'dairy_supplier_payments_unique');
+            $table->index('plant_id');
+            $table->index('supplier_id');
+            $table->index('period_start');
+            $table->index('period_end');
+            $table->index('status');
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('dairy_supplier_payments');
+        Schema::dropIfExists('dairy_batch_suppliers');
+        Schema::dropIfExists('dairy_production_batches');
+        Schema::dropIfExists('dairy_milk_quality_tests');
+        Schema::dropIfExists('dairy_milk_collections');
         Schema::dropIfExists('dairy_suppliers');
         Schema::dropIfExists('dairy_workers');
         Schema::dropIfExists('dairy_plant_galeries');

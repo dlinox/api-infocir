@@ -13,8 +13,8 @@ class ProductPriceItemResource extends JsonResource
         return [
             'id' => $item->id,
             'presentationId' => $item->presentation_id,
-            'price' => $item->price,
-            'cost' => $item->cost,
+            'price' => (float) $item->price,
+            'cost' => $item->cost !== null ? (float) $item->cost : null,
             'effectiveFrom' => $item->effective_from?->format('Y-m-d'),
             'effectiveUntil' => $item->effective_until?->format('Y-m-d'),
             'createdBy' => $item->creator?->name,

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Learning\Instructor\Catalog\Course\Http\Requests\Course\CourseRequest;
 use App\Modules\Learning\Instructor\Catalog\Course\Http\Resources\Course\CourseDataTableItemResource;
+use App\Modules\Learning\Instructor\Catalog\Course\Http\Resources\Course\CourseDetailResource;
 use App\Modules\Learning\Instructor\Catalog\Course\Http\Resources\Course\CourseSelectItemResource;
 use App\Modules\Learning\Instructor\Catalog\Course\Services\CourseService;
 
@@ -25,7 +26,7 @@ class CourseController
     public function getById(string $id)
     {
         $course = $this->courseService->findById((int) $id);
-        return ApiResponse::success(new CourseDataTableItemResource($course));
+        return ApiResponse::success(new CourseDetailResource($course));
     }
 
     public function save(CourseRequest $request)
@@ -33,6 +34,21 @@ class CourseController
         $data = $request->validated();
         $this->courseService->save($data);
         return ApiResponse::success(null, 'Curso guardado correctamente');
+    }
+
+    public function uploadCover(Request $request, int $id)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:jpg,jpeg,png,webp|max:10240',
+        ]);
+
+        $this->courseService->uploadCover(
+            $id,
+            $request->file('file'),
+            $request->input('caption'),
+        );
+
+        return ApiResponse::success(null, 'Portada actualizada correctamente');
     }
 
     public function delete(string $id)

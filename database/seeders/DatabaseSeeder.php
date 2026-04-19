@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PlantSeeder::class,
             SuperAdminSeeder::class,
             LearningSeeder::class,
+            LearningDataSeeder::class,
         ]);
     }
 }

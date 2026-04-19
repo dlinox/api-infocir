@@ -27,6 +27,7 @@ class Plant extends Model
         'email',
         'latitude',
         'longitude',
+        'capacity_liters',
         'product_quality',
         'has_sanitary_registration',
         'has_technification',
@@ -43,6 +44,7 @@ class Plant extends Model
     protected $casts = [
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
+        'capacity_liters' => 'decimal:2',
         'is_active' => 'boolean',
         'has_sanitary_registration' => 'boolean',
         'has_technification' => 'boolean',

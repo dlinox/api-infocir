@@ -62,4 +62,19 @@ class InstructorRepository
             throw $e;
         }
     }
+
+    public function getSelectItems()
+    {
+        return Instructor::query()
+            ->select(
+                'learning_instructors.id',
+                'core_persons.name as person_name',
+                'core_persons.paternal_surname as person_paternal_surname',
+                'core_persons.maternal_surname as person_maternal_surname',
+            )
+            ->join('core_persons', 'core_persons.id', '=', 'learning_instructors.person_id')
+            ->where('learning_instructors.is_active', true)
+            ->orderBy('core_persons.paternal_surname')
+            ->get();
+    }
 }

@@ -3,8 +3,11 @@
 namespace App\Models\Core;
 
 use App\Common\Traits\HasDataTable;
+use App\Models\Billing\Series;
+use App\Models\Billing\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Entity extends Model
@@ -36,5 +39,15 @@ class Entity extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Entity::class, 'entity_id');
+    }
+
+    public function vouchers(): HasMany
+    {
+        return $this->hasMany(Voucher::class, 'issuer_entity_id');
+    }
+
+    public function billingSeries(): HasMany
+    {
+        return $this->hasMany(Series::class, 'issuer_entity_id');
     }
 }

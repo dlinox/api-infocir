@@ -24,6 +24,10 @@ class SupplierRequest extends ApiFormRequest
             'city'            => 'nullable|string|max:6',
             'latitude'        => 'nullable|numeric|between:-90,90',
             'longitude'       => 'nullable|numeric|between:-180,180',
+            'community'       => 'nullable|string|max:100',
+            'total_cows'      => 'required|integer|min:0',
+            'cows_in_production' => 'required|integer|min:0',
+            'dry_cows'        => 'required|integer|min:0',
             'description'     => 'nullable|string',
             'is_active'       => 'required|boolean',
         ];
@@ -41,6 +45,16 @@ class SupplierRequest extends ApiFormRequest
             'cellphone.unique'         => 'El :attribute ya está en uso.',
             'email.email'              => 'El :attribute debe ser un correo válido.',
             'email.unique'             => 'El :attribute ya está en uso.',
+            'community.max'            => 'La :attribute no debe exceder los :max caracteres.',
+            'total_cows.required'      => 'El :attribute es requerido.',
+            'total_cows.integer'       => 'El :attribute debe ser un número entero.',
+            'total_cows.min'           => 'El :attribute debe ser mayor o igual a :min.',
+            'cows_in_production.required' => 'El :attribute es requerido.',
+            'cows_in_production.integer'  => 'El :attribute debe ser un número entero.',
+            'cows_in_production.min'      => 'El :attribute debe ser mayor o igual a :min.',
+            'dry_cows.required'        => 'El :attribute es requerido.',
+            'dry_cows.integer'         => 'El :attribute debe ser un número entero.',
+            'dry_cows.min'             => 'El :attribute debe ser mayor o igual a :min.',
             'is_active.required'       => 'El campo :attribute es requerido.',
         ];
     }
@@ -59,6 +73,10 @@ class SupplierRequest extends ApiFormRequest
             'city'            => 'Ciudad',
             'latitude'        => 'Latitud',
             'longitude'       => 'Longitud',
+            'community'       => 'Comunidad',
+            'total_cows'      => 'Total de vacas',
+            'cows_in_production' => 'Vacas en producción',
+            'dry_cows'        => 'Vacas secas',
             'description'     => 'Descripción',
             'is_active'       => 'Estado',
         ];

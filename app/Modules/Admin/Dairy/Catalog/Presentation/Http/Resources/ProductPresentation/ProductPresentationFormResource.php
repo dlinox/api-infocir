@@ -14,7 +14,7 @@ class ProductPresentationFormResource extends JsonResource
             'plantProductId' => $this->plant_product_id,
             'name'           => $this->name,
             'unitMeasureId'  => $this->unit_measure_id,
-            'content'        => $this->content,
+            'content'        => (float) $this->content,
             'isActive'       => $this->is_active,
             'sku'            => $this->sku,
             'barcode'        => $this->barcode,
