@@ -73,7 +73,7 @@ class RoleSeeder extends Seeder
             [
                 'name'         => 'worker',
                 'display_name' => 'Trabajador',
-                'redirect_to'  => '/wo',
+                'redirect_to'  => '/le',
                 'level'        => '3',
                 'scope'        => 'worker',
                 'is_active'    => true,

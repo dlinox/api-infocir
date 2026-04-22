@@ -14,7 +14,6 @@ class MilkCollectionRequest extends ApiFormRequest
             'collection_date' => ['required', 'date'],
             'shift'           => ['required', 'in:morning,afternoon'],
             'quantity_liters' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],
-            'price_per_liter' => ['required', 'numeric', 'min:0', 'max:999999.9999'],
             'latitude'        => ['nullable', 'numeric', 'between:-90,90'],
             'longitude'       => ['nullable', 'numeric', 'between:-180,180'],
             'payment_status'  => ['nullable', 'in:pending,paid,cancelled'],
@@ -54,7 +53,6 @@ class MilkCollectionRequest extends ApiFormRequest
             'collection_date' => 'fecha de recolección',
             'shift'           => 'turno',
             'quantity_liters' => 'cantidad (litros)',
-            'price_per_liter' => 'precio por litro',
             'payment_status'  => 'estado de pago',
             'observations'    => 'observaciones',
         ];

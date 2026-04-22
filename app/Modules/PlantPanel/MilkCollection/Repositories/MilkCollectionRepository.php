@@ -3,6 +3,7 @@
 namespace App\Modules\PlantPanel\MilkCollection\Repositories;
 
 use App\Models\Dairy\MilkCollection;
+use App\Models\Dairy\Supplier;
 
 class MilkCollectionRepository
 {
@@ -39,7 +40,10 @@ class MilkCollectionRepository
     public function createOrUpdate(array $data, int $plantId): MilkCollection
     {
         $data['plant_id'] = $plantId;
-        $data['total_amount'] = round((float) $data['quantity_liters'] * (float) $data['price_per_liter'], 2);
+        $supplier = Supplier::findOrFail($data['supplier_id']);
+        $pricePerLiter = (float) ($supplier->reference_price_per_liter ?? 0);
+        $data['price_per_liter'] = $pricePerLiter;
+        $data['total_amount'] = round((float) $data['quantity_liters'] * $pricePerLiter, 2);
 
         if (!empty($data['id'])) {
             $collection = MilkCollection::where('id', $data['id'])->where('plant_id', $plantId)->firstOrFail();

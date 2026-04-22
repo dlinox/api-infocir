@@ -81,7 +81,7 @@ trait HasDataTable
             $query->range($request->ranges);
         }
 
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $searchColumns = $searchColumns ?: $query->getModel()->searchColumns;
             $query->search($request->search, $searchColumns);
         }

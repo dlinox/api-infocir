@@ -19,7 +19,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
-            $table->unique(['supplier_id', 'registration_date', 'shift'], 'dairy_supplier_milk_registrations_unique');
             $table->index('supplier_id');
             $table->index('registration_date');
         });

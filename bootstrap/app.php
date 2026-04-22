@@ -4,6 +4,7 @@ use App\Common\Exceptions\ApiException;
 use App\Common\Exceptions\PermissionDeniedException;
 use App\Common\Http\Responses\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -44,6 +45,18 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (PermissionDeniedException $e) {
             return ApiResponse::error($e->getMessage(), null, 403);
+        });
+
+        $exceptions->render(function (QueryException $e) {
+            if (app()->hasDebugModeEnabled()) {
+                return ApiResponse::serverError($e->getMessage(), [
+                    'exception' => get_class($e),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
+            }
+
+            return ApiResponse::serverError('Error en la base de datos. Verifique los datos enviados.', null, 500);
         });
 
         $exceptions->render(function (Throwable $e) {
