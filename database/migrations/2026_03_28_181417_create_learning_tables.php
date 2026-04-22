@@ -257,6 +257,9 @@ return new class extends Migration
             //   virtual   → 100% online/remota
             //   mixed     → híbrida (presencial + virtual)
             $table->string('location', 200)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();   // Latitud para presenciales
+            $table->decimal('longitude', 10, 7)->nullable();  // Longitud para presenciales
+            $table->string('meeting_url', 500)->nullable();   // URL de reunión para virtuales/mixtas
             $table->unsignedSmallInteger('max_participants')->nullable();
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();

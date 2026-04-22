@@ -38,6 +38,7 @@ class Worker extends Model
         'position_id',
         'instruction_degree_id',
         'profession_id',
+        'monthly_salary',
         'is_active',
     ];
 
@@ -47,6 +48,7 @@ class Worker extends Model
         'position_id'          => 'integer',
         'instruction_degree_id' => 'integer',
         'profession_id'        => 'integer',
+        'monthly_salary'       => 'decimal:2',
         'is_active'            => 'boolean',
     ];
 

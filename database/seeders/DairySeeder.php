@@ -14,6 +14,8 @@ use App\Models\Dairy\Position;
 use App\Models\Dairy\Product;
 use App\Models\Dairy\ProductType;
 use App\Models\Dairy\Supply;
+use App\Models\Dairy\InvestmentCategory;
+use App\Models\Dairy\AssetCatalog;
 use App\Models\Core\UnitMeasure;
 
 class DairySeeder extends Seeder
@@ -31,6 +33,8 @@ class DairySeeder extends Seeder
         $this->seedProductTypes();
         $this->seedProducts();
         $this->seedSupplies();
+        $this->seedInvestmentCategories();
+        $this->seedAssetCatalog();
     }
 
     private function seedInstructionDegrees(): void
@@ -150,12 +154,16 @@ class DairySeeder extends Seeder
     private function seedProductTypes(): void
     {
         $items = [
-            ['name' => 'Queso fresco', 'description' => 'Queso sin maduración elaborado con leche pasteurizada'],
-            ['name' => 'Queso andino', 'description' => 'Queso semi-madurado típico de la sierra peruana'],
-            ['name' => 'Queso paria', 'description' => 'Queso semi-duro tradicional de la región altiplánica'],
-            ['name' => 'Queso mozzarella', 'description' => 'Queso de pasta hilada para uso gastronómico'],
-            ['name' => 'Yogurt natural', 'description' => 'Leche fermentada sin saborizantes artificiales'],
-
+            ['name' => 'Queso fresco',        'description' => 'Queso sin maduración elaborado con leche pasteurizada'],
+            ['name' => 'Queso andino',         'description' => 'Queso semi-madurado típico de la sierra peruana'],
+            ['name' => 'Queso paria',          'description' => 'Queso semi-duro tradicional de la región altiplánica'],
+            ['name' => 'Queso mozzarella',     'description' => 'Queso de pasta hilada para uso gastronómico'],
+            ['name' => 'Yogurt natural',       'description' => 'Leche fermentada sin saborizantes artificiales'],
+            ['name' => 'Yogurt frutado',       'description' => 'Leche fermentada con pulpa o saborizante de fruta'],
+            ['name' => 'Mantequilla',          'description' => 'Grasa láctea obtenida del batido de crema de leche'],
+            ['name' => 'Manjar blanco',        'description' => 'Dulce de leche concentrado elaborado artesanalmente'],
+            ['name' => 'Leche pasteurizada',   'description' => 'Leche entera sometida a tratamiento térmico'],
+            ['name' => 'Crema de leche',       'description' => 'Nata fresca con alto contenido graso'],
         ];
 
         foreach ($items as $item) {
@@ -218,6 +226,80 @@ class DairySeeder extends Seeder
 
         foreach ($items as $item) {
             Supply::create($item);
+        }
+    }
+
+    private function seedInvestmentCategories(): void
+    {
+        $items = [
+            // Activo Fijo
+            ['name' => 'Terrenos e Infraestructura',  'group' => 'fixed_asset',     'sort_order' => 10],
+            ['name' => 'Maquinaria y Equipo',          'group' => 'fixed_asset',     'sort_order' => 20],
+            ['name' => 'Herramientas y Equipamiento',  'group' => 'fixed_asset',     'sort_order' => 30],
+            ['name' => 'Muebles y Enseres',            'group' => 'fixed_asset',     'sort_order' => 40],
+            // Capital de Trabajo
+            ['name' => 'Trámites y Licencias',         'group' => 'working_capital', 'sort_order' => 50],
+            ['name' => 'Materia Prima / Mercadería',   'group' => 'working_capital', 'sort_order' => 60],
+            ['name' => 'Mano de Obra',                 'group' => 'working_capital', 'sort_order' => 70],
+            ['name' => 'Costos Directos',              'group' => 'working_capital', 'sort_order' => 80],
+            ['name' => 'Costos Indirectos',            'group' => 'working_capital', 'sort_order' => 90],
+            ['name' => 'Gastos Administrativos',       'group' => 'working_capital', 'sort_order' => 100],
+            ['name' => 'Gastos de Ventas',             'group' => 'working_capital', 'sort_order' => 110],
+            ['name' => 'Impuestos',                    'group' => 'working_capital', 'sort_order' => 120],
+        ];
+
+        foreach ($items as $item) {
+            InvestmentCategory::create($item);
+        }
+    }
+
+    private function seedAssetCatalog(): void
+    {
+        $terrenos      = InvestmentCategory::where('name', 'Terrenos e Infraestructura')->first()?->id;
+        $maquinaria    = InvestmentCategory::where('name', 'Maquinaria y Equipo')->first()?->id;
+        $herramientas  = InvestmentCategory::where('name', 'Herramientas y Equipamiento')->first()?->id;
+        $muebles       = InvestmentCategory::where('name', 'Muebles y Enseres')->first()?->id;
+
+        $items = [
+            // Terrenos e Infraestructura
+            ['investment_category_id' => $terrenos,     'name' => 'Terreno para planta',            'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $terrenos,     'name' => 'Construcción de planta',          'useful_life_years' => 33,   'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Cerco perimétrico',               'useful_life_years' => 20,   'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Pozo de agua',                    'useful_life_years' => 20,   'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Sistema eléctrico',               'useful_life_years' => 15,   'depreciation_method' => 'straight_line'],
+
+            // Maquinaria y Equipo
+            ['investment_category_id' => $maquinaria,   'name' => 'Tina quesera 500 lt',  'brand' => 'INDUTEC',   'model' => 'TQ-500', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Tina quesera 1000 lt', 'brand' => 'INDUTEC',   'model' => 'TQ-1000','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Prensa de queso',      'brand' => 'INOXLAC',   'model' => 'PQ-20',  'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Descremadora',         'brand' => 'Westfalia', 'model' => 'MSE-150','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Pasteurizador',        'brand' => 'GEA',       'model' => 'P-300',  'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Yogurtera',            'brand' => 'INOXLAC',   'model' => 'YG-200', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Cámara de refrigeración','brand' => 'Bohn',      'model' => 'CR-15M3','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Caldero de vapor',     'brand' => 'Continental','model' => 'CV-50',  'useful_life_years' => 15, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Generador eléctrico',  'brand' => 'Honda',     'model' => 'EM-7000','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+
+            // Herramientas y Equipamiento
+            ['investment_category_id' => $herramientas, 'name' => 'Moldes de queso',                'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Termómetro industrial',          'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Baldes y paletas de acero inox', 'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Liras de corte de cuajada',      'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Bomba de trasiego',              'useful_life_years' => 8, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Selladora al vacío',             'useful_life_years' => 8, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Balanza electrónica',            'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+
+            // Muebles y Enseres
+            ['investment_category_id' => $muebles,      'name' => 'Mesa de trabajo acero inoxidable', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Estantería de maduración',         'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Escritorio de oficina',            'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Silla de oficina',                 'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Computadora de escritorio',        'useful_life_years' => 4,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Impresora multifuncional',         'useful_life_years' => 4,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Archivador metálico',              'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+        ];
+
+        foreach ($items as $item) {
+            AssetCatalog::create($item);
         }
     }
 }

@@ -4,7 +4,7 @@ use App\Modules\Learning\Instructor\Catalog\Program\Http\Controllers\ProgramCont
 use App\Modules\Learning\Instructor\Catalog\Program\Http\Controllers\ProgramCourseController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:api'])->prefix('/programs')->group(function () {
+Route::middleware(['auth:api'])->prefix('/learning/instructor/programs')->group(function () {
     Route::post('/data-table', [ProgramController::class, 'dataTable']);
     Route::get('/get/{id}', [ProgramController::class, 'getById']);
     Route::post('/save', [ProgramController::class, 'save']);

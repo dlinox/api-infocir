@@ -85,4 +85,9 @@ class Plant extends Model
     {
         return $this->hasMany(PlantProduct::class);
     }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(PlantGallery::class);
+    }
 }

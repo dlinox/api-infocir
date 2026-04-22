@@ -13,6 +13,11 @@ class ProductionBatch extends Model
 
     protected $table = 'dairy_production_batches';
 
+    public array $searchColumns = [
+        'dairy_production_batches.batch_code',
+        'dairy_production_batches.observations',
+    ];
+
     protected $fillable = [
         'plant_id',
         'batch_code',

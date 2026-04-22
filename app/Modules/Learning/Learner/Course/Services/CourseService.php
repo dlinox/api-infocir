@@ -15,6 +15,39 @@ class CourseService
         private LearnerContext $learnerContext,
     ) {}
 
+    public function getCatalog(): array
+    {
+        $workerId = $this->learnerContext->workerId();
+
+        $enrolledCourseIds = Enrollment::where('worker_id', $workerId)
+            ->where('enrollable_type', 'learning_courses')
+            ->pluck('enrollable_id')
+            ->toArray();
+
+        $courses = Course::where('status', 'published')
+            ->with(['area:id,name', 'coverImageFile'])
+            ->withCount('modules')
+            ->orderBy('name')
+            ->get();
+
+        return $courses->map(function (Course $course) use ($enrolledCourseIds) {
+            return [
+                'id'           => $course->id,
+                'name'         => $course->name,
+                'description'  => $course->description,
+                'durationMin'  => $course->duration_min,
+                'area'         => $course->area ? ['id' => $course->area->id, 'name' => $course->area->name] : null,
+                'coverImage'   => $course->coverImageFile ? [
+                    'id'       => $course->coverImageFile->id,
+                    'url'      => $course->coverImageFile->url,
+                    'filename' => $course->coverImageFile->filename,
+                ] : null,
+                'modulesCount' => $course->modules_count,
+                'isEnrolled'   => in_array($course->id, $enrolledCourseIds, true),
+            ];
+        })->values()->all();
+    }
+
     public function getContent(int $enrollmentId): array
     {
         $workerId = $this->learnerContext->workerId();
@@ -101,9 +134,11 @@ class CourseService
                             'hint'     => $q->hint,
                             'order'    => $q->order,
                             'options'  => $q->options->map(fn ($o) => [
-                                'id'    => $o->id,
-                                'text'  => $o->text,
-                                'order' => $o->order,
+                                'id'          => $o->id,
+                                'text'        => $o->text,
+                                'order'       => $o->order,
+                                'isCorrect'   => (bool) $o->is_correct,
+                                'explanation' => $o->explanation,
                             ])->values(),
                         ])->values(),
                     ];

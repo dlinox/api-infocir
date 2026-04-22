@@ -12,6 +12,13 @@ class CourseController
         private CourseService $courseService,
     ) {}
 
+    public function catalog(): JsonResponse
+    {
+        $courses = $this->courseService->getCatalog();
+
+        return ApiResponse::success($courses);
+    }
+
     public function content(int $enrollmentId): JsonResponse
     {
         $data = $this->courseService->getContent($enrollmentId);

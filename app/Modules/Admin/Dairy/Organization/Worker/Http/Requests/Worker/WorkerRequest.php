@@ -38,6 +38,7 @@ class WorkerRequest extends ApiFormRequest
             'position_id'               => 'nullable|integer|exists:dairy_positions,id',
             'instruction_degree_id'     => 'nullable|integer|exists:core_instruction_degrees,id',
             'profession_id'             => 'nullable|integer|exists:core_professions,id',
+            'monthly_salary'            => 'required|numeric|min:0',
             'is_active'                 => 'required|boolean',
         ];
     }
@@ -57,8 +58,9 @@ class WorkerRequest extends ApiFormRequest
             'role_id.exists'                   => 'El :attribute seleccionado no existe.',
             'position_id.exists'               => 'El :attribute seleccionado no existe.',
             'instruction_degree_id.exists'     => 'El :attribute seleccionado no existe.',
-            'profession_id.exists'             => 'La :attribute seleccionada no existe.',
-            'is_active.required'               => 'El campo :attribute es requerido.',
+            'profession_id.exists'             => 'La :attribute seleccionada no existe.',            'monthly_salary.required'          => 'El :attribute es obligatorio.',
+            'monthly_salary.numeric'           => 'El :attribute debe ser un número.',
+            'monthly_salary.min'               => 'El :attribute no puede ser negativo.',            'is_active.required'               => 'El campo :attribute es requerido.',
         ];
     }
 
@@ -81,6 +83,7 @@ class WorkerRequest extends ApiFormRequest
             'position_id'              => 'Cargo',
             'instruction_degree_id'    => 'Grado de instrucción',
             'profession_id'            => 'Profesión',
+            'monthly_salary'           => 'salario mensual',
             'is_active'                => 'Estado',
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Learning\Instructor\Dashboard\Services;
 
+use App\Models\Behavior\BehaviorProfile;
 use App\Models\Core\Profile;
 use App\Models\Learning\Certification;
 use App\Models\Learning\Course;
@@ -94,9 +95,11 @@ class DashboardService
 
     private function getInstructorId(): int
     {
-        $profileId = $this->authService->getProfileIdFromToken();
+        $behaviorProfileId = $this->authService->getProfileIdFromToken();
 
-        $profile = Profile::findOrFail($profileId);
+        $behaviorProfile = BehaviorProfile::findOrFail($behaviorProfileId);
+
+        $profile = Profile::findOrFail($behaviorProfile->core_profile_id);
 
         return $profile->profileable_id;
     }

@@ -35,6 +35,7 @@ class WorkerDataTableItemResource extends JsonResource
                 'id'   => $this->profession->id,
                 'name' => $this->profession->name,
             ] : null,
+            'monthlySalary' => (float) $this->monthly_salary,
             'isActive' => $this->is_active,
         ];
     }

@@ -14,6 +14,8 @@ use App\Modules\Admin\Setting\Http\Controllers\UnitMeasureController;
 use App\Modules\Admin\Setting\Http\Controllers\SupplyController;
 use App\Modules\Admin\Setting\Http\Controllers\AreaController;
 use App\Modules\Admin\Setting\Http\Controllers\TrainingTypeController;
+use App\Modules\Admin\Setting\Http\Controllers\InvestmentCategoryController;
+use App\Modules\Admin\Setting\Http\Controllers\AssetCatalogController;
 
 Route::middleware(['auth:api'])->prefix('/genders')->group(function () {
     Route::post('/data-table', [GenderController::class, 'dataTable'])->name('genders.dataTable');
@@ -104,4 +106,18 @@ Route::middleware(['auth:api'])->prefix('/training-types')->group(function () {
     Route::post('/save', [TrainingTypeController::class, 'save'])->name('training-types.save');
     Route::delete('/delete/{id}', [TrainingTypeController::class, 'delete'])->name('training-types.delete');
     Route::get('/select-items', [TrainingTypeController::class, 'getSelectItems'])->name('training-types.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/investment-categories')->group(function () {
+    Route::post('/data-table', [InvestmentCategoryController::class, 'dataTable'])->name('investment-categories.dataTable');
+    Route::post('/save', [InvestmentCategoryController::class, 'save'])->name('investment-categories.save');
+    Route::delete('/delete/{id}', [InvestmentCategoryController::class, 'delete'])->name('investment-categories.delete');
+    Route::get('/select-items', [InvestmentCategoryController::class, 'getSelectItems'])->name('investment-categories.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/asset-catalog')->group(function () {
+    Route::post('/data-table', [AssetCatalogController::class, 'dataTable'])->name('asset-catalog.dataTable');
+    Route::post('/save', [AssetCatalogController::class, 'save'])->name('asset-catalog.save');
+    Route::delete('/delete/{id}', [AssetCatalogController::class, 'delete'])->name('asset-catalog.delete');
+    Route::get('/select-items', [AssetCatalogController::class, 'getSelectItems'])->name('asset-catalog.selectItems');
 });

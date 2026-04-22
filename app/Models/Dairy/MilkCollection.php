@@ -14,6 +14,13 @@ class MilkCollection extends Model
 
     protected $table = 'dairy_milk_collections';
 
+    public array $searchColumns = [
+        'dairy_milk_collections.observations',
+        'dairy_suppliers.name',
+        'dairy_suppliers.trade_name',
+        'dairy_suppliers.document_number',
+    ];
+
     protected $fillable = [
         'plant_id',
         'supplier_id',
@@ -25,6 +32,7 @@ class MilkCollection extends Model
         'latitude',
         'longitude',
         'file_id',
+        'payment_status',
         'observations',
         'created_by',
     ];

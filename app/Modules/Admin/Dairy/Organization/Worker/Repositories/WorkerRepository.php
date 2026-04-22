@@ -32,6 +32,30 @@ class WorkerRepository
         return $query->dataTable($request);
     }
 
+    public function dataTableForEntity($request, int $entityId)
+    {
+        $query = Worker::query()
+            ->select(
+                'dairy_workers.*',
+                'core_persons.document_type as person_document_type',
+                'core_persons.document_number as person_document_number',
+                'core_persons.name as person_name',
+                'core_persons.paternal_surname as person_paternal_surname',
+                'core_persons.maternal_surname as person_maternal_surname',
+                'core_persons.cellphone as person_cellphone',
+                'core_persons.email as person_email',
+            )
+            ->join('core_persons', 'core_persons.id', '=', 'dairy_workers.person_id')
+            ->with(['position', 'instructionDegree', 'profession'])
+            ->where('dairy_workers.entity_id', $entityId);
+
+        if (empty($request->sortBy) || !isset($request->sortBy)) {
+            $query->orderBy('dairy_workers.person_id', 'desc');
+        }
+
+        return $query->dataTable($request);
+    }
+
     public function findByPersonId(int $personId): Worker
     {
         $worker = Worker::where('person_id', $personId)

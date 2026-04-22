@@ -27,6 +27,8 @@ class Enrollment extends Model
         'enrollable_id' => 'integer',
         'worker_id'     => 'integer',
         'progress'      => 'float',
+        'enrolled_at'   => 'datetime',
+        'completed_at'  => 'datetime',
     ];
 
     public function enrollable(): MorphTo

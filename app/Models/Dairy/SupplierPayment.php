@@ -12,6 +12,13 @@ class SupplierPayment extends Model
 
     protected $table = 'dairy_supplier_payments';
 
+    public array $searchColumns = [
+        'dairy_supplier_payments.observations',
+        'dairy_suppliers.name',
+        'dairy_suppliers.trade_name',
+        'dairy_suppliers.document_number',
+    ];
+
     protected $fillable = [
         'plant_id',
         'supplier_id',

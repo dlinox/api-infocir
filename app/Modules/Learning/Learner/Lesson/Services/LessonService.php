@@ -26,17 +26,6 @@ class LessonService
         $enrollment = $this->getEnrollment($enrollmentId);
         $lesson = $this->validateLessonInEnrollment($lessonId, $enrollment);
 
-        if ($lesson->has_quiz) {
-            $passed = QuizAttempt::where('enrollment_id', $enrollment->id)
-                ->where('lesson_id', $lesson->id)
-                ->where('passed', true)
-                ->exists();
-
-            if (!$passed) {
-                throw new ApiException('Debes aprobar el cuestionario antes de completar esta lección.', 422);
-            }
-        }
-
         LessonProgress::updateOrCreate(
             ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
             ['completed' => true, 'completed_at' => now()],
@@ -138,19 +127,16 @@ class LessonService
             return $attempt;
         });
 
-        if ($passed) {
-            LessonProgress::updateOrCreate(
-                ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
-                ['completed' => true, 'completed_at' => now()],
-            );
-            $this->recalculateProgress($enrollment);
-        }
+        LessonProgress::updateOrCreate(
+            ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
+            ['completed' => true, 'completed_at' => now()],
+        );
+        $this->recalculateProgress($enrollment);
 
         return [
             'attemptId'   => $attempt->id,
             'score'       => $score,
-            'passed'      => $passed,
-            'passingScore'=> (float) $lesson->passing_score,
+            'passed'      => true,
             'correct'     => $correct,
             'total'       => $questions->count(),
             'results'     => $results,

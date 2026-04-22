@@ -41,6 +41,15 @@ return [
             'report'     => false,
         ],
 
+        'dairy' => [
+            'driver'     => 'local',
+            'root'       => storage_path('app/public/dairy'),
+            'url'        => rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage/dairy',
+            'visibility' => 'public',
+            'throw'      => true,
+            'report'     => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

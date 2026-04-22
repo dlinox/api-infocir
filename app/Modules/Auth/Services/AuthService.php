@@ -13,6 +13,8 @@ use App\Common\Exceptions\ApiException;
 use App\Models\Behavior\BehaviorProfile;
 use App\Models\Core\Entity;
 use App\Models\Core\Profile as CoreProfile;
+use App\Models\Dairy\Plant;
+use App\Models\Dairy\Supplier;
 use App\Models\Dairy\Worker;
 
 use App\Modules\Auth\Repositories\Actions\SignInAction;
@@ -149,6 +151,50 @@ class AuthService
             'id'   => $entityable->id,
             'name' => $name,
         ];
+    }
+
+    /**
+     * Get the authenticated plant. Throws if entity is not a plant.
+     */
+    public function getMyPlantId(): int
+    {
+        $entity = $this->getMyEntity();
+        if ($entity['type'] !== 'plant') {
+            throw new ApiException('La entidad autenticada no es una planta', 403);
+        }
+        return $entity['id'];
+    }
+
+    /**
+     * Get the authenticated supplier. Throws if entity is not a supplier.
+     */
+    public function getMySupplierId(): int
+    {
+        $entity = $this->getMyEntity();
+        if ($entity['type'] !== 'supplier') {
+            throw new ApiException('La entidad autenticada no es un proveedor', 403);
+        }
+        return $entity['id'];
+    }
+
+    /**
+     * Get the core_entities.id of the authenticated worker (works for plant or supplier)
+     */
+    public function getMyEntityId(): int
+    {
+        $profileId = $this->getProfileIdFromToken();
+        if (!$profileId) throw new ApiException("No se encontró el perfil", 401);
+
+        $behaviorProfile = BehaviorProfile::find($profileId);
+        if (!$behaviorProfile) throw new ApiException("Perfil no encontrado", 404);
+
+        $coreProfile = CoreProfile::find($behaviorProfile->core_profile_id);
+        if (!$coreProfile) throw new ApiException("Perfil core no encontrado", 404);
+
+        $worker = Worker::where('person_id', $coreProfile->profileable_id)->first();
+        if (!$worker) throw new ApiException("No tiene trabajador asignado", 404);
+
+        return (int) $worker->entity_id;
     }
 
     /**

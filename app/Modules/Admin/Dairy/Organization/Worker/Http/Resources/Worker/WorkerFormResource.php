@@ -36,6 +36,7 @@ class WorkerFormResource extends JsonResource
             'positionId'          => $this->position_id,
             'instructionDegreeId' => $this->instruction_degree_id,
             'professionId'        => $this->profession_id,
+            'monthlySalary'       => (float) $this->monthly_salary,
             'isActive'            => $this->is_active,
         ];
     }

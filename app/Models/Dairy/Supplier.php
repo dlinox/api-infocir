@@ -5,6 +5,7 @@ namespace App\Models\Dairy;
 use App\Common\Traits\HasDataTable;
 use App\Common\Traits\HasEntity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
@@ -13,7 +14,7 @@ class Supplier extends Model
     protected $table = 'dairy_suppliers';
 
     public array $searchColumns = [
-        'dairy_suppliers.name',
+        // 'dairy_suppliers.name',
         'dairy_suppliers.trade_name',
         'dairy_suppliers.document_number',
         'dairy_suppliers.cellphone',
@@ -36,6 +37,9 @@ class Supplier extends Model
         'total_cows',
         'cows_in_production',
         'dry_cows',
+        'tank_capacity_liters',
+        'tank_alert_percentage',
+        'reference_price_per_liter',
         'description',
         'is_active',
     ];
@@ -46,8 +50,15 @@ class Supplier extends Model
         'total_cows' => 'integer',
         'cows_in_production' => 'integer',
         'dry_cows' => 'integer',
+        'tank_capacity_liters' => 'decimal:2',
+        'tank_alert_percentage' => 'integer',
+        'reference_price_per_liter' => 'decimal:4',
         'is_active' => 'boolean',
     ];
 
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(SupplierGallery::class);
+    }
 }
 

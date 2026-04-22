@@ -70,6 +70,7 @@ class CreateOrUpdateWorkerAction
             'position_id'          => $data['position_id'] ?? null,
             'instruction_degree_id' => $data['instruction_degree_id'] ?? null,
             'profession_id'        => $data['profession_id'] ?? null,
+            'monthly_salary'       => $data['monthly_salary'],
             'is_active'            => $data['is_active'] ?? true,
         ]);
 
@@ -102,6 +103,7 @@ class CreateOrUpdateWorkerAction
             'position_id'          => $data['position_id'] ?? null,
             'instruction_degree_id' => $data['instruction_degree_id'] ?? null,
             'profession_id'        => $data['profession_id'] ?? null,
+            'monthly_salary'       => $data['monthly_salary'],
             'is_active'            => $data['is_active'] ?? true,
         ]);
 

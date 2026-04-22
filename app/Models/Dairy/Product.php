@@ -51,4 +51,9 @@ class Product extends Model
     {
         return $this->hasManyThrough(ProductPresentation::class, PlantProduct::class);
     }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(ProductGallery::class);
+    }
 }

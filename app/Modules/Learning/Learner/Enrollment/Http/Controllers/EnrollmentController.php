@@ -6,6 +6,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Learning\Learner\Enrollment\Http\Resources\Enrollment\EnrollmentListResource;
 use App\Modules\Learning\Learner\Enrollment\Services\EnrollmentService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class EnrollmentController
 {
@@ -18,6 +19,14 @@ class EnrollmentController
         $enrollments = $this->enrollmentService->list();
 
         return ApiResponse::success(EnrollmentListResource::collection($enrollments));
+    }
+
+    public function selfEnroll(Request $request): JsonResponse
+    {
+        $courseId = (int) $request->input('courseId');
+        $enrollment = $this->enrollmentService->selfEnroll($courseId);
+
+        return ApiResponse::success(new EnrollmentListResource($enrollment), 'Matriculación exitosa.');
     }
 
     public function getById(int $id): JsonResponse

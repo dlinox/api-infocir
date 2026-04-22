@@ -18,4 +18,11 @@ class CertificationController
 
         return ApiResponse::success($data);
     }
+
+    public function preview(int $id): JsonResponse
+    {
+        $data = $this->certificationService->getPreview($id);
+
+        return ApiResponse::success($data);
+    }
 }

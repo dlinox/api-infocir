@@ -13,7 +13,7 @@ class ProductPresentationRepository
             ->with(['unitMeasure', 'plantProduct.product']);
 
         if (!empty($request->filters['plant_id'])) {
-            $query->whereHas('plantProduct', fn ($q) => $q->where('plant_id', $request->filters['plant_id']));
+            $query->whereHas('plantProduct', fn ($q) => $q->where('dairy_plant_products.plant_id', $request->filters['plant_id']));
         }
 
         if (!empty($request->filters['plant_product_id'])) {
@@ -27,6 +27,12 @@ class ProductPresentationRepository
         if (empty($request->sortBy) || !isset($request->sortBy)) {
             $query->orderBy('id', 'desc');
         }
+
+        // Exclude manually-handled filters so HasDataTable::scopeFilter does not
+        // re-apply them as plain WHERE clauses on dairy_product_presentations.
+        $handledFilters = ['plant_id', 'plant_product_id', 'is_active'];
+        $remainingFilters = array_diff_key($request->filters ?? [], array_flip($handledFilters));
+        $request->merge(['filters' => $remainingFilters]);
 
         return $query->dataTable($request);
     }

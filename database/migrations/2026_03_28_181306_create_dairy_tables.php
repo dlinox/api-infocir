@@ -144,6 +144,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('total_cows')->default(0);
             $table->unsignedSmallInteger('cows_in_production')->default(0);
             $table->unsignedSmallInteger('dry_cows')->default(0);
+            $table->decimal('tank_capacity_liters', 10, 2)->nullable();
+            $table->unsignedTinyInteger('tank_alert_percentage')->nullable();
+            $table->decimal('reference_price_per_liter', 10, 4)->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -267,13 +270,48 @@ return new class extends Migration
         Schema::create('dairy_plant_galeries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plant_id');
-            $table->string('image_path', 255);
+            $table->unsignedBigInteger('file_id');
             $table->string('caption', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('core_files')->onDelete('cascade');
             $table->index('plant_id');
+            $table->index('file_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_supplier_galeries', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('file_id');
+            $table->string('caption', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('core_files')->onDelete('cascade');
+            $table->index('supplier_id');
+            $table->index('file_id');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_product_galeries', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('presentation_id')->nullable();
+            $table->unsignedBigInteger('file_id');
+            $table->string('caption', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('dairy_products')->onDelete('cascade');
+            $table->foreign('presentation_id')->references('id')->on('dairy_product_presentations')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('core_files')->onDelete('cascade');
+            $table->index('product_id');
+            $table->index('presentation_id');
+            $table->index('file_id');
             $table->index('is_active');
         });
 
@@ -283,6 +321,7 @@ return new class extends Migration
             $table->unsignedBigInteger('position_id')->nullable();
             $table->unsignedBigInteger('instruction_degree_id')->nullable();
             $table->unsignedBigInteger('profession_id')->nullable();
+            $table->decimal('monthly_salary', 10, 2)->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
@@ -311,6 +350,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->unsignedBigInteger('file_id')->nullable();
+            $table->enum('payment_status', ['pending', 'paid', 'cancelled'])->default('pending');
             $table->text('observations')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
@@ -325,6 +365,7 @@ return new class extends Migration
             $table->index('collection_date');
             $table->index('shift');
             $table->index('file_id');
+            $table->index('payment_status');
         });
 
         Schema::create('dairy_milk_quality_tests', function (Blueprint $table) {
@@ -422,10 +463,12 @@ return new class extends Migration
         Schema::dropIfExists('dairy_milk_collections');
         Schema::dropIfExists('dairy_suppliers');
         Schema::dropIfExists('dairy_workers');
+        Schema::dropIfExists('dairy_supplier_galeries');
         Schema::dropIfExists('dairy_plant_galeries');
         Schema::dropIfExists('dairy_stock_movements');
         Schema::dropIfExists('dairy_product_prices');
         Schema::dropIfExists('dairy_product_formulas');
+        Schema::dropIfExists('dairy_product_galeries');
         Schema::dropIfExists('dairy_product_presentations');
         Schema::dropIfExists('dairy_plant_products');
         Schema::dropIfExists('dairy_products');

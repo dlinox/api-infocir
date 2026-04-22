@@ -49,4 +49,9 @@ class ProductPresentation extends Model
     {
         return $this->hasMany(ProductFormula::class, 'presentation_id');
     }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(ProductGallery::class, 'presentation_id');
+    }
 }
