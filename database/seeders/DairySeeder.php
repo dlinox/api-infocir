@@ -237,8 +237,9 @@ class DairySeeder extends Seeder
             ['name' => 'Maquinaria y Equipo',          'group' => 'fixed_asset',     'sort_order' => 20],
             ['name' => 'Herramientas y Equipamiento',  'group' => 'fixed_asset',     'sort_order' => 30],
             ['name' => 'Muebles y Enseres',            'group' => 'fixed_asset',     'sort_order' => 40],
+            // Gastos Pre-Operativos
+            ['name' => 'Gastos Pre-Operativos',        'group' => 'pre_operative',   'sort_order' => 50],
             // Capital de Trabajo
-            ['name' => 'Trámites y Licencias',         'group' => 'working_capital', 'sort_order' => 50],
             ['name' => 'Materia Prima / Mercadería',   'group' => 'working_capital', 'sort_order' => 60],
             ['name' => 'Mano de Obra',                 'group' => 'working_capital', 'sort_order' => 70],
             ['name' => 'Costos Directos',              'group' => 'working_capital', 'sort_order' => 80],
@@ -246,6 +247,7 @@ class DairySeeder extends Seeder
             ['name' => 'Gastos Administrativos',       'group' => 'working_capital', 'sort_order' => 100],
             ['name' => 'Gastos de Ventas',             'group' => 'working_capital', 'sort_order' => 110],
             ['name' => 'Impuestos',                    'group' => 'working_capital', 'sort_order' => 120],
+            ['name' => 'Depreciación',                 'group' => 'working_capital', 'sort_order' => 130],
         ];
 
         foreach ($items as $item) {
@@ -255,47 +257,108 @@ class DairySeeder extends Seeder
 
     private function seedAssetCatalog(): void
     {
-        $terrenos      = InvestmentCategory::where('name', 'Terrenos e Infraestructura')->first()?->id;
-        $maquinaria    = InvestmentCategory::where('name', 'Maquinaria y Equipo')->first()?->id;
-        $herramientas  = InvestmentCategory::where('name', 'Herramientas y Equipamiento')->first()?->id;
-        $muebles       = InvestmentCategory::where('name', 'Muebles y Enseres')->first()?->id;
+        $terrenos     = InvestmentCategory::where('name', 'Terrenos e Infraestructura')->first()?->id;
+        $maquinaria   = InvestmentCategory::where('name', 'Maquinaria y Equipo')->first()?->id;
+        $herramientas = InvestmentCategory::where('name', 'Herramientas y Equipamiento')->first()?->id;
+        $muebles      = InvestmentCategory::where('name', 'Muebles y Enseres')->first()?->id;
+        $preOp        = InvestmentCategory::where('name', 'Gastos Pre-Operativos')->first()?->id;
+        $materiaP     = InvestmentCategory::where('name', 'Materia Prima / Mercadería')->first()?->id;
+        $manoObra     = InvestmentCategory::where('name', 'Mano de Obra')->first()?->id;
+        $costosDirect = InvestmentCategory::where('name', 'Costos Directos')->first()?->id;
+        $costosIndir  = InvestmentCategory::where('name', 'Costos Indirectos')->first()?->id;
+        $gastosAdmin  = InvestmentCategory::where('name', 'Gastos Administrativos')->first()?->id;
+        $gastosVentas = InvestmentCategory::where('name', 'Gastos de Ventas')->first()?->id;
+        $impuestos    = InvestmentCategory::where('name', 'Impuestos')->first()?->id;
+        $depreciacion = InvestmentCategory::where('name', 'Depreciación')->first()?->id;
 
         $items = [
             // Terrenos e Infraestructura
-            ['investment_category_id' => $terrenos,     'name' => 'Terreno para planta',            'useful_life_years' => null, 'depreciation_method' => null],
-            ['investment_category_id' => $terrenos,     'name' => 'Construcción de planta',          'useful_life_years' => 33,   'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $terrenos,     'name' => 'Cerco perimétrico',               'useful_life_years' => 20,   'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $terrenos,     'name' => 'Pozo de agua',                    'useful_life_years' => 20,   'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $terrenos,     'name' => 'Sistema eléctrico',               'useful_life_years' => 15,   'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Adecuación de local industrial',         'useful_life_years' => 20, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Instalaciones eléctricas',               'useful_life_years' => 15, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Instalaciones de agua y vapor',          'useful_life_years' => 15, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $terrenos,     'name' => 'Acondicionamiento frío',                 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
 
             // Maquinaria y Equipo
-            ['investment_category_id' => $maquinaria,   'name' => 'Tina quesera 500 lt',  'brand' => 'INDUTEC',   'model' => 'TQ-500', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Tina quesera 1000 lt', 'brand' => 'INDUTEC',   'model' => 'TQ-1000','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Prensa de queso',      'brand' => 'INOXLAC',   'model' => 'PQ-20',  'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Descremadora',         'brand' => 'Westfalia', 'model' => 'MSE-150','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Pasteurizador',        'brand' => 'GEA',       'model' => 'P-300',  'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Yogurtera',            'brand' => 'INOXLAC',   'model' => 'YG-200', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Cámara de refrigeración','brand' => 'Bohn',      'model' => 'CR-15M3','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Caldero de vapor',     'brand' => 'Continental','model' => 'CV-50',  'useful_life_years' => 15, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $maquinaria,   'name' => 'Generador eléctrico',  'brand' => 'Honda',     'model' => 'EM-7000','useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Pasteurizador tubular HTST',             'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Tina quesera de doble fondo',            'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Descremadora centrífuga',                'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Moldes de queso y prensas',              'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Mantequilladora industrial',             'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Incubadora / fermentadora',              'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Envasadora al vacío',                    'useful_life_years' => 8,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $maquinaria,   'name' => 'Balanza de precisión electrónica',       'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
 
             // Herramientas y Equipamiento
-            ['investment_category_id' => $herramientas, 'name' => 'Moldes de queso',                'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Termómetro industrial',          'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Baldes y paletas de acero inox', 'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Liras de corte de cuajada',      'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Bomba de trasiego',              'useful_life_years' => 8, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Selladora al vacío',             'useful_life_years' => 8, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $herramientas, 'name' => 'Balanza electrónica',            'useful_life_years' => 5, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Cámara de frío modular',                 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Cuarto de maduración',                   'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Etiquetadora semiautomática',            'useful_life_years' => 8,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Utensilios inox',                        'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Tanque de almacenamiento de leche',      'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Equipo de limpieza CIP',                 'useful_life_years' => 8,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Termómetros y pH-metros',                'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $herramientas, 'name' => 'Indumentaria BPM',                       'useful_life_years' => 2,  'depreciation_method' => 'straight_line'],
 
             // Muebles y Enseres
-            ['investment_category_id' => $muebles,      'name' => 'Mesa de trabajo acero inoxidable', 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Estantería de maduración',         'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Escritorio de oficina',            'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Silla de oficina',                 'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Computadora de escritorio',        'useful_life_years' => 4,  'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Impresora multifuncional',         'useful_life_years' => 4,  'depreciation_method' => 'straight_line'],
-            ['investment_category_id' => $muebles,      'name' => 'Archivador metálico',              'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Escritorio administrativo',              'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Sillas',                                 'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Estantería metálica',                    'useful_life_years' => 10, 'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Computadora + impresora + UPS',          'useful_life_years' => 4,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Botiquín y extintor',                    'useful_life_years' => 5,  'depreciation_method' => 'straight_line'],
+            ['investment_category_id' => $muebles,      'name' => 'Uniformes corporativos',                 'useful_life_years' => 2,  'depreciation_method' => 'straight_line'],
+
+            // Gastos Pre-Operativos
+            ['investment_category_id' => $preOp,        'name' => 'Trámites de constitución y licencias',   'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Registro sanitario (DIGESA/SENASA)',      'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Certificación BPM y HACCP',              'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Diseño de marca y etiquetas',            'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Capacitación inicial del personal',      'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Estudio de factibilidad',                'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Gastos notariales y legales',            'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $preOp,        'name' => 'Publicidad y lanzamiento',               'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Materia Prima / Mercadería
+            ['investment_category_id' => $materiaP,     'name' => 'Leche fresca',                           'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $materiaP,     'name' => 'Cuajo y cultivos lácticos',              'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $materiaP,     'name' => 'Sal, azúcar y conservantes',             'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $materiaP,     'name' => 'Envases y empaques',                     'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $materiaP,     'name' => 'Pulpa de fruta',                         'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Mano de Obra
+            ['investment_category_id' => $manoObra,     'name' => 'Operarios de producción',                'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $manoObra,     'name' => 'Maestro quesero',                        'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $manoObra,     'name' => 'Técnico de laboratorio',                 'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $manoObra,     'name' => 'Personal de limpieza',                   'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Costos Directos
+            ['investment_category_id' => $costosDirect, 'name' => 'Energía eléctrica',                      'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $costosDirect, 'name' => 'Agua',                                   'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $costosDirect, 'name' => 'Combustible / GLP',                      'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $costosDirect, 'name' => 'Transporte de insumos',                  'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Costos Indirectos
+            ['investment_category_id' => $costosIndir,  'name' => 'Mantenimiento de equipos',               'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $costosIndir,  'name' => 'Seguros',                                'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $costosIndir,  'name' => 'Alquiler de local',                      'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Gastos Administrativos
+            ['investment_category_id' => $gastosAdmin,  'name' => 'Sueldos administrativos',                'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $gastosAdmin,  'name' => 'Útiles de oficina',                      'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $gastosAdmin,  'name' => 'Comunicaciones (internet, teléfono)',     'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $gastosAdmin,  'name' => 'Contabilidad y asesoría legal',          'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Gastos de Ventas
+            ['investment_category_id' => $gastosVentas, 'name' => 'Publicidad y marketing',                 'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $gastosVentas, 'name' => 'Transporte de distribución',             'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $gastosVentas, 'name' => 'Comisiones de ventas',                   'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Impuestos
+            ['investment_category_id' => $impuestos,    'name' => 'IGV',                                    'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $impuestos,    'name' => 'Impuesto a la Renta',                    'useful_life_years' => null, 'depreciation_method' => null],
+
+            // Depreciación
+            ['investment_category_id' => $depreciacion, 'name' => 'Depreciación de maquinaria',             'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $depreciacion, 'name' => 'Depreciación de infraestructura',        'useful_life_years' => null, 'depreciation_method' => null],
+            ['investment_category_id' => $depreciacion, 'name' => 'Depreciación de equipos de oficina',     'useful_life_years' => null, 'depreciation_method' => null],
         ];
 
         foreach ($items as $item) {

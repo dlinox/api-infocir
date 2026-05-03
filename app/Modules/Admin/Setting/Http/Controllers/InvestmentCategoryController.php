@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Setting\Http\Requests\InvestmentCategory\InvestmentCategoryRequest;
 use App\Modules\Admin\Setting\Http\Resources\InvestmentCategory\InvestmentCategoryDataTableItemResource;
+use App\Modules\Admin\Setting\Http\Resources\InvestmentCategory\InvestmentCategorySelectItemResource;
 use App\Modules\Admin\Setting\Services\InvestmentCategoryService;
 
 class InvestmentCategoryController
@@ -37,6 +38,6 @@ class InvestmentCategoryController
     public function getSelectItems()
     {
         $items = $this->investmentCategoryService->getSelectItems();
-        return ApiResponse::success(InvestmentCategoryDataTableItemResource::collection($items));
+        return ApiResponse::success(InvestmentCategorySelectItemResource::collection($items));
     }
 }

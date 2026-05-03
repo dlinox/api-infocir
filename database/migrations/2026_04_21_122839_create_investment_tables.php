@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('dairy_investment_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
-            $table->enum('group', ['fixed_asset', 'working_capital'])->default('fixed_asset');
+            $table->enum('group', ['fixed_asset', 'working_capital', 'pre_operative'])->default('fixed_asset');
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
 

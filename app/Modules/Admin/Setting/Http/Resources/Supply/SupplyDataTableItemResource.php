@@ -18,6 +18,7 @@ class SupplyDataTableItemResource extends JsonResource
             ] : null,
             'description' => $this->description,
             'isActive'    => $this->is_active,
+            'isPrimary'   => $this->is_primary,
         ];
     }
 }

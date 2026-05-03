@@ -10,13 +10,15 @@ class ProductFormResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'productTypeId' => $this->product_type_id,
-            'createdBy' => $this->created_by,
-            'isActive' => $this->is_active,
-            'plantsCount' => $this->plant_products_count ?? 0,
+            'id'                => $this->id,
+            'name'              => $this->name,
+            'description'       => $this->description,
+            'productTypeId'     => $this->product_type_id,
+            'createdBy'         => $this->created_by,
+            'isActive'          => $this->is_active,
+            'containsMilk'      => $this->contains_milk,
+            'milkLitersPerUnit' => $this->milk_liters_per_unit,
+            'plantsCount'       => $this->plant_products_count ?? 0,
             'presentationsCount' => $this->presentations_count ?? 0,
         ];
     }

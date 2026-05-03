@@ -13,8 +13,10 @@ class InvestmentPlan extends Model
 
     protected $fillable = [
         'entity_id',
+        'plan_type',
         'name',
         'period_year',
+        'period_month',
         'status',
         'total_amount',
         'notes',
@@ -22,6 +24,7 @@ class InvestmentPlan extends Model
 
     protected $casts = [
         'period_year'  => 'integer',
+        'period_month' => 'integer',
         'total_amount' => 'decimal:2',
     ];
 

@@ -15,6 +15,7 @@ class SupplyRequest extends ApiFormRequest
             'unit_measure_id'  => 'nullable|integer|exists:core_unit_measures,id',
             'description'      => 'nullable|string|max:255',
             'is_active'        => 'required|boolean',
+            'is_primary'       => 'required|boolean',
         ];
     }
 
@@ -30,6 +31,8 @@ class SupplyRequest extends ApiFormRequest
             'description.max'          => 'La :attribute no debe exceder los :max caracteres.',
             'is_active.required'       => 'El :attribute es requerido.',
             'is_active.boolean'        => 'El :attribute debe ser verdadero o falso.',
+            'is_primary.required'      => 'El :attribute es requerido.',
+            'is_primary.boolean'       => 'El :attribute debe ser verdadero o falso.',
         ];
     }
 
@@ -41,6 +44,7 @@ class SupplyRequest extends ApiFormRequest
             'unit_measure_id' => 'Unidad de medida',
             'description'     => 'Descripción',
             'is_active'       => 'Estado',
+            'is_primary'      => 'Insumo principal',
         ];
     }
 }

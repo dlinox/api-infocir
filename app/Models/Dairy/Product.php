@@ -21,10 +21,14 @@ class Product extends Model
         'product_type_id',
         'created_by',
         'is_active',
+        'contains_milk',
+        'milk_liters_per_unit',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active'            => 'boolean',
+        'contains_milk'        => 'boolean',
+        'milk_liters_per_unit' => 'decimal:3',
     ];
 
     public static $searchColumns = [

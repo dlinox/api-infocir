@@ -20,12 +20,14 @@ class Supply extends Model
         'unit_measure_id',
         'description',
         'is_active',
+        'is_primary',
     ];
 
     protected $casts = [
         'unit_measure_id' => 'integer',
-        'created_by' => 'integer',
-        'is_active' => 'boolean',
+        'created_by'      => 'integer',
+        'is_active'       => 'boolean',
+        'is_primary'      => 'boolean',
     ];
 
     public static $searchColumns = [

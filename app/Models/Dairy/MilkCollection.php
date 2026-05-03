@@ -24,6 +24,7 @@ class MilkCollection extends Model
     protected $fillable = [
         'plant_id',
         'supplier_id',
+        'collection_route_id',
         'collection_date',
         'shift',
         'quantity_liters',
@@ -64,5 +65,10 @@ class MilkCollection extends Model
     public function qualityTest(): HasOne
     {
         return $this->hasOne(MilkQualityTest::class);
+    }
+
+    public function collectionRoute(): BelongsTo
+    {
+        return $this->belongsTo(CollectionRoute::class);
     }
 }

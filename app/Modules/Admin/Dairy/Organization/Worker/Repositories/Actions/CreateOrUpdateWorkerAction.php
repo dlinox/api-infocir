@@ -83,8 +83,11 @@ class CreateOrUpdateWorkerAction
         $workerRole = Role::where('name', Worker::ROLE_NAME)->firstOrFail();
         $this->profileRepository->create($userId, $workerRole->id, $coreProfile->id);
 
-        if (!empty($data['role_id']) && $data['role_id'] !== $workerRole->id) {
-            $this->profileRepository->create($userId, $data['role_id'], $coreProfile->id);
+        $positionRoleId = !empty($data['position_id'])
+            ? \App\Models\Dairy\Position::find($data['position_id'])?->role_id
+            : null;
+        if ($positionRoleId && $positionRoleId !== $workerRole->id) {
+            $this->profileRepository->create($userId, $positionRoleId, $coreProfile->id);
         }
 
         return $worker;
@@ -110,11 +113,14 @@ class CreateOrUpdateWorkerAction
         $coreProfile = Profile::where('person_id', $person->id)
             ->where('profileable_type', 'dairy_workers')
             ->first();
-        if ($coreProfile && !empty($data['role_id'])) {
+        $positionRoleId = !empty($data['position_id'])
+            ? \App\Models\Dairy\Position::find($data['position_id'])?->role_id
+            : null;
+        if ($coreProfile && $positionRoleId) {
             $workerRoleId = Role::where('name', Worker::ROLE_NAME)->value('id');
             BehaviorProfile::where('core_profile_id', $coreProfile->id)
                 ->where('role_id', '!=', $workerRoleId)
-                ->update(['role_id' => $data['role_id']]);
+                ->update(['role_id' => $positionRoleId]);
         }
 
         $userId = $this->findExistingUserId($person->id);

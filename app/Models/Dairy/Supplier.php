@@ -5,6 +5,7 @@ namespace App\Models\Dairy;
 use App\Common\Traits\HasDataTable;
 use App\Common\Traits\HasEntity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
@@ -59,6 +60,13 @@ class Supplier extends Model
     public function galleries(): HasMany
     {
         return $this->hasMany(SupplierGallery::class);
+    }
+
+    public function plants(): BelongsToMany
+    {
+        return $this->belongsToMany(Plant::class, 'dairy_plant_suppliers')
+            ->withPivot('is_active', 'price_per_liter')
+            ->withTimestamps();
     }
 }
 

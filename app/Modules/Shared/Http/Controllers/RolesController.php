@@ -9,9 +9,12 @@ class RolesController
 {
     public function selectItems()
     {
-        $scope = request()->query('scope');
+        $scopesRaw = request()->query('scopes');
+        $scopes    = $scopesRaw ? explode(',', $scopesRaw) : [];
+        $level     = request()->query('level');
 
-        $roles = Role::when($scope, fn($q) => $q->where('scope', $scope))
+        $roles = Role::when(!empty($scopes), fn($q) => $q->whereIn('scope', $scopes))
+            ->when(!is_null($level), fn($q) => $q->where('level', $level))
             ->where('is_active', true)
             ->orderBy('display_name')
             ->get(['id', 'display_name'])

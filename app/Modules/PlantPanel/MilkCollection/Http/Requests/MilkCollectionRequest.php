@@ -9,8 +9,9 @@ class MilkCollectionRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'id'              => ['nullable', 'integer'],
-            'supplier_id'     => ['required', 'integer', 'exists:dairy_suppliers,id'],
+            'id'                  => ['nullable', 'integer'],
+            'collection_route_id' => ['nullable', 'integer', 'exists:dairy_collection_routes,id'],
+            'supplier_id'         => ['required', 'integer', 'exists:dairy_suppliers,id'],
             'collection_date' => ['required', 'date'],
             'shift'           => ['required', 'in:morning,afternoon'],
             'quantity_liters' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],

@@ -32,7 +32,6 @@ class WorkerFormResource extends JsonResource
                 'dairy_suppliers' => 'supplier',
                 default           => null,
             },
-            'roleId'             => $this->behavior_role_id,
             'positionId'          => $this->position_id,
             'instructionDegreeId' => $this->instruction_degree_id,
             'professionId'        => $this->profession_id,

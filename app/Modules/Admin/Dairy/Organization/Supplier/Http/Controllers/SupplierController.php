@@ -40,5 +40,11 @@ class SupplierController
         $this->supplierService->delete((int) $id);
         return ApiResponse::success(null, 'Proveedor eliminado correctamente');
     }
+
+    public function getSelectItems()
+    {
+        $items = $this->supplierService->getSelectItems();
+        return ApiResponse::success($items);
+    }
 }
 

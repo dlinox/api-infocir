@@ -14,21 +14,30 @@ class InvestmentPlanController
         private InvestmentPlanService $service,
     ) {}
 
-    public function getCurrent(): JsonResponse
+    public function getWorkingCapital(int $year, int $month): JsonResponse
     {
-        $plan = $this->service->getCurrent();
-        return ApiResponse::success(new InvestmentPlanResource($plan));
+        return ApiResponse::success(new InvestmentPlanResource($this->service->getWorkingCapital($year, $month)));
     }
 
     public function save(InvestmentPlanRequest $request): JsonResponse
     {
         $plan = $this->service->save($request->validated());
-        return ApiResponse::success(new InvestmentPlanResource($plan), 'Plan guardado correctamente');
+        return ApiResponse::success(new InvestmentPlanResource($plan), 'Gastos del mes guardados correctamente');
     }
 
-    public function approve(int $id): JsonResponse
+    public function copyPreviousMonth(int $year, int $month): JsonResponse
     {
-        $plan = $this->service->approve($id);
-        return ApiResponse::success(new InvestmentPlanResource($plan), 'Plan aprobado correctamente');
+        $plan = $this->service->copyPreviousMonth($year, $month);
+        return ApiResponse::success(new InvestmentPlanResource($plan), 'Gastos del mes anterior copiados');
+    }
+
+    public function getWorkingCapitalWorkers(): JsonResponse
+    {
+        return ApiResponse::success($this->service->getWorkingCapitalWorkers());
+    }
+
+    public function getSummary(): JsonResponse
+    {
+        return ApiResponse::success($this->service->getSummary((int) date('Y')));
     }
 }

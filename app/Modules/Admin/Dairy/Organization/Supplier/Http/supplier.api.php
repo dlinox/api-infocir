@@ -9,6 +9,7 @@ Route::middleware(['auth:api'])->prefix('/suppliers')->group(function () {
     Route::get('/get/{id}', [SupplierController::class, 'getById'])->name('suppliers.getById');
     Route::post('/save', [SupplierController::class, 'save'])->name('suppliers.save');
     Route::delete('/delete/{id}', [SupplierController::class, 'delete'])->name('suppliers.delete');
+    Route::get('/select-items', [SupplierController::class, 'getSelectItems'])->name('suppliers.selectItems');
 });
 
 Route::middleware(['auth:api'])->prefix('/supplier-galleries')->group(function () {

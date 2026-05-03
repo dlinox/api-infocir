@@ -83,9 +83,14 @@ class MilkCollectionService
 
     public function getSupplierSelectItems(): array
     {
-        return Supplier::where('is_active', true)
-            ->orderBy('name')
-            ->get(['id', 'name', 'trade_name'])
+        $plantId = $this->authService->getMyPlantId();
+
+        return Supplier::where('dairy_suppliers.is_active', true)
+            ->join('dairy_plant_suppliers', 'dairy_plant_suppliers.supplier_id', '=', 'dairy_suppliers.id')
+            ->where('dairy_plant_suppliers.plant_id', $plantId)
+            ->where('dairy_plant_suppliers.is_active', true)
+            ->orderBy('dairy_suppliers.name')
+            ->get(['dairy_suppliers.id', 'dairy_suppliers.name', 'dairy_suppliers.trade_name'])
             ->map(fn ($s) => [
                 'value' => $s->id,
                 'title' => $s->trade_name ?: $s->name,

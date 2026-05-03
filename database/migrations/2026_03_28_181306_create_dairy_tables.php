@@ -158,6 +158,22 @@ return new class extends Migration
             $table->index('is_active');
         });
 
+        Schema::create('dairy_plant_suppliers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('supplier_id');
+            $table->decimal('price_per_liter', 10, 4)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->unique(['plant_id', 'supplier_id']);
+            $table->index('plant_id');
+            $table->index('supplier_id');
+            $table->index('is_active');
+        });
+
         Schema::create('dairy_products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
@@ -338,10 +354,35 @@ return new class extends Migration
             $table->index('is_active');
         });
 
+        Schema::create('dairy_collection_routes', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('collector_id');
+            $table->timestamp('started_at')->useCurrent();
+            $table->timestamp('ended_at')->nullable();
+            $table->decimal('start_latitude', 10, 7)->nullable();
+            $table->decimal('start_longitude', 10, 7)->nullable();
+            $table->decimal('end_latitude', 10, 7)->nullable();
+            $table->decimal('end_longitude', 10, 7)->nullable();
+            $table->decimal('initial_mileage', 10, 2)->nullable();
+            $table->decimal('final_mileage', 10, 2)->nullable();
+            $table->enum('status', ['active', 'completed'])->default('active');
+            $table->text('observations')->nullable();
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('collector_id')->references('id')->on('auth_users')->onDelete('cascade');
+            $table->index('plant_id');
+            $table->index('collector_id');
+            $table->index('status');
+            $table->index('started_at');
+        });
+
         Schema::create('dairy_milk_collections', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plant_id');
             $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('collection_route_id')->nullable();
             $table->date('collection_date');
             $table->enum('shift', ['morning', 'afternoon'])->default('morning');
             $table->decimal('quantity_liters', 10, 2);
@@ -357,6 +398,7 @@ return new class extends Migration
 
             $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
             $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->foreign('collection_route_id')->references('id')->on('dairy_collection_routes')->onDelete('set null');
             $table->foreign('file_id')->references('id')->on('core_files')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
             $table->unique(['plant_id', 'supplier_id', 'collection_date', 'shift'], 'dairy_milk_collections_unique');
@@ -461,6 +503,8 @@ return new class extends Migration
         Schema::dropIfExists('dairy_production_batches');
         Schema::dropIfExists('dairy_milk_quality_tests');
         Schema::dropIfExists('dairy_milk_collections');
+        Schema::dropIfExists('dairy_collection_routes');
+        Schema::dropIfExists('dairy_plant_suppliers');
         Schema::dropIfExists('dairy_suppliers');
         Schema::dropIfExists('dairy_workers');
         Schema::dropIfExists('dairy_supplier_galeries');

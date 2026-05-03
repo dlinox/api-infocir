@@ -27,6 +27,7 @@ class MeResource extends JsonResource
             'email' => $this->email,
             'name' => $person?->full_name ?? $this->username,
             'role' => $role?->display_name ?? null,
+            'roleSlug' => $role?->name ?? null,
             'permissions' => $permissions,
             'isActive' => $this->is_active,
         ];

@@ -13,6 +13,7 @@ class InvestmentItem extends Model
         'plan_id',
         'investment_category_id',
         'name',
+        'recurrence_type',
         'unit_value',
         'quantity',
         'total',

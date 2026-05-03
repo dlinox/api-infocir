@@ -7,6 +7,7 @@ use App\Common\Traits\HasEntity;
 use App\Models\Core\City;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Plant extends Model
@@ -89,5 +90,12 @@ class Plant extends Model
     public function galleries(): HasMany
     {
         return $this->hasMany(PlantGallery::class);
+    }
+
+    public function suppliers(): BelongsToMany
+    {
+        return $this->belongsToMany(Supplier::class, 'dairy_plant_suppliers')
+            ->withPivot('is_active', 'price_per_liter')
+            ->withTimestamps();
     }
 }

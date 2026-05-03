@@ -45,6 +45,10 @@ class MilkCollectionRepository
         $data['price_per_liter'] = $pricePerLiter;
         $data['total_amount'] = round((float) $data['quantity_liters'] * $pricePerLiter, 2);
 
+        if (!empty($data['collection_route_id'])) {
+            $data['collection_route_id'] = $data['collection_route_id'];
+        }
+
         if (!empty($data['id'])) {
             $collection = MilkCollection::where('id', $data['id'])->where('plant_id', $plantId)->firstOrFail();
             $collection->update($data);

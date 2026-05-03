@@ -41,7 +41,7 @@ class RoleSeeder extends Seeder
             [
                 'name'         => 'plant_collector',
                 'display_name' => 'Acopiador de planta',
-                'redirect_to'  => '/m/pl',
+                'redirect_to'  => '/m/co',
                 'level'        => '2',
                 'scope'        => 'plant',
                 'is_active'    => true,

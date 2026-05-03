@@ -8,25 +8,29 @@ use Illuminate\Support\Facades\DB;
 
 class InvestmentPlanRepository
 {
-    public function findCurrentForEntity(int $entityId): ?InvestmentPlan
+    public function getOrCreateWorkingCapital(int $entityId, int $year, int $month): InvestmentPlan
     {
-        return InvestmentPlan::where('entity_id', $entityId)
-            ->orderByRaw("CASE WHEN status = 'draft' THEN 0 ELSE 1 END")
-            ->orderBy('period_year', 'desc')
-            ->orderBy('id', 'desc')
+        $plan = InvestmentPlan::where('entity_id', $entityId)
+            ->where('plan_type', 'working_capital')
+            ->where('period_year', $year)
+            ->where('period_month', $month)
             ->with(['items.category'])
+            ->orderBy('id', 'desc')
             ->first();
-    }
 
-    public function createForEntity(int $entityId, int $year): InvestmentPlan
-    {
-        return InvestmentPlan::create([
-            'entity_id'    => $entityId,
-            'name'         => "Plan de Inversión {$year}",
-            'period_year'  => $year,
-            'status'       => 'draft',
-            'total_amount' => 0,
-        ]);
+        if (!$plan) {
+            $plan = InvestmentPlan::create([
+                'entity_id'    => $entityId,
+                'plan_type'    => 'working_capital',
+                'period_year'  => $year,
+                'period_month' => $month,
+                'status'       => 'draft',
+                'total_amount' => 0,
+            ]);
+            $plan->setRelation('items', collect());
+        }
+
+        return $plan;
     }
 
     public function save(int $entityId, array $data): InvestmentPlan
@@ -36,15 +40,13 @@ class InvestmentPlanRepository
                 ? InvestmentPlan::where('id', $data['id'])->where('entity_id', $entityId)->firstOrFail()
                 : new InvestmentPlan(['entity_id' => $entityId]);
 
-            if ($plan->status === 'approved') {
-                throw new \App\Common\Exceptions\ApiException('El plan ya fue aprobado y no puede modificarse', 422);
-            }
-
             $plan->fill([
-                'entity_id'   => $entityId,
-                'name'        => $data['name'],
-                'period_year' => $data['period_year'],
-                'notes'       => $data['notes'] ?? null,
+                'entity_id'    => $entityId,
+                'plan_type'    => 'working_capital',
+                'period_year'  => $data['period_year'],
+                'period_month' => $data['period_month'] ?? null,
+                'notes'        => $data['notes'] ?? null,
+                'status'       => 'draft',
             ]);
 
             $items = $data['items'] ?? [];
@@ -63,6 +65,7 @@ class InvestmentPlanRepository
                     'plan_id'                => $plan->id,
                     'investment_category_id' => $item['investment_category_id'],
                     'name'                   => $item['name'],
+                    'recurrence_type'        => $item['recurrence_type'] ?? 'one_time',
                     'unit_value'             => $item['unit_value'],
                     'quantity'               => $item['quantity'],
                     'total'                  => round((float) $item['unit_value'] * (float) $item['quantity'], 2),
@@ -74,10 +77,23 @@ class InvestmentPlanRepository
         });
     }
 
-    public function approve(int $entityId, int $planId): InvestmentPlan
+    /**
+     * Devuelve el plan inmediatamente anterior al (year,month) dado.
+     */
+    public function findPreviousWorkingCapital(int $entityId, int $year, int $month): ?InvestmentPlan
     {
-        $plan = InvestmentPlan::where('id', $planId)->where('entity_id', $entityId)->firstOrFail();
-        $plan->update(['status' => 'approved']);
-        return $plan->fresh(['items.category']);
+        return InvestmentPlan::where('entity_id', $entityId)
+            ->where('plan_type', 'working_capital')
+            ->where(function ($q) use ($year, $month) {
+                $q->where('period_year', '<', $year)
+                  ->orWhere(function ($q2) use ($year, $month) {
+                      $q2->where('period_year', $year)
+                         ->where('period_month', '<', $month);
+                  });
+            })
+            ->with(['items'])
+            ->orderBy('period_year', 'desc')
+            ->orderBy('period_month', 'desc')
+            ->first();
     }
 }

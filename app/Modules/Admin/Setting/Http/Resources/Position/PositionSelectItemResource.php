@@ -9,8 +9,9 @@ class PositionSelectItemResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'title' => $this->name,
-            'value' => $this->id,
+            'title'    => $this->name,
+            'value'    => $this->id,
+            'subtitle' => $this->role?->display_name,
         ];
     }
 }
