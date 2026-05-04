@@ -2,6 +2,7 @@
 
 namespace App\Modules\PlantPanel\ProductionBatch\Repositories;
 
+use App\Models\Dairy\Plant;
 use App\Models\Dairy\ProductionBatch;
 use App\Models\Dairy\StockMovement;
 use Illuminate\Support\Facades\DB;
@@ -39,30 +40,35 @@ class ProductionBatchRepository
     public function createOrUpdate(array $data, int $plantId): ProductionBatch
     {
         $data['plant_id'] = $plantId;
-        if (isset($data['quantity_liters_used']) && isset($data['quantity_kg']) && $data['quantity_liters_used'] > 0) {
-            $data['yield_ratio'] = round(((float) $data['quantity_kg'] / (float) $data['quantity_liters_used']) * 100, 2);
-        }
 
-        $suppliers = $data['suppliers'] ?? [];
-        unset($data['suppliers']);
-
-        return DB::transaction(function () use ($data, $plantId, $suppliers) {
+        return DB::transaction(function () use ($data, $plantId) {
             if (!empty($data['id'])) {
                 $batch = ProductionBatch::where('id', $data['id'])->where('plant_id', $plantId)->firstOrFail();
                 $batch->update($data);
             } else {
+                $data['batch_code'] = $this->generateBatchCode($plantId, $data['production_date']);
                 $batch = ProductionBatch::create($data);
             }
 
-            $sync = collect($suppliers)
-                ->mapWithKeys(fn ($s) => [
-                    (int) $s['supplier_id'] => ['quantity_liters' => (float) $s['quantity_liters']],
-                ])
-                ->all();
-            $batch->suppliers()->sync($sync);
-
             return $batch;
         });
+    }
+
+    private function generateBatchCode(int $plantId, string $productionDate): string
+    {
+        $plant = Plant::findOrFail($plantId);
+        $type  = $plant->type; // 'A', 'B' o 'C'
+        $date  = str_replace('-', '', $productionDate); // YYYYMMDD
+
+        $prefix = sprintf('%s%03d-%s-', $type, $plantId, $date);
+
+        $last = ProductionBatch::where('batch_code', 'like', $prefix . '%')
+            ->lockForUpdate()
+            ->max('batch_code');
+
+        $seq = $last ? ((int) substr($last, -3)) + 1 : 1;
+
+        return $prefix . str_pad($seq, 3, '0', STR_PAD_LEFT);
     }
 
     public function delete(int $id, int $plantId): void
@@ -71,9 +77,9 @@ class ProductionBatchRepository
         $batch->delete();
     }
 
-    public function markReady(int $id, int $plantId): ProductionBatch
+    public function markReady(int $id, int $plantId, ?int $finalQuantity = null, ?string $notes = null): ProductionBatch
     {
-        return DB::transaction(function () use ($id, $plantId) {
+        return DB::transaction(function () use ($id, $plantId, $finalQuantity, $notes) {
             $batch = ProductionBatch::with('presentation')
                 ->where('id', $id)
                 ->where('plant_id', $plantId)
@@ -84,22 +90,21 @@ class ProductionBatchRepository
                 abort(422, 'El lote no tiene una presentación asignada.');
             }
 
-            $content = (float) ($batch->presentation->content ?? 0);
-            $units   = $content > 0
-                ? (int) floor((float) $batch->quantity_kg / $content)
-                : (int) $batch->quantity_kg;
+            $update = ['status' => 'ready'];
+            if ($finalQuantity !== null) $update['quantity_units'] = $finalQuantity;
+            if ($notes) $update['observations'] = $notes;
+            $batch->update($update);
+            $batch->refresh();
 
             StockMovement::create([
                 'presentation_id' => $batch->presentation_id,
                 'plant_id'        => $plantId,
                 'type'            => 'entry',
-                'quantity'        => $units,
+                'quantity'        => (int) $batch->quantity_units,
                 'batch_code'      => $batch->batch_code,
                 'expiration_date' => $batch->maturation_end_date,
                 'reason'          => 'Ingreso por producción — Lote ' . $batch->batch_code,
             ]);
-
-            $batch->update(['status' => 'ready']);
 
             return $batch->fresh();
         });

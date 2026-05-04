@@ -26,8 +26,8 @@ class InvestmentCategoryService
         return $this->investmentCategoryRepository->delete($id);
     }
 
-    public function getSelectItems()
+    public function getSelectItems(?string $group = null)
     {
-        return $this->investmentCategoryRepository->getSelectItems();
+        return $this->investmentCategoryRepository->getSelectItems($group);
     }
 }

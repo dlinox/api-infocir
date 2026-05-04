@@ -7,6 +7,34 @@ use App\Models\Dairy\Supplier;
 
 class MilkCollectionRepository
 {
+    public function dailySummary(string $date, int $plantId): array
+    {
+        $collections = MilkCollection::query()
+            ->join('dairy_suppliers', 'dairy_suppliers.id', '=', 'dairy_milk_collections.supplier_id')
+            ->where('dairy_milk_collections.plant_id', $plantId)
+            ->where('dairy_milk_collections.collection_date', $date)
+            ->select([
+                'dairy_suppliers.id as supplier_id',
+                'dairy_suppliers.name as supplier_name',
+                'dairy_suppliers.trade_name as supplier_trade_name',
+                'dairy_milk_collections.shift',
+                'dairy_milk_collections.quantity_liters',
+            ])
+            ->orderBy('dairy_suppliers.name')
+            ->get();
+
+        return [
+            'date'        => $date,
+            'totalLiters' => round((float) $collections->sum('quantity_liters'), 2),
+            'suppliers'   => $collections->map(fn ($c) => [
+                'supplierId'   => $c->supplier_id,
+                'supplierName' => $c->supplier_trade_name ?: $c->supplier_name,
+                'shift'        => $c->shift,
+                'liters'       => (float) $c->quantity_liters,
+            ])->values()->toArray(),
+        ];
+    }
+
     public function dataTable($request, int $plantId)
     {
         $query = MilkCollection::query()

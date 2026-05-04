@@ -15,6 +15,12 @@ class MilkCollectionController
         private MilkCollectionService $service,
     ) {}
 
+    public function dailySummary(Request $request)
+    {
+        $date = $request->query('date', now()->toDateString());
+        return ApiResponse::success($this->service->dailySummary($date));
+    }
+
     public function dataTable(Request $request)
     {
         $items = $this->service->dataTable($request);

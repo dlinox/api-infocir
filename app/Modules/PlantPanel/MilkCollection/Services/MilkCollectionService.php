@@ -21,6 +21,12 @@ class MilkCollectionService
         private FileService $fileService,
     ) {}
 
+    public function dailySummary(string $date): array
+    {
+        $plantId = $this->authService->getMyPlantId();
+        return $this->repository->dailySummary($date, $plantId);
+    }
+
     public function dataTable(Request $request)
     {
         $plantId = $this->authService->getMyPlantId();

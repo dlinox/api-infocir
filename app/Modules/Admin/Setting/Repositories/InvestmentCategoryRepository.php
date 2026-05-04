@@ -35,11 +35,14 @@ class InvestmentCategoryRepository
         return $category;
     }
 
-    public function getSelectItems()
+    public function getSelectItems(?string $group = null)
     {
-        return InvestmentCategory::where('is_active', true)
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+        $query = InvestmentCategory::where('is_active', true);
+
+        if ($group !== null) {
+            $query->where('group', $group);
+        }
+
+        return $query->orderBy('sort_order')->orderBy('name')->get();
     }
 }

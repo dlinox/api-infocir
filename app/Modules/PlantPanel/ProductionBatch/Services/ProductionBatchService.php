@@ -42,18 +42,24 @@ class ProductionBatchService
         $this->repository->delete($id, $plantId);
     }
 
-    public function cancel(int $id): void
+    public function cancel(int $id, ?string $notes = null, ?string $rejectionType = null, bool $ingredientsConsumed = false): void
     {
         $plantId = $this->authService->getMyPlantId();
         $batch = $this->repository->findByIdForPlant($id, $plantId);
         if (!$batch) throw new ApiException('Lote no encontrado', 404);
-        $batch->update(['status' => 'rejected']);
+        $update = [
+            'status'               => 'rejected',
+            'ingredients_consumed' => $ingredientsConsumed,
+        ];
+        if ($notes) $update['observations'] = $notes;
+        if ($rejectionType) $update['rejection_type'] = $rejectionType;
+        $batch->update($update);
     }
 
-    public function markReady(int $id): void
+    public function markReady(int $id, ?int $finalQuantity = null, ?string $notes = null): void
     {
         $plantId = $this->authService->getMyPlantId();
-        $this->repository->markReady($id, $plantId);
+        $this->repository->markReady($id, $plantId, $finalQuantity, $notes);
     }
 
     public function getSupplierSelectItems(): array

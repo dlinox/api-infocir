@@ -45,6 +45,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100)->unique();
             $table->string('description', 255)->nullable();
+            $table->json('entity_type')->nullable();
+            $table->foreignId('role_id')->nullable()->constrained('behavior_roles')->nullOnDelete();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
@@ -66,6 +68,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unit_measure_id')->nullable();
             $table->string('description', 255)->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_primary')->default(false);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
@@ -74,6 +77,7 @@ return new class extends Migration
             $table->index('name');
             $table->index('unit_measure_id');
             $table->index('is_active');
+            $table->index('is_primary');
         });
 
         Schema::create('dairy_plants', function (Blueprint $table) {
@@ -182,6 +186,8 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
 
             $table->boolean('is_active')->default(true);
+            $table->boolean('contains_milk')->default(false);
+            $table->decimal('milk_liters_per_unit', 8, 3)->nullable();
             $table->timestamps();
 
             $table->foreign('product_type_id')->references('id')->on('dairy_product_types')->onDelete('set null');
@@ -434,14 +440,14 @@ return new class extends Migration
             $table->unsignedBigInteger('plant_id');
             $table->string('batch_code', 30)->unique();
             $table->date('production_date');
-            $table->decimal('quantity_liters_used', 10, 2);
-            $table->decimal('quantity_kg', 10, 2);
-            $table->decimal('yield_ratio', 5, 2)->nullable();
+            $table->unsignedInteger('quantity_units')->default(0);
             $table->enum('status', ['in_production', 'maturing', 'ready', 'sold', 'rejected'])->default('in_production');
             $table->unsignedBigInteger('presentation_id')->nullable();
             $table->date('maturation_start_date')->nullable();
             $table->date('maturation_end_date')->nullable();
             $table->text('observations')->nullable();
+            $table->string('rejection_type', 60)->nullable();
+            $table->boolean('ingredients_consumed')->default(false);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 

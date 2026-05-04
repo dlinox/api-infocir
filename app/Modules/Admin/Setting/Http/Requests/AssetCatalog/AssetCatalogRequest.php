@@ -12,7 +12,7 @@ class AssetCatalogRequest extends ApiFormRequest
         return [
             'id'                       => 'nullable|integer',
             'investment_category_id'   => 'required|integer|exists:dairy_investment_categories,id',
-            'name'                     => 'required|string|max:100|unique:dairy_asset_catalog,name,' . $id . ',id',
+            'name'                     => 'required|string|max:100|unique:dairy_fixed_asset_catalog,name,' . $id . ',id',
             'brand'                    => 'nullable|string|max:100',
             'model'                    => 'nullable|string|max:100',
             'useful_life_years'        => 'nullable|integer|min:1|max:99',

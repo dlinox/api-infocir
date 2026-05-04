@@ -25,7 +25,7 @@ class DashboardRepository
             ->sum('quantity_liters');
 
         $monthKg = ProductionBatch::whereBetween('production_date', [$monthStart, $monthEnd])
-            ->sum('quantity_kg');
+            ->sum('quantity_units');
 
         $monthlyCollections = MilkCollection::where('collection_date', '>=', now()->subMonths(5)->startOfMonth()->toDateString())
             ->selectRaw("DATE_FORMAT(collection_date, '%Y-%m') as month_key, DATE_FORMAT(collection_date, '%b') as month_name, SUM(quantity_liters) as liters")

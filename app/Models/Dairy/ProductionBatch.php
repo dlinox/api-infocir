@@ -22,24 +22,23 @@ class ProductionBatch extends Model
         'plant_id',
         'batch_code',
         'production_date',
-        'quantity_liters_used',
-        'quantity_kg',
-        'yield_ratio',
+        'quantity_units',
         'status',
         'presentation_id',
         'maturation_start_date',
         'maturation_end_date',
         'observations',
+        'rejection_type',
+        'ingredients_consumed',
         'created_by',
     ];
 
     protected $casts = [
         'production_date' => 'date',
-        'quantity_liters_used' => 'decimal:2',
-        'quantity_kg' => 'decimal:2',
-        'yield_ratio' => 'decimal:2',
+        'quantity_units' => 'integer',
         'maturation_start_date' => 'date',
         'maturation_end_date' => 'date',
+        'ingredients_consumed' => 'boolean',
     ];
 
     public function plant(): BelongsTo

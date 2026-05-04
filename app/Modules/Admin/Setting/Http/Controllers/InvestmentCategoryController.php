@@ -35,9 +35,10 @@ class InvestmentCategoryController
         return ApiResponse::success(null, 'Categoría de inversión eliminada correctamente');
     }
 
-    public function getSelectItems()
+    public function getSelectItems(Request $request)
     {
-        $items = $this->investmentCategoryService->getSelectItems();
+        $group = $request->query('group');
+        $items = $this->investmentCategoryService->getSelectItems($group);
         return ApiResponse::success(InvestmentCategorySelectItemResource::collection($items));
     }
 }

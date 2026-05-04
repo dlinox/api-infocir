@@ -35,8 +35,7 @@ class DashboardRepository
 
         $monthlyKg = ProductionBatch::where('plant_id', $plantId)
             ->whereBetween('production_date', [$monthStart, $monthEnd])
-            ->selectRaw('COALESCE(SUM(quantity_kg), 0) as kg')
-            ->value('kg');
+            ->sum('quantity_units');
 
         $activeSuppliers = MilkCollection::where('plant_id', $plantId)
             ->distinct('supplier_id')

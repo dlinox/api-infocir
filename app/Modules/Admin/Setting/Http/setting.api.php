@@ -16,6 +16,8 @@ use App\Modules\Admin\Setting\Http\Controllers\AreaController;
 use App\Modules\Admin\Setting\Http\Controllers\TrainingTypeController;
 use App\Modules\Admin\Setting\Http\Controllers\InvestmentCategoryController;
 use App\Modules\Admin\Setting\Http\Controllers\AssetCatalogController;
+use App\Modules\Admin\Setting\Http\Controllers\PreOperativeCatalogController;
+use App\Modules\Admin\Setting\Http\Controllers\WorkingCapitalCatalogController;
 
 Route::middleware(['auth:api'])->prefix('/genders')->group(function () {
     Route::post('/data-table', [GenderController::class, 'dataTable'])->name('genders.dataTable');
@@ -120,4 +122,18 @@ Route::middleware(['auth:api'])->prefix('/asset-catalog')->group(function () {
     Route::post('/save', [AssetCatalogController::class, 'save'])->name('asset-catalog.save');
     Route::delete('/delete/{id}', [AssetCatalogController::class, 'delete'])->name('asset-catalog.delete');
     Route::get('/select-items', [AssetCatalogController::class, 'getSelectItems'])->name('asset-catalog.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/pre-operative-catalog')->group(function () {
+    Route::post('/data-table', [PreOperativeCatalogController::class, 'dataTable'])->name('pre-operative-catalog.dataTable');
+    Route::post('/save', [PreOperativeCatalogController::class, 'save'])->name('pre-operative-catalog.save');
+    Route::delete('/delete/{id}', [PreOperativeCatalogController::class, 'delete'])->name('pre-operative-catalog.delete');
+    Route::get('/select-items', [PreOperativeCatalogController::class, 'getSelectItems'])->name('pre-operative-catalog.selectItems');
+});
+
+Route::middleware(['auth:api'])->prefix('/working-capital-catalog')->group(function () {
+    Route::post('/data-table', [WorkingCapitalCatalogController::class, 'dataTable'])->name('working-capital-catalog.dataTable');
+    Route::post('/save', [WorkingCapitalCatalogController::class, 'save'])->name('working-capital-catalog.save');
+    Route::delete('/delete/{id}', [WorkingCapitalCatalogController::class, 'delete'])->name('working-capital-catalog.delete');
+    Route::get('/select-items', [WorkingCapitalCatalogController::class, 'getSelectItems'])->name('working-capital-catalog.selectItems');
 });

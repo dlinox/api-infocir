@@ -40,15 +40,20 @@ class ProductionBatchController
         return ApiResponse::success(null, 'Lote eliminado correctamente');
     }
 
-    public function cancel(string $id)
+    public function cancel(string $id, Request $request)
     {
-        $this->service->cancel((int) $id);
+        $this->service->cancel(
+            (int) $id,
+            $request->input('notes'),
+            $request->input('rejection_type'),
+            (bool) $request->input('ingredients_consumed', false),
+        );
         return ApiResponse::success(null, 'Lote anulado correctamente');
     }
 
-    public function markReady(string $id)
+    public function markReady(string $id, Request $request)
     {
-        $this->service->markReady((int) $id);
+        $this->service->markReady((int) $id, $request->input('final_quantity'), $request->input('notes'));
         return ApiResponse::success(null, 'Lote marcado como listo e ingresado al inventario');
     }
 

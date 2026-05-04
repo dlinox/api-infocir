@@ -3,23 +3,22 @@
 namespace App\Models\Dairy;
 
 use App\Common\Traits\HasDataTable;
+use App\Models\Core\UnitMeasure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AssetCatalog extends Model
+class WorkingCapitalCatalog extends Model
 {
     use HasDataTable;
 
-    protected $table = 'dairy_fixed_asset_catalog';
+    protected $table = 'dairy_working_capital_catalog';
     public $timestamps = false;
 
     protected $fillable = [
         'investment_category_id',
+        'unit_measure_id',
         'name',
-        'brand',
-        'model',
-        'useful_life_years',
-        'depreciation_method',
+        'description',
         'is_active',
     ];
 
@@ -29,11 +28,15 @@ class AssetCatalog extends Model
 
     public static $searchColumns = [
         'name',
-        'brand',
     ];
 
     public function investmentCategory(): BelongsTo
     {
         return $this->belongsTo(InvestmentCategory::class, 'investment_category_id');
+    }
+
+    public function unitMeasure(): BelongsTo
+    {
+        return $this->belongsTo(UnitMeasure::class, 'unit_measure_id');
     }
 }
