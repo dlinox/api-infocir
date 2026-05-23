@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
             CoreSeeder::class,
             RoleSeeder::class,
             SuperAdminSeeder::class,
-            DairySeeder::class,
-            PlantSeeder::class,
-            SupplierSeeder::class,
-            LearningSeeder::class,
-            LearningDataSeeder::class,
+            // DairySeeder::class,
+            // PlantSeeder::class,
+            // SupplierSeeder::class,
+            // LearningSeeder::class,
+            // LearningDataSeeder::class,
         ]);
     }
 }

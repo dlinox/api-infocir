@@ -41,7 +41,7 @@ class CoreSeeder extends Seeder
         ];
 
         foreach ($documentTypes as $docType) {
-            DocumentType::create($docType);
+            DocumentType::create([...$docType, 'is_system' => true]);
         }
     }
 
@@ -55,45 +55,32 @@ class CoreSeeder extends Seeder
         ];
 
         foreach ($genders as $gender) {
-            Gender::create($gender);
+            Gender::create([...$gender, 'is_system' => true]);
         }
     }
 
     private function seedUnitMeasures(): void
     {
         $units = [
-            // Volumen (líquidos y capacidad)
-            ['name' => 'Litro', 'abbreviation' => 'L'],
-            ['name' => 'Mililitro', 'abbreviation' => 'mL'],
-            ['name' => 'Galón', 'abbreviation' => 'gal'],
-
-            // Masa (ingredientes y productos)
-            ['name' => 'Kilogramo', 'abbreviation' => 'kg'],
-            ['name' => 'Gramo', 'abbreviation' => 'g'],
-            ['name' => 'Tonelada métrica', 'abbreviation' => 't'],
-            ['name' => 'Libra', 'abbreviation' => 'lb'],
-            ['name' => 'Arroba', 'abbreviation' => '@'],
-            ['name' => 'Quintal', 'abbreviation' => 'qq'],
-
-            // Temperatura (control de calidad)
-            ['name' => 'Grado Celsius', 'abbreviation' => '°C'],
 
             // Unidades de conteo y empaque
             ['name' => 'Unidad', 'abbreviation' => 'und'],
             ['name' => 'Docena', 'abbreviation' => 'doc'],
             ['name' => 'Caja', 'abbreviation' => 'cja'],
             ['name' => 'Paquete', 'abbreviation' => 'pqt'],
-            ['name' => 'Bolsa', 'abbreviation' => 'bls'],
-            ['name' => 'Bidón', 'abbreviation' => 'bid'],
-            ['name' => 'Tarro', 'abbreviation' => 'tar'],
-            ['name' => 'Poronguito', 'abbreviation' => 'por'],
 
-            // Otras unidades técnicas
-            ['name' => 'Porcentaje', 'abbreviation' => '%'],
+            // Volumen (líquidos y capacidad)
+            ['name' => 'Litro', 'abbreviation' => 'L'],
+            ['name' => 'Mililitro', 'abbreviation' => 'mL'],
+
+            // Masa (ingredientes y productos)
+            ['name' => 'Kilogramo', 'abbreviation' => 'kg'],
+            ['name' => 'Gramo', 'abbreviation' => 'g'],
+
         ];
 
         foreach ($units as $unit) {
-            UnitMeasure::create($unit);
+            UnitMeasure::create([...$unit, 'is_system' => true]);
         }
     }
 }

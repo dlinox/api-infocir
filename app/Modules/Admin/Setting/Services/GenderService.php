@@ -3,7 +3,8 @@
 namespace App\Modules\Admin\Setting\Services;
 
 use Illuminate\Http\Request;
-
+use App\Common\Exceptions\ApiException;
+use App\Models\Core\Gender;
 use App\Modules\Admin\Setting\Repositories\GenderRepository;
 
 class GenderService
@@ -19,12 +20,24 @@ class GenderService
 
     public function save(array $data)
     {
+        unset($data['is_system']);
+
+        $existing = Gender::find($data['code']);
+        if ($existing?->is_system) {
+            throw new ApiException('Este género es del sistema y no puede modificarse.', 422);
+        }
+
         return $this->genderRepository->createOrUpdate($data);
     }
 
-    public function delete(string $id)
+    public function delete(string $code)
     {
-        return $this->genderRepository->delete($id);
+        $record = Gender::findOrFail($code);
+        if ($record->is_system) {
+            throw new ApiException('Este género es del sistema y no puede eliminarse.', 422);
+        }
+
+        return $this->genderRepository->delete($code);
     }
 
     public function getSelectItems()

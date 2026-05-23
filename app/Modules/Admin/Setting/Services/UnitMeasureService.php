@@ -3,6 +3,8 @@
 namespace App\Modules\Admin\Setting\Services;
 
 use Illuminate\Http\Request;
+use App\Common\Exceptions\ApiException;
+use App\Models\Core\UnitMeasure;
 use App\Modules\Admin\Setting\Repositories\UnitMeasureRepository;
 
 class UnitMeasureService
@@ -18,11 +20,25 @@ class UnitMeasureService
 
     public function save(array $data)
     {
+        unset($data['is_system']);
+
+        if (isset($data['id'])) {
+            $existing = UnitMeasure::findOrFail($data['id']);
+            if ($existing->is_system) {
+                throw new ApiException('Esta unidad de medida es del sistema y no puede modificarse.', 422);
+            }
+        }
+
         return $this->unitMeasureRepository->createOrUpdate($data);
     }
 
     public function delete(string $id)
     {
+        $record = UnitMeasure::findOrFail($id);
+        if ($record->is_system) {
+            throw new ApiException('Esta unidad de medida es del sistema y no puede eliminarse.', 422);
+        }
+
         return $this->unitMeasureRepository->delete($id);
     }
 

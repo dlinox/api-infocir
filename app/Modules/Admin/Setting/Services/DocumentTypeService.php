@@ -3,6 +3,8 @@
 namespace App\Modules\Admin\Setting\Services;
 
 use Illuminate\Http\Request;
+use App\Common\Exceptions\ApiException;
+use App\Models\Core\DocumentType;
 use App\Modules\Admin\Setting\Repositories\DocumentTypeRepository;
 
 class DocumentTypeService
@@ -18,12 +20,24 @@ class DocumentTypeService
 
     public function save(array $data)
     {
+        unset($data['is_system']);
+
+        $existing = DocumentType::find($data['code']);
+        if ($existing?->is_system) {
+            throw new ApiException('Este tipo de documento es del sistema y no puede modificarse.', 422);
+        }
+
         return $this->documentTypeRepository->createOrUpdate($data);
     }
 
-    public function delete(string $id)
+    public function delete(string $code)
     {
-        return $this->documentTypeRepository->delete($id);
+        $record = DocumentType::findOrFail($code);
+        if ($record->is_system) {
+            throw new ApiException('Este tipo de documento es del sistema y no puede eliminarse.', 422);
+        }
+
+        return $this->documentTypeRepository->delete($code);
     }
 
     public function getSelectItems()

@@ -19,10 +19,12 @@ class Gender extends Model
         'code',
         'name',
         'is_active',
+        'is_system',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_system' => 'boolean',
     ];
 
     public function persons()

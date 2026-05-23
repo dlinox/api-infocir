@@ -14,6 +14,7 @@ class UnitMeasureDataTableItemResource extends JsonResource
             'name'         => $this->name,
             'abbreviation' => $this->abbreviation,
             'isActive'     => $this->is_active,
+            'isSystem'     => $this->is_system,
         ];
     }
 }

@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('name', 100)->unique();
             $table->string('abbreviation', 20)->unique();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_system')->default(false);
             $table->timestamps();
 
             $table->index('name');
@@ -46,6 +47,7 @@ return new class extends Migration
             $table->char('code', 1)->unique();
             $table->string('name', 100)->unique();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_system')->default(false);
 
             $table->primary('code');
             $table->index('name');
@@ -56,6 +58,7 @@ return new class extends Migration
             $table->char('code', 1)->unique();
             $table->string('name', 100)->unique();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_system')->default(false);
             $table->primary('code');
             $table->index('name');
             $table->index('is_active');

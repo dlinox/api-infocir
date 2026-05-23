@@ -13,6 +13,7 @@ class DocumentTypeDataTableItemResource extends JsonResource
             'code'     => $this->code,
             'name'     => $this->name,
             'isActive' => $this->is_active,
+            'isSystem' => $this->is_system,
         ];
     }
 }

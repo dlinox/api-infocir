@@ -15,10 +15,12 @@ class UnitMeasure extends Model
         'name',
         'abbreviation',
         'is_active',
+        'is_system',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_system' => 'boolean',
     ];
 
     public static $searchColumns = [
