@@ -11,31 +11,31 @@ use App\Modules\Admin\Setting\Services\PreOperativeCatalogService;
 class PreOperativeCatalogController
 {
     public function __construct(
-        private PreOperativeCatalogService $service
+        private PreOperativeCatalogService $preOperativeCatalogService
     ) {}
 
     public function dataTable(Request $request)
     {
-        $items = $this->service->dataTable($request);
+        $items = $this->preOperativeCatalogService->dataTable($request);
         $items['data'] = PreOperativeCatalogDataTableItemResource::collection($items['data']);
         return ApiResponse::success($items);
     }
 
     public function save(PreOperativeCatalogRequest $request)
     {
-        $this->service->save($request->validated());
+        $this->preOperativeCatalogService->save($request->validated());
         return ApiResponse::success(null, 'Catálogo pre-operativo guardado correctamente');
     }
 
     public function delete(string $id)
     {
-        $this->service->delete($id);
+        $this->preOperativeCatalogService->delete($id);
         return ApiResponse::success(null, 'Catálogo pre-operativo eliminado correctamente');
     }
 
     public function getSelectItems()
     {
-        $items = $this->service->getSelectItems();
+        $items = $this->preOperativeCatalogService->getSelectItems();
         return ApiResponse::success(PreOperativeCatalogDataTableItemResource::collection($items));
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\Admin\Dairy\Catalog\Presentation\Http\Controllers\ProductFormulaController;
 
-Route::middleware(['auth:api'])->prefix('/product-formulas')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/product-formulas')->group(function () {
     Route::get('/by-presentation/{presentationId}', [ProductFormulaController::class, 'getByPresentation'])
         ->name('productFormulas.getByPresentation');
     Route::get('/versions/{presentationId}', [ProductFormulaController::class, 'getVersions'])

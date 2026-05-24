@@ -26,7 +26,7 @@ class SupplyController
     {
         $data = $request->validated();
         $this->supplyService->save($data);
-        return ApiResponse::success($data, 'Insumo guardado correctamente');
+        return ApiResponse::success(null, 'Insumo guardado correctamente');
     }
 
     public function delete(string $id)

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\Admin\Dairy\Catalog\Presentation\Http\Controllers\PlantProductController;
 
-Route::middleware(['auth:api'])->prefix('/plant-products')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/plant-products')->group(function () {
     Route::post('/data-table', [PlantProductController::class, 'dataTable'])->name('plantProducts.dataTable');
     Route::get('/get/{id}', [PlantProductController::class, 'get'])->name('plantProducts.get');
     Route::get('/list', [PlantProductController::class, 'list'])->name('plantProducts.list');

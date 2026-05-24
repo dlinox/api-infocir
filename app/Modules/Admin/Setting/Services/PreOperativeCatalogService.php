@@ -8,26 +8,26 @@ use App\Modules\Admin\Setting\Repositories\PreOperativeCatalogRepository;
 class PreOperativeCatalogService
 {
     public function __construct(
-        private PreOperativeCatalogRepository $repository
+        private PreOperativeCatalogRepository $preOperativeCatalogRepository
     ) {}
 
     public function dataTable(Request $request)
     {
-        return $this->repository->dataTable($request);
+        return $this->preOperativeCatalogRepository->dataTable($request);
     }
 
     public function save(array $data)
     {
-        return $this->repository->createOrUpdate($data);
+        return $this->preOperativeCatalogRepository->createOrUpdate($data);
     }
 
     public function delete(string $id)
     {
-        return $this->repository->delete($id);
+        return $this->preOperativeCatalogRepository->delete($id);
     }
 
     public function getSelectItems()
     {
-        return $this->repository->getSelectItems();
+        return $this->preOperativeCatalogRepository->getSelectItems();
     }
 }

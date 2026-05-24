@@ -26,7 +26,7 @@ class InstructionDegreeController
     {
         $data = $request->validated();
         $this->instructionDegreeService->save($data);
-        return ApiResponse::success($data, 'Grado de instrucción guardado correctamente');
+        return ApiResponse::success(null, 'Grado de instrucción guardado correctamente');
     }
 
     public function delete(string $id)

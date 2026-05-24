@@ -26,7 +26,7 @@ class ProductTypeController
     {
         $data = $request->validated();
         $this->productTypeService->save($data);
-        return ApiResponse::success($data, 'Tipo de producto guardado correctamente');
+        return ApiResponse::success(null, 'Tipo de producto guardado correctamente');
     }
 
     public function delete(string $id)

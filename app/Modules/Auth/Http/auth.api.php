@@ -10,7 +10,7 @@ Route::get('auth/google', [AuthController::class, 'googleRedirect']);
 Route::get('auth/google/callback', [AuthController::class, 'googleCallback']);
 
 // Protected routes
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->group(function () {
     Route::get('auth/profiles', [AuthController::class, 'profiles']);
     Route::get('auth/me', [AuthController::class, 'me']);
     Route::get('auth/my-entity', [AuthController::class, 'myEntity']);

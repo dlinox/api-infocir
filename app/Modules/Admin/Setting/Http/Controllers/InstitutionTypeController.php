@@ -26,7 +26,7 @@ class InstitutionTypeController
     {
         $data = $request->validated();
         $this->institutionTypeService->save($data);
-        return ApiResponse::success($data, 'Tipo de institución guardado correctamente');
+        return ApiResponse::success(null, 'Tipo de institución guardado correctamente');
     }
 
     public function delete(string $id)

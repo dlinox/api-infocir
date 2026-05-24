@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\PlantPanel\MilkCollection\Http\Controllers\MilkCollectionController;
 
-Route::middleware(['auth:api'])->prefix('/plant-panel/milk-collections')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/plant-panel/milk-collections')->group(function () {
     Route::get('/daily-summary', [MilkCollectionController::class, 'dailySummary'])->name('plantPanel.milkCollections.dailySummary');
     Route::post('/data-table', [MilkCollectionController::class, 'dataTable'])->name('plantPanel.milkCollections.dataTable');
     Route::get('/get/{id}', [MilkCollectionController::class, 'getById'])->name('plantPanel.milkCollections.getById');

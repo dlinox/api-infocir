@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\PlantPanel\SupplierPayment\Http\Controllers\SupplierPaymentController;
 
-Route::middleware(['auth:api'])->prefix('/plant-panel/supplier-payments')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/plant-panel/supplier-payments')->group(function () {
     Route::post('/data-table', [SupplierPaymentController::class, 'dataTable'])->name('plantPanel.supplierPayments.dataTable');
     Route::get('/get/{id}', [SupplierPaymentController::class, 'getById'])->name('plantPanel.supplierPayments.getById');
     Route::post('/save', [SupplierPaymentController::class, 'save'])->name('plantPanel.supplierPayments.save');

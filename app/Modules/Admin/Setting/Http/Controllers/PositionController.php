@@ -26,7 +26,7 @@ class PositionController
     {
         $data = $request->validated();
         $this->positionService->save($data);
-        return ApiResponse::success($data, 'Cargo guardado correctamente');
+        return ApiResponse::success(null, 'Cargo guardado correctamente');
     }
 
     public function delete(string $id)

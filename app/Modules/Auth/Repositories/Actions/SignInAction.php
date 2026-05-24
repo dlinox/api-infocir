@@ -55,7 +55,8 @@ class SignInAction
             $user->id,
             $profileId,
             $request->ip(),
-            $request->userAgent()
+            $request->userAgent(),
+            $token
         );
 
         return (object)[

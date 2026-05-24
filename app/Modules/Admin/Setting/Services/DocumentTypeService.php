@@ -24,7 +24,8 @@ class DocumentTypeService
 
         $existing = DocumentType::find($data['code']);
         if ($existing?->is_system) {
-            throw new ApiException('Este tipo de documento es del sistema y no puede modificarse.', 422);
+            $existing->update(['is_active' => $data['is_active']]);
+            return $existing;
         }
 
         return $this->documentTypeRepository->createOrUpdate($data);

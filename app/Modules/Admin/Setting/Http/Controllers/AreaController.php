@@ -26,7 +26,7 @@ class AreaController
     {
         $data = $request->validated();
         $this->areaService->save($data);
-        return ApiResponse::success($data, 'Área guardada correctamente');
+        return ApiResponse::success(null, 'Área guardada correctamente');
     }
 
     public function delete(string $id)

@@ -26,7 +26,7 @@ class ProfessionController
     {
         $data = $request->validated();
         $this->professionService->save($data);
-        return ApiResponse::success($data, 'Profesión guardada correctamente');
+        return ApiResponse::success(null, 'Profesión guardada correctamente');
     }
 
     public function delete(string $id)

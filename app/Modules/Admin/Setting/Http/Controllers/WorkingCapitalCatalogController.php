@@ -11,31 +11,31 @@ use App\Modules\Admin\Setting\Services\WorkingCapitalCatalogService;
 class WorkingCapitalCatalogController
 {
     public function __construct(
-        private WorkingCapitalCatalogService $service
+        private WorkingCapitalCatalogService $workingCapitalCatalogService
     ) {}
 
     public function dataTable(Request $request)
     {
-        $items = $this->service->dataTable($request);
+        $items = $this->workingCapitalCatalogService->dataTable($request);
         $items['data'] = WorkingCapitalCatalogDataTableItemResource::collection($items['data']);
         return ApiResponse::success($items);
     }
 
     public function save(WorkingCapitalCatalogRequest $request)
     {
-        $this->service->save($request->validated());
-        return ApiResponse::success(null, 'Insumo guardado correctamente');
+        $this->workingCapitalCatalogService->save($request->validated());
+        return ApiResponse::success(null, 'Capital de trabajo guardado correctamente');
     }
 
     public function delete(string $id)
     {
-        $this->service->delete($id);
-        return ApiResponse::success(null, 'Insumo eliminado correctamente');
+        $this->workingCapitalCatalogService->delete($id);
+        return ApiResponse::success(null, 'Capital de trabajo eliminado correctamente');
     }
 
     public function getSelectItems()
     {
-        $items = $this->service->getSelectItems();
+        $items = $this->workingCapitalCatalogService->getSelectItems();
         return ApiResponse::success(WorkingCapitalCatalogDataTableItemResource::collection($items));
     }
 }

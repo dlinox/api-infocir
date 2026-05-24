@@ -26,7 +26,7 @@ class TrainingLevelController
     {
         $data = $request->validated();
         $this->trainingLevelService->save($data);
-        return ApiResponse::success($data, 'Nivel de capacitación guardado correctamente');
+        return ApiResponse::success(null, 'Nivel de capacitación guardado correctamente');
     }
 
     public function delete(string $id)

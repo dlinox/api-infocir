@@ -76,6 +76,7 @@ class AuthService
 
         $me = ($this->meQuery)($user, $profileId);
 
+        $oldToken = (string) JWTAuth::getToken();
         JWTAuth::invalidate(JWTAuth::getToken());
 
         $token = JWTAuth::claims([
@@ -83,7 +84,14 @@ class AuthService
             'app' => $app,
         ])->fromUser($user);
 
-        $this->sessionRepository->updateProfile($user->id, $profileId);
+        $this->sessionRepository->invalidateByToken($oldToken);
+        $this->sessionRepository->create(
+            $user->id,
+            $profileId,
+            request()->ip(),
+            request()->userAgent(),
+            $token
+        );
 
         return (object)[
             'token' => $token,
@@ -96,20 +104,19 @@ class AuthService
      */
     public function refresh(): string
     {
-        return JWTAuth::refresh(JWTAuth::getToken());
+        $oldToken = (string) JWTAuth::getToken();
+        $newToken = JWTAuth::refresh(JWTAuth::getToken());
+        $this->sessionRepository->replaceToken($oldToken, $newToken);
+        return $newToken;
     }
 
     /**
-     * Sign out (invalidate token and sessions)
+     * Sign out (invalidate token and session)
      */
     public function signOut(): void
     {
-        $user = JWTAuth::user();
-
-        if ($user) {
-            $this->sessionRepository->invalidateAllForUser($user->id);
-        }
-
+        $token = (string) JWTAuth::getToken();
+        $this->sessionRepository->invalidateByToken($token);
         JWTAuth::invalidate(JWTAuth::getToken());
     }
 

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\CollectorPanel\CollectionRoute\Http\Controllers\CollectionRouteController;
 
-Route::middleware(['auth:api'])->prefix('/collector-panel/routes')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/collector-panel/routes')->group(function () {
     Route::get('/active', [CollectionRouteController::class, 'active'])->name('collectorPanel.routes.active');
     Route::get('/stats', [CollectionRouteController::class, 'stats'])->name('collectorPanel.routes.stats');
     Route::post('/start', [CollectionRouteController::class, 'start'])->name('collectorPanel.routes.start');

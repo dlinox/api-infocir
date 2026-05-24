@@ -24,7 +24,8 @@ class GenderService
 
         $existing = Gender::find($data['code']);
         if ($existing?->is_system) {
-            throw new ApiException('Este género es del sistema y no puede modificarse.', 422);
+            $existing->update(['is_active' => $data['is_active']]);
+            return $existing;
         }
 
         return $this->genderRepository->createOrUpdate($data);

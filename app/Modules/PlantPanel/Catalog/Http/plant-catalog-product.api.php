@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\PlantPanel\Catalog\Http\Controllers\PlantCatalogProductController;
 
-Route::middleware(['auth:api'])->prefix('/plant-panel/catalog')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/plant-panel/catalog')->group(function () {
     Route::get('/plant-products', [PlantCatalogProductController::class, 'plantProducts'])->name('plantPanel.catalog.plantProducts');
     Route::get('/available-products', [PlantCatalogProductController::class, 'availableProducts'])->name('plantPanel.catalog.availableProducts');
     Route::post('/add-product', [PlantCatalogProductController::class, 'addProduct'])->name('plantPanel.catalog.addProduct');

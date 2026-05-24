@@ -23,7 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'permission' => \App\Common\Http\Middleware\CheckPermission::class,
+            'permission'    => \App\Common\Http\Middleware\CheckPermission::class,
+            'check.session' => \App\Common\Http\Middleware\CheckSession::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

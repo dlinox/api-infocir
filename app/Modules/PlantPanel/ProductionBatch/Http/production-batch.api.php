@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\PlantPanel\ProductionBatch\Http\Controllers\ProductionBatchController;
 
-Route::middleware(['auth:api'])->prefix('/plant-panel/production-batches')->group(function () {
+Route::middleware(['auth:api', 'check.session'])->prefix('/plant-panel/production-batches')->group(function () {
     Route::post('/data-table', [ProductionBatchController::class, 'dataTable'])->name('plantPanel.productionBatches.dataTable');
     Route::get('/get/{id}', [ProductionBatchController::class, 'getById'])->name('plantPanel.productionBatches.getById');
     Route::post('/save', [ProductionBatchController::class, 'save'])->name('plantPanel.productionBatches.save');

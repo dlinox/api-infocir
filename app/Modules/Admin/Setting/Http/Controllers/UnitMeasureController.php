@@ -26,7 +26,7 @@ class UnitMeasureController
     {
         $data = $request->validated();
         $this->unitMeasureService->save($data);
-        return ApiResponse::success($data, 'Unidad de medida guardada correctamente');
+        return ApiResponse::success(null, 'Unidad de medida guardada correctamente');
     }
 
     public function delete(string $id)

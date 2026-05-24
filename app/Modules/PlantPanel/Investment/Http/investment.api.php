@@ -5,7 +5,7 @@ use App\Modules\PlantPanel\Investment\Http\Controllers\InvestmentPlanController;
 use App\Modules\PlantPanel\Investment\Http\Controllers\FixedAssetController;
 use App\Modules\PlantPanel\Investment\Http\Controllers\PreOperativeExpenseController;
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api', 'check.session'])->group(function () {
 
     // Capital de Trabajo (gastos mensuales)
     Route::prefix('/investment-plan')->group(function () {

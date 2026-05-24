@@ -26,7 +26,7 @@ class CompanyTypeController
     {
         $data = $request->validated();
         $this->companyTypeService->save($data);
-        return ApiResponse::success($data, 'Tipo de empresa guardado correctamente');
+        return ApiResponse::success(null, 'Tipo de empresa guardado correctamente');
     }
 
     public function delete(string $id)

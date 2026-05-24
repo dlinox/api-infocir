@@ -8,26 +8,26 @@ use App\Modules\Admin\Setting\Repositories\WorkingCapitalCatalogRepository;
 class WorkingCapitalCatalogService
 {
     public function __construct(
-        private WorkingCapitalCatalogRepository $repository
+        private WorkingCapitalCatalogRepository $workingCapitalCatalogRepository
     ) {}
 
     public function dataTable(Request $request)
     {
-        return $this->repository->dataTable($request);
+        return $this->workingCapitalCatalogRepository->dataTable($request);
     }
 
     public function save(array $data)
     {
-        return $this->repository->createOrUpdate($data);
+        return $this->workingCapitalCatalogRepository->createOrUpdate($data);
     }
 
     public function delete(string $id)
     {
-        return $this->repository->delete($id);
+        return $this->workingCapitalCatalogRepository->delete($id);
     }
 
     public function getSelectItems()
     {
-        return $this->repository->getSelectItems();
+        return $this->workingCapitalCatalogRepository->getSelectItems();
     }
 }

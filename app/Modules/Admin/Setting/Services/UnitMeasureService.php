@@ -25,7 +25,8 @@ class UnitMeasureService
         if (isset($data['id'])) {
             $existing = UnitMeasure::findOrFail($data['id']);
             if ($existing->is_system) {
-                throw new ApiException('Esta unidad de medida es del sistema y no puede modificarse.', 422);
+                $existing->update(['is_active' => $data['is_active']]);
+                return $existing;
             }
         }
 

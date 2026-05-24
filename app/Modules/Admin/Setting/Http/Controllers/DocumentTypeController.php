@@ -26,7 +26,7 @@ class DocumentTypeController
     {
         $data = $request->validated();
         $this->documentTypeService->save($data);
-        return ApiResponse::success($data, 'Tipo de documento guardado correctamente');
+        return ApiResponse::success(null, 'Tipo de documento guardado correctamente');
     }
 
     public function delete(string $code)

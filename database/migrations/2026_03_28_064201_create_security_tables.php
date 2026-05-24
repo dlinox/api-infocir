@@ -122,10 +122,24 @@ return new class extends Migration
             $table->index('role_id');
             $table->index('is_active');
         });
+
+        Schema::create('auth_oauth_providers', function (Blueprint $table) {
+            $table->id();
+            $table->string('provider', 30)->unique();
+            $table->string('client_id', 255);
+            $table->string('client_secret', 255);
+            $table->string('redirect', 255);
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->index('provider');
+            $table->index('is_active');
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('auth_oauth_providers');
         Schema::dropIfExists('behavior_profiles');
         Schema::dropIfExists('behavior_role_permissions');
         Schema::dropIfExists('behavior_permissions');

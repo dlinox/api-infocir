@@ -26,7 +26,7 @@ class TrainingTypeController
     {
         $data = $request->validated();
         $this->trainingTypeService->save($data);
-        return ApiResponse::success($data, 'Tipo de capacitación guardado correctamente');
+        return ApiResponse::success(null, 'Tipo de capacitación guardado correctamente');
     }
 
     public function delete(string $id)

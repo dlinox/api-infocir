@@ -26,7 +26,7 @@ class GenderController
     {
         $data = $request->validated();
         $this->genderService->save($data);
-        return ApiResponse::success($data, 'Género guardado correctamente');
+        return ApiResponse::success(null, 'Género guardado correctamente');
     }
 
     public function delete(string $code)
