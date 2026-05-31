@@ -2,6 +2,7 @@
 
 namespace App\Models\Dairy;
 
+use App\Models\Core\UnitMeasure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,6 +13,7 @@ class ProductFormula extends Model
     protected $fillable = [
         'presentation_id',
         'supply_id',
+        'unit_measure_id',
         'quantity',
         'unit_price',
         'version',
@@ -19,10 +21,10 @@ class ProductFormula extends Model
     ];
 
     protected $casts = [
-        'quantity' => 'decimal:3',
+        'quantity'   => 'decimal:3',
         'unit_price' => 'decimal:3',
         'is_current' => 'boolean',
-        'version' => 'integer',
+        'version'    => 'integer',
     ];
 
     public function presentation(): BelongsTo
@@ -33,5 +35,10 @@ class ProductFormula extends Model
     public function supply(): BelongsTo
     {
         return $this->belongsTo(Supply::class);
+    }
+
+    public function unitMeasure(): BelongsTo
+    {
+        return $this->belongsTo(UnitMeasure::class);
     }
 }

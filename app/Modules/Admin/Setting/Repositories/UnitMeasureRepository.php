@@ -8,7 +8,7 @@ class UnitMeasureRepository
 {
     public function dataTable($request)
     {
-        $query = UnitMeasure::query();
+        $query = UnitMeasure::with('baseUnit');
 
         if (empty($request->sortBy) || !isset($request->sortBy)) {
             $query->orderBy('id', 'desc');

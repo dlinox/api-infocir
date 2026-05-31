@@ -30,4 +30,9 @@ class SupplyService
     {
         return $this->supplyRepository->getSelectItems();
     }
+
+    public function getPrimarySupply()
+    {
+        return $this->supplyRepository->getPrimarySupply();
+    }
 }

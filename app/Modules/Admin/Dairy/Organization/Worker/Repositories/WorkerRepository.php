@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Dairy\Organization\Worker\Repositories;
 use App\Models\Behavior\BehaviorProfile;
 use App\Models\Core\Profile;
 use App\Models\Dairy\Worker;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class WorkerRepository
@@ -34,6 +35,8 @@ class WorkerRepository
 
     public function dataTableForEntity($request, int $entityId)
     {
+        $now = Carbon::now();
+
         $query = Worker::query()
             ->select(
                 'dairy_workers.*',
@@ -44,8 +47,20 @@ class WorkerRepository
                 'core_persons.maternal_surname as person_maternal_surname',
                 'core_persons.cellphone as person_cellphone',
                 'core_persons.email as person_email',
+                'current_payment.id as current_payment_id',
+                'current_payment.status as current_payment_status',
+                'current_payment.net_amount as current_payment_net_amount',
+                'current_payment.paid_at as current_payment_paid_at',
             )
             ->join('core_persons', 'core_persons.id', '=', 'dairy_workers.person_id')
+            ->join('core_entities', 'core_entities.id', '=', 'dairy_workers.entity_id')
+            ->leftJoin('dairy_worker_payments as current_payment', function ($join) use ($now) {
+                $join->on('current_payment.worker_person_id', '=', 'dairy_workers.person_id')
+                    ->on('current_payment.plant_id', '=', 'core_entities.entityable_id')
+                    ->where('core_entities.entityable_type', '=', 'dairy_plants')
+                    ->where('current_payment.period_year', '=', (int) $now->year)
+                    ->where('current_payment.period_month', '=', (int) $now->month);
+            })
             ->with(['position', 'instructionDegree', 'profession'])
             ->where('dairy_workers.entity_id', $entityId);
 

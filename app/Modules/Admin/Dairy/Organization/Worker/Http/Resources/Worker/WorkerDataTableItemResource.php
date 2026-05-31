@@ -36,6 +36,14 @@ class WorkerDataTableItemResource extends JsonResource
                 'name' => $this->profession->name,
             ] : null,
             'monthlySalary' => (float) $this->monthly_salary,
+            'currentPayment' => $this->current_payment_id ? [
+                'id' => (int) $this->current_payment_id,
+                'status' => $this->current_payment_status,
+                'netAmount' => $this->current_payment_net_amount !== null
+                    ? (float) $this->current_payment_net_amount
+                    : null,
+                'paidAt' => $this->current_payment_paid_at,
+            ] : null,
             'isActive' => $this->is_active,
         ];
     }

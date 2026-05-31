@@ -32,8 +32,9 @@ class InstructorController
     public function save(InstructorRequest $request)
     {
         $data = $request->validated();
-        $this->instructorService->save($data);
-        return ApiResponse::success(null, 'Instructor guardado correctamente');
+        $instructor = $this->instructorService->save($data);
+        $instructor->load('person');
+        return ApiResponse::success(new InstructorFormResource($instructor), 'Instructor guardado correctamente');
     }
 
     public function delete(string $id)

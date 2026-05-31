@@ -24,6 +24,10 @@ return new class extends Migration
             $table->index('is_active');
         });
 
+        Schema::table('core_persons', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('auth_users')->nullOnDelete();
+        });
+
         Schema::create('auth_password_resets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -147,6 +151,11 @@ return new class extends Migration
 
         Schema::dropIfExists('auth_sessions');
         Schema::dropIfExists('auth_password_resets');
+
+        Schema::table('core_persons', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('auth_users');
     }
 };

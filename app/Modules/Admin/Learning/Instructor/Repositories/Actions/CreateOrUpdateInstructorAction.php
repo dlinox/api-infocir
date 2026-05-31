@@ -6,7 +6,6 @@ use App\Common\Exceptions\ApiException;
 use App\Models\Behavior\Role;
 use App\Models\Core\Profile;
 use App\Models\Learning\Instructor;
-use App\Modules\Auth\Repositories\Actions\CreateOrUpdateUserAction;
 use App\Modules\Shared\Repositories\Actions\CreateOrUpdatePersonAction;
 use App\Modules\Shared\Repositories\ProfileRepository;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +14,6 @@ class CreateOrUpdateInstructorAction
 {
     public function __construct(
         private CreateOrUpdatePersonAction $createOrUpdatePersonAction,
-        private CreateOrUpdateUserAction $createOrUpdateUserAction,
         private ProfileRepository $profileRepository,
     ) {}
 
@@ -48,18 +46,6 @@ class CreateOrUpdateInstructorAction
             throw new ApiException('La persona ya es un instructor registrado');
         }
 
-        $userId = $this->findExistingUserId($person->id);
-
-        if (!$userId) {
-            $user = $this->createOrUpdateUserAction->execute([
-                'username'  => $person->document_number,
-                'password'  => $person->document_number,
-                'email'     => $person->email,
-                'is_active' => true,
-            ]);
-            $userId = $user->id;
-        }
-
         $instructor = Instructor::create([
             'person_id' => $person->id,
             'is_active' => $data['is_active'] ?? true,
@@ -72,7 +58,7 @@ class CreateOrUpdateInstructorAction
         ]);
 
         $role = Role::where('name', Instructor::ROLE_NAME)->firstOrFail();
-        $this->profileRepository->create($userId, $role->id, $coreProfile->id);
+        $this->profileRepository->create($person->user_id, $role->id, $coreProfile->id);
 
         return $instructor;
     }
@@ -87,27 +73,6 @@ class CreateOrUpdateInstructorAction
             'is_active' => $data['is_active'] ?? true,
         ]);
 
-        $userId = $this->findExistingUserId($person->id);
-
-        if ($userId) {
-            $this->createOrUpdateUserAction->execute([
-                'id'       => $userId,
-                'username' => $person->document_number,
-                'email'    => $person->email,
-            ]);
-        }
-
         return $instructor;
-    }
-
-    private function findExistingUserId(int $personId): ?int
-    {
-        $result = DB::table('behavior_profiles')
-            ->join('core_profiles', 'core_profiles.id', '=', 'behavior_profiles.core_profile_id')
-            ->where('core_profiles.person_id', $personId)
-            ->select('behavior_profiles.user_id')
-            ->first();
-
-        return $result?->user_id;
     }
 }

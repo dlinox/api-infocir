@@ -27,7 +27,7 @@ class DocumentType extends Model
         'is_system' => 'boolean',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'code',
         'name',
     ];

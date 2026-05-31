@@ -32,8 +32,8 @@ class ProductPresentationController
     public function save(ProductPresentationRequest $request)
     {
         $data = $request->validated();
-        $this->productPresentationService->save($data);
-        return ApiResponse::success($data, 'Presentación guardada correctamente');
+        $presentation = $this->productPresentationService->save($data);
+        return ApiResponse::success(new ProductPresentationFormResource($presentation), 'Presentación guardada correctamente');
     }
 
     public function delete(string $id)

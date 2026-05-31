@@ -54,4 +54,9 @@ class CollectionRoute extends Model
     {
         return $this->hasMany(MilkCollection::class);
     }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(CollectionRouteExpense::class, 'collection_route_id');
+    }
 }

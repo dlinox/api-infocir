@@ -25,6 +25,7 @@ class PlantSupplierItemResource extends JsonResource
             'cowsInProduction' => (int) ($this->cows_in_production ?? 0),
             'isActive'       => (bool) $this->is_active,
             'pricePerLiter'  => $this->price_per_liter !== null ? (float) $this->price_per_liter : null,
+            'avgDailyLiters' => (float) ($this->avg_liters_per_day ?? 0),
         ];
     }
 }

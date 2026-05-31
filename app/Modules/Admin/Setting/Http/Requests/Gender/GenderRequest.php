@@ -19,13 +19,13 @@ class GenderRequest extends ApiFormRequest
     public function messages(): array
     {
         return [
-            'code.required' => 'El campo :attribute es obligatorio.',
-            'name.required' => 'El campo :attribute es obligatorio.',
-            'name.string' => 'El campo :attribute debe ser una cadena de texto.',
-            'name.max' => 'El campo :attribute no debe exceder los 100 caracteres.',
-            'name.unique' => 'El :attribute ya está en uso.',
-            'is_active.required' => 'El campo :attribute es obligatorio.',
-            'is_active.boolean' => 'El campo :attribute debe ser verdadero o falso.',
+            'code.required'      => 'El :attribute es requerido.',
+            'name.required'      => 'El :attribute es requerido.',
+            'name.string'        => 'El :attribute debe ser una cadena de texto.',
+            'name.max'           => 'El :attribute no debe exceder los :max caracteres.',
+            'name.unique'        => 'El :attribute ya existe.',
+            'is_active.required' => 'El :attribute es requerido.',
+            'is_active.boolean'  => 'El :attribute debe ser verdadero o falso.',
         ];
     }
 

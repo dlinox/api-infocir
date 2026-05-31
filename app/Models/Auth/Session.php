@@ -5,10 +5,18 @@ namespace App\Models\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Behavior\BehaviorProfile;
+use App\Common\Traits\HasDataTable;
 
 class Session extends Model
 {
+    use HasDataTable;
+
     protected $table = 'auth_sessions';
+
+    public static array $searchColumns = [
+        'ip_address',
+        'user_agent',
+    ];
 
     protected $fillable = [
         'user_id',

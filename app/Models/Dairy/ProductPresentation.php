@@ -54,4 +54,9 @@ class ProductPresentation extends Model
     {
         return $this->hasMany(ProductGallery::class, 'presentation_id');
     }
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(ProductPrice::class, 'presentation_id');
+    }
 }

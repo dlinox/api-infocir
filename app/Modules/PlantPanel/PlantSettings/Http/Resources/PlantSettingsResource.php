@@ -30,6 +30,8 @@ class PlantSettingsResource extends JsonResource
             'hasTddTraining'          => $this->has_tdd_training,
             'description'             => $this->description,
             'isActive'                => $this->is_active,
+            'ownerName'               => $this->owner_name,
+            'onboardingCompletedAt'   => $this->onboarding_completed_at,
             'companyTypeId'           => $this->company_type_id,
             'trainingLevelId'         => $this->training_level_id,
             'institutionTypeId'       => $this->institution_type_id,

@@ -14,6 +14,8 @@ class ProductType extends Model
     protected $fillable = [
         'name',
         'description',
+        'icon',
+        'color',
         'is_active',
     ];
 
@@ -21,7 +23,7 @@ class ProductType extends Model
         'is_active' => 'boolean',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'name',
     ];
 }

@@ -7,7 +7,6 @@ use App\Models\Behavior\BehaviorProfile;
 use App\Models\Behavior\Role;
 use App\Models\Core\Profile;
 use App\Models\Dairy\Worker;
-use App\Modules\Auth\Repositories\Actions\CreateOrUpdateUserAction;
 use App\Modules\Shared\Repositories\Actions\CreateOrUpdatePersonAction;
 use App\Modules\Shared\Repositories\ProfileRepository;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +15,6 @@ class CreateOrUpdateWorkerAction
 {
     public function __construct(
         private CreateOrUpdatePersonAction $createOrUpdatePersonAction,
-        private CreateOrUpdateUserAction $createOrUpdateUserAction,
         private ProfileRepository $profileRepository,
     ) {}
 
@@ -43,35 +41,20 @@ class CreateOrUpdateWorkerAction
 
     private function create(array $data): Worker
     {
-        $personData = $data['person'];
+        $person = $this->createOrUpdatePersonAction->execute($data['person']);
 
-        $person = $this->createOrUpdatePersonAction->execute($personData);
-
-        $existingWorker = Worker::where('person_id', $person->id)->first();
-        if ($existingWorker) {
+        if (Worker::where('person_id', $person->id)->exists()) {
             throw new ApiException('La persona ya es un trabajador registrado');
         }
 
-        $userId = $this->findExistingUserId($person->id);
-
-        if (!$userId) {
-            $user = $this->createOrUpdateUserAction->execute([
-                'username' => $person->document_number,
-                'password' => $person->document_number,
-                'email' => $person->email,
-                'is_active' => true,
-            ]);
-            $userId = $user->id;
-        }
-
         $worker = Worker::create([
-            'person_id'            => $person->id,
-            'entity_id'            => $data['entity_id'],
-            'position_id'          => $data['position_id'] ?? null,
+            'person_id'             => $person->id,
+            'entity_id'             => $data['entity_id'],
+            'position_id'           => $data['position_id'] ?? null,
             'instruction_degree_id' => $data['instruction_degree_id'] ?? null,
-            'profession_id'        => $data['profession_id'] ?? null,
-            'monthly_salary'       => $data['monthly_salary'],
-            'is_active'            => $data['is_active'] ?? true,
+            'profession_id'         => $data['profession_id'] ?? null,
+            'monthly_salary'        => $data['monthly_salary'],
+            'is_active'             => $data['is_active'] ?? true,
         ]);
 
         $coreProfile = Profile::create([
@@ -81,13 +64,13 @@ class CreateOrUpdateWorkerAction
         ]);
 
         $workerRole = Role::where('name', Worker::ROLE_NAME)->firstOrFail();
-        $this->profileRepository->create($userId, $workerRole->id, $coreProfile->id);
+        $this->profileRepository->create($person->user_id, $workerRole->id, $coreProfile->id);
 
         $positionRoleId = !empty($data['position_id'])
             ? \App\Models\Dairy\Position::find($data['position_id'])?->role_id
             : null;
         if ($positionRoleId && $positionRoleId !== $workerRole->id) {
-            $this->profileRepository->create($userId, $positionRoleId, $coreProfile->id);
+            $this->profileRepository->create($person->user_id, $positionRoleId, $coreProfile->id);
         }
 
         return $worker;
@@ -95,55 +78,40 @@ class CreateOrUpdateWorkerAction
 
     private function update(array $data): Worker
     {
-        $personData = $data['person'];
-
-        $person = $this->createOrUpdatePersonAction->execute($personData);
+        $person = $this->createOrUpdatePersonAction->execute($data['person']);
 
         $worker = Worker::where('person_id', $person->id)->firstOrFail();
 
         $worker->update([
-            'entity_id'            => $data['entity_id'],
-            'position_id'          => $data['position_id'] ?? null,
+            'entity_id'             => $data['entity_id'],
+            'position_id'           => $data['position_id'] ?? null,
             'instruction_degree_id' => $data['instruction_degree_id'] ?? null,
-            'profession_id'        => $data['profession_id'] ?? null,
-            'monthly_salary'       => $data['monthly_salary'],
-            'is_active'            => $data['is_active'] ?? true,
+            'profession_id'         => $data['profession_id'] ?? null,
+            'monthly_salary'        => $data['monthly_salary'],
+            'is_active'             => $data['is_active'] ?? true,
         ]);
 
         $coreProfile = Profile::where('person_id', $person->id)
             ->where('profileable_type', 'dairy_workers')
             ->first();
+
         $positionRoleId = !empty($data['position_id'])
             ? \App\Models\Dairy\Position::find($data['position_id'])?->role_id
             : null;
+
         if ($coreProfile && $positionRoleId) {
             $workerRoleId = Role::where('name', Worker::ROLE_NAME)->value('id');
-            BehaviorProfile::where('core_profile_id', $coreProfile->id)
+            $existingPositionProfile = BehaviorProfile::where('core_profile_id', $coreProfile->id)
                 ->where('role_id', '!=', $workerRoleId)
-                ->update(['role_id' => $positionRoleId]);
-        }
+                ->first();
 
-        $userId = $this->findExistingUserId($person->id);
-
-        if ($userId) {
-            $this->createOrUpdateUserAction->execute([
-                'id'       => $userId,
-                'username' => $person->document_number,
-                'email'    => $person->email,
-            ]);
+            if ($existingPositionProfile) {
+                $existingPositionProfile->update(['role_id' => $positionRoleId]);
+            } elseif ($person->user_id) {
+                $this->profileRepository->create($person->user_id, $positionRoleId, $coreProfile->id);
+            }
         }
 
         return $worker;
-    }
-
-    private function findExistingUserId(int $personId): ?int
-    {
-        $result = DB::table('behavior_profiles')
-            ->join('core_profiles', 'core_profiles.id', '=', 'behavior_profiles.core_profile_id')
-            ->where('core_profiles.person_id', $personId)
-            ->select('behavior_profiles.user_id')
-            ->first();
-
-        return $result?->user_id;
     }
 }

@@ -16,6 +16,7 @@ use App\Models\Dairy\Product;
 use App\Models\Dairy\ProductType;
 use App\Models\Dairy\Supply;
 use App\Models\Dairy\InvestmentCategory;
+use App\Models\Behavior\Role;
 use App\Models\Dairy\AssetCatalog;
 use App\Models\Dairy\PreOperativeCatalog;
 use App\Models\Dairy\WorkingCapitalCatalog;
@@ -139,15 +140,21 @@ class DairySeeder extends Seeder
 
     private function seedPositions(): void
     {
+        // El cargo define el rol de acceso del trabajador (role_id):
+        //  - "Jefe de planta"      → plant_manager (gestiona la planta en app-managers)
+        //  - "Encargado de acopio" → plant_collector (registra acopio en el panel de acopiador)
+        $plantManagerRoleId  = Role::where('name', 'plant_manager')->value('id');
+        $plantCollectorRoleId = Role::where('name', 'plant_collector')->value('id');
+
         $items = [
-            ['name' => 'Jefe de planta',            'description' => 'Responsable general de la operación de la planta'],
-            ['name' => 'Maestro quesero',           'description' => 'Encargado de la elaboración de quesos y derivados lácteos'],
-            ['name' => 'Técnico de laboratorio',    'description' => 'Encargado del control de calidad y análisis de muestras'],
-            ['name' => 'Operario de producción',    'description' => 'Ejecuta los procesos de transformación de la leche'],
-            ['name' => 'Encargado de acopio',       'description' => 'Gestiona la recepción y almacenamiento de leche fresca'],
-            ['name' => 'Encargado de ventas',       'description' => 'Gestiona la comercialización de productos lácteos'],
-            ['name' => 'Almacenero',                'description' => 'Control de inventarios, insumos y productos terminados'],
-            ['name' => 'Asistente administrativo',  'description' => 'Apoyo en gestión administrativa y documentaria'],
+            ['name' => 'Jefe de planta',            'role_id' => $plantManagerRoleId,   'description' => 'Responsable general de la operación de la planta'],
+            ['name' => 'Maestro quesero',           'role_id' => null,                   'description' => 'Encargado de la elaboración de quesos y derivados lácteos'],
+            ['name' => 'Técnico de laboratorio',    'role_id' => null,                   'description' => 'Encargado del control de calidad y análisis de muestras'],
+            ['name' => 'Operario de producción',    'role_id' => null,                   'description' => 'Ejecuta los procesos de transformación de la leche'],
+            ['name' => 'Encargado de acopio',       'role_id' => $plantCollectorRoleId,  'description' => 'Gestiona la recepción y almacenamiento de leche fresca'],
+            ['name' => 'Encargado de ventas',       'role_id' => null,                   'description' => 'Gestiona la comercialización de productos lácteos'],
+            ['name' => 'Almacenero',                'role_id' => null,                   'description' => 'Control de inventarios, insumos y productos terminados'],
+            ['name' => 'Asistente administrativo',  'role_id' => null,                   'description' => 'Apoyo en gestión administrativa y documentaria'],
         ];
 
         foreach ($items as $item) {
@@ -158,16 +165,16 @@ class DairySeeder extends Seeder
     private function seedProductTypes(): void
     {
         $items = [
-            ['name' => 'Queso fresco',       'description' => 'Queso sin maduración elaborado con leche pasteurizada'],
-            ['name' => 'Queso andino',        'description' => 'Queso semi-madurado típico de la sierra peruana'],
-            ['name' => 'Queso paria',         'description' => 'Queso semi-duro tradicional de la región altiplánica'],
-            ['name' => 'Queso mozzarella',    'description' => 'Queso de pasta hilada para uso gastronómico'],
-            ['name' => 'Yogurt natural',      'description' => 'Leche fermentada sin saborizantes artificiales'],
-            ['name' => 'Yogurt frutado',      'description' => 'Leche fermentada con pulpa o saborizante de fruta'],
-            ['name' => 'Mantequilla',         'description' => 'Grasa láctea obtenida del batido de crema de leche'],
-            ['name' => 'Manjar blanco',       'description' => 'Dulce de leche concentrado elaborado artesanalmente'],
-            ['name' => 'Leche pasteurizada',  'description' => 'Leche entera sometida a tratamiento térmico'],
-            ['name' => 'Crema de leche',      'description' => 'Nata fresca con alto contenido graso'],
+            ['name' => 'Queso fresco',       'icon' => '🧀', 'color' => 'orange', 'description' => 'Queso sin maduración elaborado con leche pasteurizada'],
+            ['name' => 'Queso andino',        'icon' => '🧀', 'color' => 'orange', 'description' => 'Queso semi-madurado típico de la sierra peruana'],
+            ['name' => 'Queso paria',         'icon' => '🧀', 'color' => 'orange', 'description' => 'Queso semi-duro tradicional de la región altiplánica'],
+            ['name' => 'Queso mozzarella',    'icon' => '🧀', 'color' => 'orange', 'description' => 'Queso de pasta hilada para uso gastronómico'],
+            ['name' => 'Yogurt natural',      'icon' => '🫙', 'color' => 'cyan',   'description' => 'Leche fermentada sin saborizantes artificiales'],
+            ['name' => 'Yogurt frutado',      'icon' => '🫙', 'color' => 'cyan',   'description' => 'Leche fermentada con pulpa o saborizante de fruta'],
+            ['name' => 'Mantequilla',         'icon' => '🧈', 'color' => 'lime',   'description' => 'Grasa láctea obtenida del batido de crema de leche'],
+            ['name' => 'Manjar blanco',       'icon' => '🍯', 'color' => 'yellow', 'description' => 'Dulce de leche concentrado elaborado artesanalmente'],
+            ['name' => 'Leche pasteurizada',  'icon' => '🥛', 'color' => 'teal',   'description' => 'Leche entera sometida a tratamiento térmico'],
+            ['name' => 'Crema de leche',      'icon' => '🧈', 'color' => 'lime',   'description' => 'Nata fresca con alto contenido graso'],
         ];
 
         foreach ($items as $item) {
@@ -378,78 +385,42 @@ class DairySeeder extends Seeder
 
     private function seedWorkingCapitalCatalog(): void
     {
-        $litro = UnitMeasure::where('abbreviation', 'L')->first()?->id;
-        $kg    = UnitMeasure::where('abbreviation', 'kg')->first()?->id;
-        $g     = UnitMeasure::where('abbreviation', 'g')->first()?->id;
-        $ml    = UnitMeasure::where('abbreviation', 'mL')->first()?->id;
-
-        $materiaP     = InvestmentCategory::where('name', 'Materia Prima / Mercadería')->first()?->id;
-        $manoObraD    = InvestmentCategory::where('name', 'Mano de Obra Directa')->first()?->id;
-        $manoObraI    = InvestmentCategory::where('name', 'Mano de Obra Indirecta')->first()?->id;
-        $costosDirect = InvestmentCategory::where('name', 'Costos Directos')->first()?->id;
+        $costosDir    = InvestmentCategory::where('name', 'Costos Directos')->first()?->id;
         $costosIndir  = InvestmentCategory::where('name', 'Costos Indirectos')->first()?->id;
         $gastosAdmin  = InvestmentCategory::where('name', 'Gastos Administrativos')->first()?->id;
         $gastosVentas = InvestmentCategory::where('name', 'Gastos de Ventas')->first()?->id;
-        $impuestos    = InvestmentCategory::where('name', 'Impuestos')->first()?->id;
-        $depreciacion = InvestmentCategory::where('name', 'Depreciación')->first()?->id;
+
+        $litro = UnitMeasure::where('abbreviation', 'L')->first()?->id;
 
         $items = [
-            // Materia Prima / Mercadería
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $litro, 'name' => 'Leche fresca',                         'description' => 'Leche cruda de acopio en establos'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $kg,    'name' => 'Cuajo microbiano',                     'description' => 'Enzima para la coagulación de la leche'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $kg,    'name' => 'Sal industrial',                       'description' => 'Cloruro de sodio para salado de quesos'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $kg,    'name' => 'Cloruro de calcio',                    'description' => 'Aditivo para mejorar la coagulación de la leche'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $g,     'name' => 'Cultivos lácticos (yogurt y queso)',   'description' => 'Bacterias para fermentación de yogurt y queso andino'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => null,   'name' => 'Envases y empaques',                   'description' => 'Bolsas, potes, tapas y etiquetas para productos terminados'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $litro, 'name' => 'Materiales de limpieza y desinfección CIP', 'description' => 'Detergentes y desinfectantes para limpieza de equipos'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => $kg,    'name' => 'Gas industrial',                       'description' => 'Gas en válvulas para procesos de calor'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => null,   'name' => 'Insumos de laboratorio',               'description' => 'Reactivos, placas Petri y materiales de análisis'],
-            ['investment_category_id' => $materiaP,     'unit_measure_id' => null,   'name' => 'Materiales de oficina y formularios BPM', 'description' => 'Útiles de oficina y formatos SENASA/HACCP'],
-
-            // Mano de Obra Directa
-            ['investment_category_id' => $manoObraD,    'unit_measure_id' => null,   'name' => 'Quesero maestro / Jefe de producción', 'description' => 'Responsable del proceso de elaboración de quesos y derivados'],
-            ['investment_category_id' => $manoObraD,    'unit_measure_id' => null,   'name' => 'Operario de planta (proceso general)', 'description' => 'Ejecuta los procesos de transformación de la leche'],
-            ['investment_category_id' => $manoObraD,    'unit_measure_id' => null,   'name' => 'Operario de planta (empaque/distribución)', 'description' => 'Encargado del empaque y despacho de productos'],
-            ['investment_category_id' => $manoObraD,    'unit_measure_id' => null,   'name' => 'Repartidor / conductor',               'description' => 'Distribución y entrega de productos con viáticos'],
-
-            // Mano de Obra Indirecta
-            ['investment_category_id' => $manoObraI,    'unit_measure_id' => null,   'name' => 'Jefe de planta / Administrador',       'description' => 'Responsable general de la operación administrativa'],
-            ['investment_category_id' => $manoObraI,    'unit_measure_id' => null,   'name' => 'Asistente administrativo y de ventas', 'description' => 'Apoyo en gestión administrativa, documentaria y comercial'],
-            ['investment_category_id' => $manoObraI,    'unit_measure_id' => null,   'name' => 'Servicio de contabilidad externo',     'description' => 'Honorarios de contador externo'],
-            ['investment_category_id' => $manoObraI,    'unit_measure_id' => null,   'name' => 'Vendedor / promotor',                  'description' => 'Gestión comercial con comisión base fija'],
-            ['investment_category_id' => $manoObraI,    'unit_measure_id' => null,   'name' => 'Vigilancia / seguridad',               'description' => 'Servicio externo de vigilancia y seguridad'],
-
-            // Costos Directos
-            ['investment_category_id' => $costosDirect, 'unit_measure_id' => null,   'name' => 'Flete recojo de leche',                'description' => 'Acopio en establos, costo por litro recogido'],
-            ['investment_category_id' => $costosDirect, 'unit_measure_id' => null,   'name' => 'Análisis de calidad de leche cruda',   'description' => 'Control en punto de compra (acidez, densidad, grasa)'],
-
-            // Costos Indirectos
-            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Energía eléctrica trifásica',          'description' => 'Consumo eléctrico de la planta procesadora'],
-            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Alquiler de planta procesadora',       'description' => 'Arrendamiento del local industrial'],
-            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Telefonía + internet + WhatsApp Business', 'description' => 'Servicios de comunicación de la empresa'],
-            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Seguro multirriesgo planta + mercadería', 'description' => 'Prima de seguro anual contra siniestros'],
-
-            // Gastos Administrativos
-            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Útiles de oficina y tóneres',          'description' => 'Útiles de escritorio, archivadores y consumibles de impresión'],
-            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Honorarios contador',                  'description' => 'Formalización contable y declaraciones tributarias'],
-            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Gastos bancarios',                     'description' => 'Apertura de cuenta, chequera y Yape empresarial'],
-            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Mantenimiento preventivo de equipos',  'description' => 'Primera revisión programada de maquinaria'],
-
-            // Gastos de Ventas
-            ['investment_category_id' => $gastosVentas, 'unit_measure_id' => null,   'name' => 'Publicidad mensual (redes + ferias)',  'description' => 'Redes sociales, impulsadoras y participación en ferias'],
-            ['investment_category_id' => $gastosVentas, 'unit_measure_id' => null,   'name' => 'Comisiones de ventas',                 'description' => 'Apertura de cuentas con distribuidores'],
-            ['investment_category_id' => $gastosVentas, 'unit_measure_id' => null,   'name' => 'Material POP',                         'description' => 'Afiches, banners, viniles y tarjetas de presentación'],
-            ['investment_category_id' => $gastosVentas, 'unit_measure_id' => null,   'name' => 'Transporte y distribución',            'description' => 'Gasolina, rutas y peajes para distribución de productos'],
-
-            // Impuestos
-            ['investment_category_id' => $impuestos,    'unit_measure_id' => null,   'name' => 'Impuesto de alcabala y arbitrios',     'description' => 'Impuestos municipales primer año'],
-            ['investment_category_id' => $impuestos,    'unit_measure_id' => null,   'name' => 'IGV (crédito fiscal inicial)',          'description' => 'Impuesto general a las ventas del primer ciclo'],
-            ['investment_category_id' => $impuestos,    'unit_measure_id' => null,   'name' => 'Impuesto a la renta',                  'description' => 'Provisión primera declaración mensual'],
-
-            // Depreciación
-            ['investment_category_id' => $depreciacion, 'unit_measure_id' => null,   'name' => 'Depreciación de maquinaria y equipos', 'description' => 'Depreciación año 1 referencial a 10 años'],
-            ['investment_category_id' => $depreciacion, 'unit_measure_id' => null,   'name' => 'Depreciación de muebles y equipamiento', 'description' => 'Depreciación año 1 referencial a 5 años'],
+            // Costos Directos: gastos de recorrido del acopiador
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => $litro, 'name' => 'Combustible',                  'description' => 'Gasolina o diésel para el vehículo de recorrido', 'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Peajes',                       'description' => 'Pago de peajes durante el recorrido',             'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Alimentación',                 'description' => 'Gastos de alimentación del acopiador en ruta',     'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Mantenimiento de vehículo',    'description' => 'Reparaciones o mantenimiento durante el recorrido', 'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Lavado de vehículo',           'description' => 'Limpieza del vehículo de recolección',             'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Hielo',                        'description' => 'Hielo para conservación de la leche en ruta',      'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Ayudante / estiba',            'description' => 'Pago a ayudante para carga y descarga',           'is_route_expense' => true],
+            ['investment_category_id' => $costosDir,    'unit_measure_id' => null,   'name' => 'Otros gastos de ruta',         'description' => 'Gastos varios no clasificados del recorrido',      'is_route_expense' => true],
         ];
+
+        $items = array_merge($items, [
+            // Costos Indirectos: servicios comunes
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Energía eléctrica trifásica',          'description' => 'Consumo eléctrico de la planta procesadora'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Servicio de agua',                     'description' => 'Consumo de agua potable y saneamiento'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Combustible de planta',                'description' => 'Gasolina, GLP o diésel para operación y transporte interno'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Gas para producción',                  'description' => 'Consumo de gas para cocción y procesos térmicos'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Limpieza y desinfección',              'description' => 'Insumos de higiene operativa y sanitaria'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Alquiler de planta procesadora',       'description' => 'Arrendamiento del local industrial'],
+            ['investment_category_id' => $costosIndir,  'unit_measure_id' => null,   'name' => 'Internet y telefonía',                 'description' => 'Servicios de comunicación de la empresa'],
+
+            // Gastos Administrativos comunes
+            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Gastos bancarios',                     'description' => 'Comisiones y mantenimiento de cuenta'],
+            ['investment_category_id' => $gastosAdmin,  'unit_measure_id' => null,   'name' => 'Mantenimiento de equipos',             'description' => 'Mantenimiento correctivo/preventivo básico'],
+
+            // Gastos de Ventas comunes
+            ['investment_category_id' => $gastosVentas, 'unit_measure_id' => null,   'name' => 'Transporte y distribución',            'description' => 'Gasolina, rutas y peajes para distribución de productos'],
+        ]);
 
         foreach ($items as $item) {
             WorkingCapitalCatalog::create($item);

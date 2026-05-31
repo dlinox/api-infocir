@@ -22,7 +22,7 @@ class InstitutionType extends Model
         'is_active' => 'boolean',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'name',
     ];
 }

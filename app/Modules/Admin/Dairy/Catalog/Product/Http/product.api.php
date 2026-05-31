@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\Admin\Dairy\Catalog\Product\Http\Controllers\ProductController;
 use App\Modules\Admin\Dairy\Catalog\Product\Http\Controllers\ProductGalleryController;
-
 Route::middleware(['auth:api', 'check.session'])->prefix('/products')->group(function () {
     Route::post('/data-table', [ProductController::class, 'dataTable'])->name('products.dataTable');
     Route::get('/get/{id}', [ProductController::class, 'getById'])->name('products.getById');
@@ -18,3 +17,4 @@ Route::middleware(['auth:api', 'check.session'])->prefix('/product-galleries')->
     Route::delete('/delete/{id}', [ProductGalleryController::class, 'delete'])->name('product-galleries.delete');
     Route::get('/select-presentations/{productId}', [ProductGalleryController::class, 'selectPresentations'])->name('product-galleries.selectPresentations');
 });
+

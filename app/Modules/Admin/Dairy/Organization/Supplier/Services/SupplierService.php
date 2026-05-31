@@ -33,7 +33,7 @@ class SupplierService
         return $this->supplierRepository->delete($id);
     }
 
-    public function getSelectItems(): array
+    public function getSelectItems()
     {
         return $this->supplierRepository->getSelectItems();
     }

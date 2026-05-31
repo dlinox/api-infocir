@@ -11,7 +11,7 @@ class PreOperativeCatalogRepository
         $query = PreOperativeCatalog::with('investmentCategory');
 
         if (empty($request->sortBy) || !isset($request->sortBy)) {
-            $query->orderBy('name');
+            $query->orderBy('id', 'desc');
         }
 
         return $query->dataTable($request);

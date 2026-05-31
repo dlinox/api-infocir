@@ -68,8 +68,15 @@ return new class extends Migration
                   ->nullable()
                   ->constrained('core_unit_measures')
                   ->nullOnDelete();
+            $table->foreignId('icon_file_id')
+                  ->nullable()
+                  ->constrained('core_files')
+                  ->nullOnDelete();
             $table->string('name', 100)->unique();
             $table->string('description', 255)->nullable();
+            $table->string('color', 20)->default('#64748b');
+            $table->enum('recurrence_type', ['none', 'monthly', 'every_x_days'])->default('none');
+            $table->unsignedSmallInteger('recurrence_every_days')->nullable();
             $table->boolean('is_active')->default(true);
 
             $table->index('name');

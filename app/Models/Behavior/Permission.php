@@ -5,8 +5,12 @@ namespace App\Models\Behavior;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+use App\Common\Traits\HasDataTable;
+
 class Permission extends Model
 {
+    use HasDataTable;
+
     protected $table = 'behavior_permissions';
 
     protected $fillable = [
@@ -15,6 +19,16 @@ class Permission extends Model
         'type',
         'parent_id',
         'level',
+    ];
+
+    protected $casts = [
+        'level'     => 'integer',
+        'parent_id' => 'integer',
+    ];
+
+    public static array $searchColumns = [
+        'display_name',
+        'name',
     ];
 
     public function roles(): BelongsToMany

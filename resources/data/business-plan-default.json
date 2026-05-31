@@ -1,0 +1,513 @@
+{
+  "parametros": {
+    "wacc": 0.1,
+    "tasaCrecimiento": 0.05,
+    "horizonte": 12
+  },
+  "inversiones": {
+    "grupos": [
+      {
+        "nombre": "Activo Fijo",
+        "secciones": [
+          {
+            "nombre": "Terrenos e Infraestructura",
+            "rubros": [
+              {
+                "rubro": "Adecuación de local industrial (pisos epóxicos, desagüe, instalaciones sanitarias)",
+                "valorUnit": 8500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Instalaciones eléctricas trifásicas (tablero + cableado + tomacorrientes industriales)",
+                "valorUnit": 4200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Instalaciones de agua y vapor (tuberías sanitarias + trampa vapor + cisterna)",
+                "valorUnit": 3800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Acondicionamiento frío: cámara pre-fría + cuarto de proceso 4°C",
+                "valorUnit": 3200.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Maquinaria y Equipo",
+            "rubros": [
+              {
+                "rubro": "Pasteurizador tubular HTST 500 L/h (acero inox AISI 316)",
+                "valorUnit": 28000.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Tina quesera de doble fondo 300 L (acero inox + sistema calor)",
+                "valorUnit": 9500.0,
+                "unidades": 2.0
+              },
+              {
+                "rubro": "Descremadora centrífuga 300 L/h (eléctrica, acero inox)",
+                "valorUnit": 7500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Moldes de queso inox (juego 50 unidades) + prensas neumáticas",
+                "valorUnit": 4800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Mantequilladora industrial 50 kg/batch (eléctrica)",
+                "valorUnit": 8200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Incubadora/fermentadora para yogurt (3 bandejas × 40 L)",
+                "valorUnit": 6500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Envasadora semiautomática al vacío + selladora de bolsas",
+                "valorUnit": 5200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Balanza de precisión electrónica (cap. 30 kg, precisión 1g)",
+                "valorUnit": 850.0,
+                "unidades": 2.0
+              }
+            ]
+          },
+          {
+            "nombre": "Herramientas y Equipamiento",
+            "rubros": [
+              {
+                "rubro": "Cámara de frío modular 4°C — 6 m³ (pre-fabricada, incluye instalación)",
+                "valorUnit": 18500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Cuarto de maduración 10-12°C — 3 m³ (para queso tipo andino)",
+                "valorUnit": 8200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Etiquetadora semiautomática + software de trazabilidad HACCP",
+                "valorUnit": 3500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Utensilios inox: tazones, espumaderas, cuchillos, rasquetas, tubos",
+                "valorUnit": 2200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Tanque de almacenamiento leche 500 L (acero inox, refrigerado 4°C)",
+                "valorUnit": 6800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Equipo de limpieza CIP: bomba + depósitos + mangueras sanitarias",
+                "valorUnit": 2400.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Termómetros digitales + pH-metros + lactodensímetros (kit completo)",
+                "valorUnit": 450.0,
+                "unidades": 2.0
+              },
+              {
+                "rubro": "Indumentaria BPM: mandiles, botas, guantes, gorros, mascarillas (x5 pers)",
+                "valorUnit": 320.0,
+                "unidades": 5.0
+              }
+            ]
+          },
+          {
+            "nombre": "Muebles y Enseres",
+            "rubros": [
+              {
+                "rubro": "Escritorio administrativo + silla ergonómica (oficina planta)",
+                "valorUnit": 1800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Sillas para área de reuniones / capacitación (pack 6 unidades)",
+                "valorUnit": 900.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Estantería metálica para almacén de insumos (3 niveles × 2m)",
+                "valorUnit": 650.0,
+                "unidades": 3.0
+              },
+              {
+                "rubro": "Computadora + impresora + UPS (gestión administrativa y contable)",
+                "valorUnit": 3200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Botiquín de primeros auxilios + extintor PQS 6 kg (x3 puntos)",
+                "valorUnit": 380.0,
+                "unidades": 3.0
+              },
+              {
+                "rubro": "Uniformes corporativos con logo (jefatura + administrativo)",
+                "valorUnit": 280.0,
+                "unidades": 5.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Gastos Pre-operativos",
+        "secciones": [
+          {
+            "nombre": "Gastos Pre-operativos",
+            "rubros": [
+              {
+                "rubro": "Licencias municipales (licencia funcionamiento + defensa civil + anuncios)",
+                "valorUnit": 2800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Constitución empresa: SUNAT + SUNARP + legalización libros + RUC",
+                "valorUnit": 1500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Certificaciones: DIGESA (RAS) + SENASA + HACCP + registro sanitario",
+                "valorUnit": 6500.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Publicidad de lanzamiento: branding + redes sociales + degustación apertura",
+                "valorUnit": 3200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Capacitación BPM: 3 días personal + manuales HACCP + formatos SENASA",
+                "valorUnit": 1800.0,
+                "unidades": 1.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Capital de Trabajo",
+        "secciones": [
+          {
+            "nombre": "Materia Prima / Mercadería",
+            "rubros": [
+              {
+                "rubro": "Leche fresca — stock 2 meses: 2,000 kg/mes × 10 lt/kg × S/1.80 × 2",
+                "valorUnit": 72000.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Cuajo microbiano, cloruro de calcio, sal industrial — stock 2 meses",
+                "valorUnit": 2800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Cultivos lácticos (yogurt y queso tipo andino) — stock 2 meses",
+                "valorUnit": 1600.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Envases y empaques (bolsas, potes, tapas, etiquetas) — stock 2 meses",
+                "valorUnit": 3200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Materiales de limpieza y desinfección CIP — stock 2 meses",
+                "valorUnit": 900.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Gas industrial (válvulas + recarga) — stock 2 meses",
+                "valorUnit": 650.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Insumos de laboratorio (reactivos, placas Petri) — stock inicial",
+                "valorUnit": 480.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Materiales de oficina y formularios BPM — dotación inicial",
+                "valorUnit": 350.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Mano de Obra Directa",
+            "rubros": [
+              {
+                "rubro": "Quesero maestro / Jefe de producción — sueldo bruto × 2 meses",
+                "valorUnit": 4400.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Operario de planta 1 (proceso general) — sueldo bruto × 2 meses",
+                "valorUnit": 2800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Operario de planta 2 (empaque/distribución) — sueldo bruto × 2m",
+                "valorUnit": 2800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Repartidor/conductor (incluye viáticos) — sueldo bruto × 2 meses",
+                "valorUnit": 2400.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Mano de Obra Indirecta",
+            "rubros": [
+              {
+                "rubro": "Jefe de planta / Administrador — sueldo bruto × 2 meses",
+                "valorUnit": 4400.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Asistente administrativo y de ventas — sueldo bruto × 2 meses",
+                "valorUnit": 2400.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Servicio de contabilidad externo — honorarios × 2 meses",
+                "valorUnit": 800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Vendedor / promotor (comisión base) — retribución fija × 2 meses",
+                "valorUnit": 2000.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Vigilancia / seguridad (servicio externo) — mensualidad × 2 meses",
+                "valorUnit": 1200.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Costos Directos",
+            "rubros": [
+              {
+                "rubro": "Flete recojo leche — acopio en establos (S/0.15/lt × 40,000 lt/mes × 2m)",
+                "valorUnit": 12000.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Análisis de calidad leche cruda en punto de compra — 2 meses",
+                "valorUnit": 600.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Costos Indirectos",
+            "rubros": [
+              {
+                "rubro": "Energía eléctrica trifásica — 2 meses de operación inicial",
+                "valorUnit": 3200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Alquiler planta procesadora — 2 meses (depósito + primer mes)",
+                "valorUnit": 7000.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Telefonía + internet + WhatsApp Business — 2 meses",
+                "valorUnit": 280.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Seguro multirriesgo planta + seguro de mercadería — prima anual",
+                "valorUnit": 5400.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Gastos Administrativos",
+            "rubros": [
+              {
+                "rubro": "Útiles de oficina + tóneres + archivadores — dotación inicial",
+                "valorUnit": 650.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Honorarios contador primer trimestre (formalización contable)",
+                "valorUnit": 1200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Gastos bancarios: apertura cuenta + chequera + Yape empresarial",
+                "valorUnit": 350.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Mantenimiento preventivo equipos — primera revisión programada",
+                "valorUnit": 800.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Gastos de Ventas",
+            "rubros": [
+              {
+                "rubro": "Publicidad mensual: redes sociales + impulsadoras + ferias x2m",
+                "valorUnit": 1800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Comisiones ventas inicial: apertura cuentas distribuidores x2m",
+                "valorUnit": 1200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Material POP: afiches, banners, viniles, tarjetas presentación",
+                "valorUnit": 850.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Transporte y distribución: gasolina rutas + peajes — 2 meses",
+                "valorUnit": 2400.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Impuestos (RUS / Régimen)",
+            "rubros": [
+              {
+                "rubro": "Impuesto de alcabala + arbitrios primer año — pago adelantado",
+                "valorUnit": 1200.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "IGV primer ciclo (crédito fiscal inicial estimado)",
+                "valorUnit": 2800.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Impuesto a la renta — provisión primera declaración mensual",
+                "valorUnit": 650.0,
+                "unidades": 1.0
+              }
+            ]
+          },
+          {
+            "nombre": "Depreciación (referencial)",
+            "rubros": [
+              {
+                "rubro": "Depreciación maquinaria y equipos — año 1 referencial (10 años)",
+                "valorUnit": 8059.0,
+                "unidades": 1.0
+              },
+              {
+                "rubro": "Depreciación muebles, vehículo y equipamiento — año 1 (5 años)",
+                "valorUnit": 4800.0,
+                "unidades": 1.0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "productos": [
+    {
+      "nombre": "Queso Fresco (kg)",
+      "capacidad": 4000.0,
+      "precioVenta": 25.0,
+      "costoUnit": 23.05,
+      "demanda": [
+        1800.0,
+        1900.0,
+        2100.0,
+        2200.0,
+        2000.0,
+        1900.0,
+        1800.0,
+        1850.0,
+        2000.0,
+        2100.0,
+        2200.0,
+        2150.0
+      ]
+    },
+    {
+      "nombre": "Mantequilla 200g (pack)",
+      "capacidad": 3400.0,
+      "precioVenta": 11.05,
+      "costoUnit": 8.5,
+      "demanda": [
+        420.0,
+        450.0,
+        500.0,
+        520.0,
+        480.0,
+        450.0,
+        420.0,
+        430.0,
+        480.0,
+        500.0,
+        520.0,
+        530.0
+      ]
+    },
+    {
+      "nombre": "Yogurt Natural 1L",
+      "capacidad": 3200.0,
+      "precioVenta": 3.64,
+      "costoUnit": 2.8,
+      "demanda": [
+        1050.0,
+        1100.0,
+        1200.0,
+        1250.0,
+        1150.0,
+        1100.0,
+        1050.0,
+        1080.0,
+        1150.0,
+        1200.0,
+        1250.0,
+        1270.0
+      ]
+    },
+    {
+      "nombre": "Queso Andino (kg)",
+      "capacidad": 5000.0,
+      "precioVenta": 34.45,
+      "costoUnit": 26.5,
+      "demanda": [
+        180.0,
+        200.0,
+        220.0,
+        240.0,
+        210.0,
+        190.0,
+        170.0,
+        180.0,
+        200.0,
+        220.0,
+        240.0,
+        250.0
+      ]
+    }
+  ]
+}

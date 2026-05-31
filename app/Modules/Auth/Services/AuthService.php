@@ -153,11 +153,17 @@ class AuthService
             ? ($entityable->trade_name ?? $entityable->name)
             : $entityable->name;
 
-        return [
+        $result = [
             'type' => $type,
             'id'   => $entityable->id,
             'name' => $name,
         ];
+
+        if ($type === 'plant') {
+            $result['onboardingCompletedAt'] = $entityable->onboarding_completed_at?->toISOString();
+        }
+
+        return $result;
     }
 
     /**

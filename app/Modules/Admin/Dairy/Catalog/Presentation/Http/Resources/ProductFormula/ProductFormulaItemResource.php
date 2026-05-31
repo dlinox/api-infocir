@@ -9,18 +9,22 @@ class ProductFormulaItemResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $unit = $this->unitMeasure ?? $this->supply?->unitMeasure;
+
         return [
-            'id' => $this->id,
-            'supplyId' => $this->supply_id,
-            'supplyName' => $this->supply?->name,
-            'unitMeasureName' => $this->supply?->unitMeasure?->name,
-            'quantity' => (float) $this->quantity,
-            'unitPrice' => (float) $this->unit_price,
-            'subtotal' => $this->subtotal,
-            'percentage' => $this->percentage,
-            'change' => $this->change,
-            'version' => $this->version,
-            'isCurrent' => $this->is_current,
+            'id'                     => $this->id,
+            'supplyId'               => $this->supply_id,
+            'supplyName'             => $this->supply?->name,
+            'unitMeasureId'          => $unit?->id,
+            'unitMeasureName'        => $unit?->name,
+            'unitMeasureAbbreviation'=> $unit?->abbreviation,
+            'quantity'               => (float) $this->quantity,
+            'unitPrice'              => (float) $this->unit_price,
+            'subtotal'               => $this->subtotal,
+            'percentage'             => $this->percentage,
+            'change'                 => $this->change,
+            'version'                => $this->version,
+            'isCurrent'              => $this->is_current,
         ];
     }
 }

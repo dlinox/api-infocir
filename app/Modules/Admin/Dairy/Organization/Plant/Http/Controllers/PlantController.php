@@ -7,6 +7,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Dairy\Organization\Plant\Http\Requests\Plant\PlantRequest;
 use App\Modules\Admin\Dairy\Organization\Plant\Http\Resources\Plant\PlantDataTableItemResource;
 use App\Modules\Admin\Dairy\Organization\Plant\Http\Resources\Plant\PlantFormResource;
+use App\Modules\Admin\Dairy\Organization\Plant\Http\Resources\Plant\PlantSelectItemResource;
 use App\Modules\Admin\Dairy\Organization\Plant\Services\PlantService;
 
 class PlantController
@@ -31,8 +32,8 @@ class PlantController
     public function save(PlantRequest $request)
     {
         $data = $request->validated();
-        $this->plantService->save($data);
-        return ApiResponse::success($data, 'Planta guardada correctamente');
+        $plant = $this->plantService->save($data);
+        return ApiResponse::success(new PlantFormResource($plant), 'Planta guardada correctamente');
     }
 
     public function delete(string $id)
@@ -44,6 +45,6 @@ class PlantController
     public function getSelectItems()
     {
         $items = $this->plantService->getSelectItems();
-        return ApiResponse::success($items);
+        return ApiResponse::success(PlantSelectItemResource::collection($items));
     }
 }

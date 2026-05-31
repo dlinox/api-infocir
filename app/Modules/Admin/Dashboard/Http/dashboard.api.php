@@ -1,9 +1,10 @@
 <?php
 
-use App\Modules\Admin\Dashboard\Http\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Modules\Admin\Dashboard\Http\Controllers\DashboardController;
 
-Route::middleware(['auth:api', 'check.session'])->group(function () {
-    Route::get('/admin/dashboard/summary', [DashboardController::class, 'summary']);
-    Route::get('/admin/dashboard/map-data', [DashboardController::class, 'mapData']);
+Route::middleware(['auth:api', 'check.session'])->prefix('/admin/dashboard')->group(function () {
+    Route::get('/summary', [DashboardController::class, 'summary'])->name('dashboard.summary');
+    Route::get('/map-data', [DashboardController::class, 'mapData'])->name('dashboard.mapData');
+    Route::get('/overview', [DashboardController::class, 'overview'])->name('dashboard.overview');
 });

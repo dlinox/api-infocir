@@ -34,6 +34,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100)->unique();
             $table->string('abbreviation', 20)->unique();
+            $table->foreignId('base_unit_id')->nullable()->constrained('core_unit_measures')->nullOnDelete();
+            $table->decimal('conversion_factor', 15, 6)->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_system')->default(false);
             $table->timestamps();
@@ -110,6 +112,7 @@ return new class extends Migration
             $table->string('address', 255)->nullable();
             $table->char('city', 6)->nullable();
             $table->char('country', 2)->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->unique();
 
             $table->timestamps();
 

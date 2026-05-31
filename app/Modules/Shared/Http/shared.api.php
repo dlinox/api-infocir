@@ -18,6 +18,7 @@ Route::middleware(['auth:api', 'check.session'])->prefix('/roles')->group(functi
 Route::middleware(['auth:api', 'check.session'])->prefix('/persons')->group(function () {
     Route::get('/select-async-items', [PersonController::class, 'selectAsyncItems'])->name('persons.selectAsyncItems');
     Route::get('/search-by-document', [PersonController::class, 'searchByDocument'])->name('persons.searchByDocument');
+    Route::get('/get/{id}',           [PersonController::class, 'get'])->name('persons.get')->whereNumber('id');
 });
 
 Route::middleware(['auth:api', 'check.session'])->prefix('/profile')->group(function () {

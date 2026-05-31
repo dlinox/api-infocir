@@ -13,6 +13,8 @@ class ProductTypeDataTableItemResource extends JsonResource
             'id'          => $this->id,
             'name'        => $this->name,
             'description' => $this->description,
+            'icon'        => $this->icon,
+            'color'       => $this->color,
             'isActive'    => $this->is_active,
         ];
     }

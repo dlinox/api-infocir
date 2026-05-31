@@ -28,7 +28,7 @@ class InvestmentCategory extends Model
         'default_validity_years'    => 'integer',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'name',
     ];
 }

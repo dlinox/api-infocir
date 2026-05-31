@@ -4,71 +4,112 @@ namespace App\Modules\Shared\Repositories;
 
 use App\Common\Exceptions\ApiException;
 use App\Models\Core\Person;
+use App\Models\Core\Profile;
 use Illuminate\Support\Facades\DB;
 
 class PersonRepository
 {
-    private const PROFILE_TABLES = [
-        'admins'  => ['table' => 'core_admins',    'column' => 'person_id'],
-        'workers'     => ['table' => 'dairy_workers',        'column' => 'person_id'],
-        'instructors' => ['table' => 'learning_instructors', 'column' => 'person_id'],
+    private const PROFILE_TYPE_MAP = [
+        'admins'      => 'core_admins',
+        'workers'     => 'dairy_workers',
+        'instructors' => 'learning_instructors',
+    ];
+
+    private const PROFILE_TYPE_LABELS = [
+        'core_admins'          => 'Administrador',
+        'dairy_workers'        => 'Trabajador',
+        'dairy_plants'         => 'Planta',
+        'dairy_suppliers'      => 'Proveedor',
+        'learning_instructors' => 'Instructor',
     ];
 
     public function searchByDocument(string $documentType, string $documentNumber, string $profile, ?int $id = null): ?array
     {
-        $profileConfig = self::PROFILE_TABLES[$profile] ?? null;
-        if (!$profileConfig) return null;
+        $targetType = self::PROFILE_TYPE_MAP[$profile] ?? null;
+        if (!$targetType) return null;
 
         $person = Person::where('document_type', $documentType)
             ->where('document_number', $documentNumber)
             ->first();
 
-        // Con ID (edición)
         if ($id) {
             if (!$person) return null;
             if ($person->id === $id) return null;
             throw new ApiException('El documento pertenece a otra persona');
         }
 
-        // Sin ID (creación)
         if (!$person) return null;
 
-        $hasProfile = DB::table($profileConfig['table'])
-            ->where($profileConfig['column'], $person->id)
-            ->exists();
+        $existingProfiles = $this->loadProfiles($person->id);
+        $profileAlreadyExists = collect($existingProfiles)
+            ->contains(fn ($p) => $p['type'] === $targetType);
 
-        if ($hasProfile) {
-            throw new ApiException("La persona ya tiene el perfil de {$profile}");
-        }
-
-        // Persona existe pero no tiene este perfil → devolver con sus perfiles existentes
-        $existingProfiles = [];
-        foreach (self::PROFILE_TABLES as $type => $config) {
-            if (DB::table($config['table'])->where($config['column'], $person->id)->exists()) {
-                $existingProfiles[] = $type;
-            }
-        }
-
-        // Buscar usuario asociado (una persona solo puede tener una cuenta)
-        $user = DB::table('behavior_profiles')
-            ->join('auth_users', 'auth_users.id', '=', 'behavior_profiles.user_id')
-            ->join('core_profiles', 'core_profiles.id', '=', 'behavior_profiles.core_profile_id')
-            ->where('core_profiles.person_id', $person->id)
-            ->select('auth_users.id', 'auth_users.username', 'auth_users.email', 'auth_users.is_active')
-            ->first();
+        $user = $person->user_id
+            ? DB::table('auth_users')
+                ->where('id', $person->user_id)
+                ->select('id', 'username', 'email', 'is_active')
+                ->first()
+            : null;
 
         return [
-            'person' => $person,
-            'profiles' => $existingProfiles,
-            'user' => $user,
+            'exists'               => true,
+            'profileAlreadyExists' => $profileAlreadyExists,
+            'person'               => $person,
+            'user'                 => $user,
+            'profiles'             => $existingProfiles,
         ];
+    }
+
+    public function getById(int $id): ?Person
+    {
+        return Person::find($id);
+    }
+
+    private function loadProfiles(int $personId): array
+    {
+        $profiles = Profile::where('person_id', $personId)->get();
+
+        return $profiles->map(function (Profile $profile) {
+            $entityName = $this->resolveEntityName($profile->profileable_type, $profile->profileable_id);
+            $roleNames  = DB::table('behavior_profiles')
+                ->join('behavior_roles', 'behavior_roles.id', '=', 'behavior_profiles.role_id')
+                ->where('behavior_profiles.core_profile_id', $profile->id)
+                ->pluck('behavior_roles.display_name')
+                ->all();
+
+            return [
+                'type'             => $profile->profileable_type,
+                'typeLabel'        => self::PROFILE_TYPE_LABELS[$profile->profileable_type] ?? $profile->profileable_type,
+                'entityName'       => $entityName,
+                'roleDisplayNames' => $roleNames,
+            ];
+        })->all();
+    }
+
+    private function resolveEntityName(string $type, int $id): ?string
+    {
+        if ($type === 'dairy_workers') {
+            $entity = DB::table('dairy_workers')
+                ->join('core_entities', 'core_entities.id', '=', 'dairy_workers.entity_id')
+                ->where('dairy_workers.person_id', $id)
+                ->select('core_entities.entityable_type', 'core_entities.entityable_id')
+                ->first();
+            return $entity
+                ? $this->resolveEntityName($entity->entityable_type, (int) $entity->entityable_id)
+                : null;
+        }
+
+        return match ($type) {
+            'dairy_plants'    => DB::table('dairy_plants')->where('id', $id)->value('name'),
+            'dairy_suppliers' => DB::table('dairy_suppliers')->where('id', $id)->value('name'),
+            default           => null,
+        };
     }
 
     public function selectAsyncItems($search, $value = null)
     {
         $selected = null;
         $limit = 25;
-
 
         $query = Person::select(
             'core_persons.id',

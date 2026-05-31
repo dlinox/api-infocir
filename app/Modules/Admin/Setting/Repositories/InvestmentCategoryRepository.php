@@ -11,7 +11,7 @@ class InvestmentCategoryRepository
         $query = InvestmentCategory::query();
 
         if (empty($request->sortBy) || !isset($request->sortBy)) {
-            $query->orderBy('sort_order')->orderBy('name');
+            $query->orderBy('id', 'desc');
         }
 
         return $query->dataTable($request);

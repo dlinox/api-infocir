@@ -27,6 +27,11 @@ class Gender extends Model
         'is_system' => 'boolean',
     ];
 
+    public static array $searchColumns = [
+        'code',
+        'name',
+    ];
+
     public function persons()
     {
         return $this->hasMany(Person::class, 'gender', 'code');

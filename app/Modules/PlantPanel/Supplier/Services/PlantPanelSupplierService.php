@@ -20,6 +20,12 @@ class PlantPanelSupplierService
         return $this->repository->getForPlant($plantId);
     }
 
+    public function save(array $data): void
+    {
+        $plantId = $this->authService->getMyPlantId();
+        $this->repository->createForPlant($plantId, $data);
+    }
+
     public function toggleActive(int $supplierId): void
     {
         $plantId = $this->authService->getMyPlantId();

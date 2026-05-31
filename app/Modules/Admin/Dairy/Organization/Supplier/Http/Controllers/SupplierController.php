@@ -7,6 +7,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Dairy\Organization\Supplier\Http\Requests\Supplier\SupplierRequest;
 use App\Modules\Admin\Dairy\Organization\Supplier\Http\Resources\Supplier\SupplierDataTableItemResource;
 use App\Modules\Admin\Dairy\Organization\Supplier\Http\Resources\Supplier\SupplierFormResource;
+use App\Modules\Admin\Dairy\Organization\Supplier\Http\Resources\Supplier\SupplierSelectItemResource;
 use App\Modules\Admin\Dairy\Organization\Supplier\Services\SupplierService;
 
 class SupplierController
@@ -31,8 +32,8 @@ class SupplierController
     public function save(SupplierRequest $request)
     {
         $data = $request->validated();
-        $this->supplierService->save($data);
-        return ApiResponse::success(null, 'Proveedor guardado correctamente');
+        $supplier = $this->supplierService->save($data);
+        return ApiResponse::success(new SupplierFormResource($supplier), 'Proveedor guardado correctamente');
     }
 
     public function delete(string $id)
@@ -44,7 +45,7 @@ class SupplierController
     public function getSelectItems()
     {
         $items = $this->supplierService->getSelectItems();
-        return ApiResponse::success($items);
+        return ApiResponse::success(SupplierSelectItemResource::collection($items));
     }
 }
 

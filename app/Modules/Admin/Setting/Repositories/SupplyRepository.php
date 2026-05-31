@@ -37,6 +37,11 @@ class SupplyRepository
 
     public function getSelectItems()
     {
-        return Supply::where('is_active', true)->orderBy('name')->get();
+        return Supply::with('unitMeasure')->where('is_active', true)->orderBy('name')->get();
+    }
+
+    public function getPrimarySupply()
+    {
+        return Supply::where('is_primary', true)->where('is_active', true)->first();
     }
 }

@@ -3,27 +3,59 @@
 namespace App\Modules\Shared\Repositories\Actions;
 
 use App\Common\Exceptions\ApiException;
+use App\Models\Auth\User;
 use App\Models\Core\Person;
+use App\Modules\Auth\Repositories\Actions\CreateOrUpdateUserAction;
 
 class CreateOrUpdatePersonAction
 {
-    public function __construct() {}
+    public function __construct(
+        private CreateOrUpdateUserAction $createOrUpdateUserAction,
+    ) {}
 
-    public function execute(array $data, ?int $id = null): Person
+    public function execute(array $data, bool $ensureUser = true): Person
     {
-        if (!empty($data['id'])) {
-            $person = Person::where('id', $data['id'])->first();
+        $person = !empty($data['id'])
+            ? $this->updatePerson($data)
+            : $this->createPerson($data);
 
-            if (!$person) throw new ApiException('La persona no existe');
-
-            self::validate($data, $person->id);
-
-            $person->update($data);
-
-            return $person;
+        if ($ensureUser && !$person->user_id) {
+            $user = $this->createOrUpdateUserAction->execute([
+                'username'  => $person->document_number,
+                'password'  => $person->document_number,
+                'email'     => $person->email,
+                'is_active' => true,
+            ]);
+            $person->update(['user_id' => $user->id]);
+            $person->refresh();
         }
+
+        return $person;
+    }
+
+    private function createPerson(array $data): Person
+    {
         self::validate($data, null);
         return Person::create($data);
+    }
+
+    private function updatePerson(array $data): Person
+    {
+        $person = Person::find($data['id']);
+        if (!$person) throw new ApiException('La persona no existe');
+
+        self::validate($data, $person->id);
+        $person->update($data);
+
+        if ($person->user_id) {
+            $this->createOrUpdateUserAction->execute([
+                'id'       => $person->user_id,
+                'username' => $person->document_number,
+                'email'    => $person->email,
+            ]);
+        }
+
+        return $person;
     }
 
     private static function validate(array $data, ?int $id = null): void

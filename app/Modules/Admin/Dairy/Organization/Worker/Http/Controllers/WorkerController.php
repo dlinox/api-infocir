@@ -31,8 +31,9 @@ class WorkerController
     public function save(WorkerRequest $request)
     {
         $data = $request->validated();
-        $this->workerService->save($data);
-        return ApiResponse::success(null, 'Trabajador guardado correctamente');
+        $worker = $this->workerService->save($data);
+        $worker->load(['person', 'entity']);
+        return ApiResponse::success(new WorkerFormResource($worker), 'Trabajador guardado correctamente');
     }
 
     public function delete(string $id)

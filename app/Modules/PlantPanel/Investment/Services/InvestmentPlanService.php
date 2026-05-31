@@ -5,7 +5,9 @@ namespace App\Modules\PlantPanel\Investment\Services;
 use App\Models\Dairy\FixedAsset;
 use App\Models\Dairy\InvestmentPlan;
 use App\Models\Dairy\PreOperativeExpense;
+use App\Models\Dairy\SupplierPayment;
 use App\Models\Dairy\Worker;
+use App\Models\Dairy\WorkerPayment;
 use App\Modules\Auth\Services\AuthService;
 use App\Modules\PlantPanel\Investment\Repositories\InvestmentPlanRepository;
 use App\Modules\PlantPanel\Investment\Support\DepreciationCalculator;
@@ -96,6 +98,7 @@ class InvestmentPlanService
     public function getSummary(int $year): array
     {
         $entityId = $this->authService->getMyEntityId();
+        $plantId = $this->authService->getMyPlantId();
         $today    = Carbon::today();
 
         // Activo Fijo: total acumulado (no por año) y depreciación mensual
@@ -143,6 +146,29 @@ class InvestmentPlanService
             ->where('period_year', $year)
             ->sum('total_amount');
 
+        // Pagos ejecutados por planta (trabajadores + proveedores)
+        $workerCurrent = (float) WorkerPayment::where('plant_id', $plantId)
+            ->where('status', 'paid')
+            ->where('period_year', $year)
+            ->where('period_month', $currentMonth)
+            ->sum('net_amount');
+        $workerYear = (float) WorkerPayment::where('plant_id', $plantId)
+            ->where('status', 'paid')
+            ->where('period_year', $year)
+            ->sum('net_amount');
+        $supplierCurrent = (float) SupplierPayment::where('plant_id', $plantId)
+            ->where('status', 'paid')
+            ->whereYear('period_end', $year)
+            ->whereMonth('period_end', $currentMonth)
+            ->sum('net_amount');
+        $supplierYear = (float) SupplierPayment::where('plant_id', $plantId)
+            ->where('status', 'paid')
+            ->whereYear('period_end', $year)
+            ->sum('net_amount');
+
+        $executedCurrent = $workerCurrent + $supplierCurrent;
+        $executedYear = $workerYear + $supplierYear;
+
         return [
             'year'                       => $year,
             'currentMonth'               => $currentMonth,
@@ -155,6 +181,15 @@ class InvestmentPlanService
             'workingCapitalCurrentMonth' => round($wcCurrent, 2),
             'workingCapitalYearTotal'    => round($wcYear, 2),
             'totalInvested'              => round($assetsTotal + $preOpTotal + $wcYear, 2),
+            'operationalCurrentMonth'    => 0.0,
+            'operationalYearTotal'       => 0.0,
+            'workerPaymentsCurrentMonth' => round($workerCurrent, 2),
+            'workerPaymentsYearTotal'    => round($workerYear, 2),
+            'supplierPaymentsCurrentMonth' => round($supplierCurrent, 2),
+            'supplierPaymentsYearTotal'  => round($supplierYear, 2),
+            'executedCurrentMonth'       => round($executedCurrent, 2),
+            'executedYearTotal'          => round($executedYear, 2),
+            'plannedVsExecutedGap'       => round($wcYear - $executedYear, 2),
         ];
     }
 }

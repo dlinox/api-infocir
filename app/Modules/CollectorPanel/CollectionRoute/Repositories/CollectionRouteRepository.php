@@ -3,12 +3,15 @@
 namespace App\Modules\CollectorPanel\CollectionRoute\Repositories;
 
 use App\Models\Dairy\CollectionRoute;
+use App\Models\Dairy\WorkingCapitalCatalog;
+use Illuminate\Database\Eloquent\Collection;
 
 class CollectionRouteRepository
 {
     public function getActive(int $plantId, int $collectorId): ?CollectionRoute
     {
-        return CollectionRoute::where('plant_id', $plantId)
+        return CollectionRoute::with('expenses.catalogItem.unitMeasure')
+            ->where('plant_id', $plantId)
             ->where('collector_id', $collectorId)
             ->where('status', 'active')
             ->latest('started_at')
@@ -20,13 +23,27 @@ class CollectionRouteRepository
         return CollectionRoute::create($data);
     }
 
-    public function finalize(CollectionRoute $route, array $data): CollectionRoute
+    public function finalize(CollectionRoute $route, array $data, array $expenses = []): CollectionRoute
     {
         $route->update(array_merge($data, [
             'ended_at' => now(),
             'status'   => 'completed',
         ]));
-        return $route;
+
+        if (!empty($expenses)) {
+            $route->expenses()->createMany($expenses);
+        }
+
+        return $route->load('expenses.catalogItem.unitMeasure');
+    }
+
+    public function getRouteExpenseItems(): Collection
+    {
+        return WorkingCapitalCatalog::with('unitMeasure')
+            ->where('is_active', true)
+            ->where('is_route_expense', true)
+            ->orderBy('name')
+            ->get();
     }
 
     public function findByIdAndPlant(int $id, int $plantId): ?CollectionRoute

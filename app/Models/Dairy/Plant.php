@@ -4,6 +4,7 @@ namespace App\Models\Dairy;
 
 use App\Common\Traits\HasDataTable;
 use App\Common\Traits\HasEntity;
+use App\Common\Traits\HasSlug;
 use App\Models\Core\City;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,13 +13,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Plant extends Model
 {
-    use HasDataTable, HasEntity;
+    use HasDataTable, HasEntity, HasSlug;
 
     protected $table = 'dairy_plants';
 
     protected $fillable = [
         'ruc',
         'name',
+        'slug',
+        'owner_name',
         'trade_name',
         'type',
         'brand',
@@ -37,6 +40,7 @@ class Plant extends Model
         'has_tdd_training',
         'description',
         'is_active',
+        'onboarding_completed_at',
         'company_type_id',
         'training_level_id',
         'institution_type_id',
@@ -52,6 +56,7 @@ class Plant extends Model
         'has_production_parameters' => 'boolean',
         'has_digesa_parameters' => 'boolean',
         'has_tdd_training' => 'boolean',
+        'onboarding_completed_at' => 'datetime',
     ];
 
     public static $searchColumns = [

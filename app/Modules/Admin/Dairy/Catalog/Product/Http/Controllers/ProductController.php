@@ -7,6 +7,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Admin\Dairy\Catalog\Product\Http\Requests\Product\ProductRequest;
 use App\Modules\Admin\Dairy\Catalog\Product\Http\Resources\Product\ProductDataTableItemResource;
 use App\Modules\Admin\Dairy\Catalog\Product\Http\Resources\Product\ProductFormResource;
+use App\Modules\Admin\Dairy\Catalog\Product\Http\Resources\Product\ProductSelectItemResource;
 use App\Modules\Admin\Dairy\Catalog\Product\Services\ProductService;
 
 class ProductController
@@ -31,8 +32,8 @@ class ProductController
     public function save(ProductRequest $request)
     {
         $data = $request->validated();
-        $this->productService->save($data);
-        return ApiResponse::success($data, 'Producto guardado correctamente');
+        $product = $this->productService->save($data);
+        return ApiResponse::success(new ProductFormResource($product), 'Producto guardado correctamente');
     }
 
     public function delete(string $id)
@@ -44,6 +45,6 @@ class ProductController
     public function getSelectItems()
     {
         $items = $this->productService->getSelectItems();
-        return ApiResponse::success($items);
+        return ApiResponse::success(ProductSelectItemResource::collection($items));
     }
 }

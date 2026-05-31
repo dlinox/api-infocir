@@ -11,6 +11,8 @@ class ProductTypeSelectItemResource extends JsonResource
         return [
             'title' => $this->name,
             'value' => $this->id,
+            'icon'  => $this->icon,
+            'color' => $this->color,
         ];
     }
 }

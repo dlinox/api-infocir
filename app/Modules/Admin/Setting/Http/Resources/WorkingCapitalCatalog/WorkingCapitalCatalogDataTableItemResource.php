@@ -13,12 +13,22 @@ class WorkingCapitalCatalogDataTableItemResource extends JsonResource
             'id'                 => $this->id,
             'name'               => $this->name,
             'description'        => $this->description,
+            'color'              => $this->color,
+            'recurrenceType'     => $this->recurrence_type,
+            'recurrenceEveryDays' => $this->recurrence_every_days,
             'isActive'           => $this->is_active,
             'investmentCategory' => $this->investmentCategory
                 ? ['id' => $this->investmentCategory->id, 'name' => $this->investmentCategory->name]
                 : null,
-            'unitMeasure'        => $this->unitMeasure
-                ? ['id' => $this->unitMeasure->id, 'name' => $this->unitMeasure->name, 'abbreviation' => $this->unitMeasure->abbreviation]
+            'iconFile'           => $this->iconFile
+                ? [
+                    'id'       => $this->iconFile->id,
+                    'url'      => $this->iconFile->url,
+                    'filename' => $this->iconFile->filename,
+                    'mimeType' => $this->iconFile->mime_type,
+                    'size'     => $this->iconFile->size,
+                    'caption'  => $this->iconFile->caption,
+                ]
                 : null,
         ];
     }

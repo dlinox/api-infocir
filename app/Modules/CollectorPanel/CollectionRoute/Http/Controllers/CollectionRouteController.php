@@ -7,6 +7,7 @@ use App\Common\Http\Responses\ApiResponse;
 use App\Modules\CollectorPanel\CollectionRoute\Http\Requests\StartRouteRequest;
 use App\Modules\CollectorPanel\CollectionRoute\Http\Requests\FinalizeRouteRequest;
 use App\Modules\CollectorPanel\CollectionRoute\Http\Resources\CollectionRouteResource;
+use App\Modules\CollectorPanel\CollectionRoute\Http\Resources\RouteExpenseItemResource;
 use App\Modules\CollectorPanel\CollectionRoute\Services\CollectionRouteService;
 
 class CollectionRouteController
@@ -49,5 +50,11 @@ class CollectionRouteController
         $dateTo   = request()->query('dateTo');
         $data = $this->service->stats($dateFrom ?: null, $dateTo ?: null);
         return ApiResponse::success($data, '');
+    }
+
+    public function expenseItems(): JsonResponse
+    {
+        $items = $this->service->getRouteExpenseItems();
+        return ApiResponse::success(RouteExpenseItemResource::collection($items), '');
     }
 }

@@ -40,4 +40,10 @@ class SupplyController
         $items = $this->supplyService->getSelectItems();
         return ApiResponse::success(SupplySelectItemResource::collection($items));
     }
+
+    public function getPrimarySupply()
+    {
+        $supply = $this->supplyService->getPrimarySupply();
+        return ApiResponse::success($supply ? new SupplySelectItemResource($supply) : null);
+    }
 }

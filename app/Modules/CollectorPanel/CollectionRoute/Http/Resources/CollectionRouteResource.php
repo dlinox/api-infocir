@@ -23,6 +23,21 @@ class CollectionRouteResource extends JsonResource
             'observations'    => $this->observations,
             'collectionsCount' => (int) ($this->collections_count ?? $this->milkCollections()->count()),
             'totalLiters'     => (float) ($this->total_liters ?? $this->milkCollections()->sum('quantity_liters')),
+            'totalExpenses'   => (float) $this->expenses->sum('amount'),
+            'expenses'        => $this->expenses->map(fn ($expense) => [
+                'id'       => $expense->id,
+                'amount'   => (float) $expense->amount,
+                'quantity' => $expense->quantity !== null ? (float) $expense->quantity : null,
+                'notes'    => $expense->notes,
+                'catalogItem' => $expense->catalogItem ? [
+                    'id'          => $expense->catalogItem->id,
+                    'name'        => $expense->catalogItem->name,
+                    'color'       => $expense->catalogItem->color,
+                    'unitMeasure' => $expense->catalogItem->unitMeasure
+                        ? ['id' => $expense->catalogItem->unitMeasure->id, 'abbreviation' => $expense->catalogItem->unitMeasure->abbreviation]
+                        : null,
+                ] : null,
+            ])->values(),
         ];
     }
 }

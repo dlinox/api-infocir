@@ -3,6 +3,7 @@
 namespace App\Modules\PlantPanel\Supplier\Http\Controllers;
 
 use App\Common\Http\Responses\ApiResponse;
+use App\Modules\PlantPanel\Supplier\Http\Requests\PlantPanelSupplierRequest;
 use App\Modules\PlantPanel\Supplier\Http\Resources\PlantSupplierItemResource;
 use App\Modules\PlantPanel\Supplier\Services\PlantPanelSupplierService;
 use Illuminate\Http\JsonResponse;
@@ -18,6 +19,12 @@ class PlantPanelSupplierController
     {
         $suppliers = $this->service->list();
         return ApiResponse::success(PlantSupplierItemResource::collection($suppliers));
+    }
+
+    public function save(PlantPanelSupplierRequest $request): JsonResponse
+    {
+        $this->service->save($request->validated());
+        return ApiResponse::success(null, 'Proveedor guardado correctamente');
     }
 
     public function toggleActive(int $supplierId): JsonResponse

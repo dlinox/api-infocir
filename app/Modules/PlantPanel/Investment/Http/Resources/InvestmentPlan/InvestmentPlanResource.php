@@ -30,6 +30,7 @@ class InvestmentPlanResource extends JsonResource
                 'quantity'             => (float) $item->quantity,
                 'total'                => (float) $item->total,
                 'sortOrder'            => (int) $item->sort_order,
+                'createdAt'            => $item->created_at?->toIso8601String(),
             ])->values(),
         ];
     }

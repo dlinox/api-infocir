@@ -6,6 +6,7 @@ use App\Common\Exceptions\ApiException;
 use App\Models\Dairy\CollectionRoute;
 use App\Modules\Auth\Services\AuthService;
 use App\Modules\CollectorPanel\CollectionRoute\Repositories\CollectionRouteRepository;
+use Illuminate\Support\Facades\DB;
 
 class CollectionRouteService
 {
@@ -47,7 +48,15 @@ class CollectionRouteService
         if (!$route) throw new ApiException('Recorrido no encontrado.', 404);
         if ($route->status === 'completed') throw new ApiException('Este recorrido ya fue finalizado.', 422);
 
-        return $this->repository->finalize($route, $data);
+        $expenses = $data['expenses'] ?? [];
+        unset($data['expenses']);
+
+        return DB::transaction(fn () => $this->repository->finalize($route, $data, $expenses));
+    }
+
+    public function getRouteExpenseItems(): mixed
+    {
+        return $this->repository->getRouteExpenseItems();
     }
 
     public function dataTable($request): mixed

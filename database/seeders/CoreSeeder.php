@@ -61,26 +61,22 @@ class CoreSeeder extends Seeder
 
     private function seedUnitMeasures(): void
     {
-        $units = [
+        $gramo     = UnitMeasure::create(['name' => 'Gramo',    'abbreviation' => 'g',  'is_system' => true]);
+        $mililitro = UnitMeasure::create(['name' => 'Mililitro','abbreviation' => 'mL', 'is_system' => true]);
 
-            // Unidades de conteo y empaque
-            ['name' => 'Unidad', 'abbreviation' => 'und'],
-            ['name' => 'Docena', 'abbreviation' => 'doc'],
-            ['name' => 'Caja', 'abbreviation' => 'cja'],
-            ['name' => 'Paquete', 'abbreviation' => 'pqt'],
-
-            // Volumen (líquidos y capacidad)
-            ['name' => 'Litro', 'abbreviation' => 'L'],
-            ['name' => 'Mililitro', 'abbreviation' => 'mL'],
-
-            // Masa (ingredientes y productos)
-            ['name' => 'Kilogramo', 'abbreviation' => 'kg'],
-            ['name' => 'Gramo', 'abbreviation' => 'g'],
-
-        ];
-
-        foreach ($units as $unit) {
-            UnitMeasure::create([...$unit, 'is_system' => true]);
-        }
+        UnitMeasure::create([
+            'name'              => 'Kilogramo',
+            'abbreviation'      => 'kg',
+            'base_unit_id'      => $gramo->id,
+            'conversion_factor' => 1000,
+            'is_system'         => true,
+        ]);
+        UnitMeasure::create([
+            'name'              => 'Litro',
+            'abbreviation'      => 'L',
+            'base_unit_id'      => $mililitro->id,
+            'conversion_factor' => 1000,
+            'is_system'         => true,
+        ]);
     }
 }

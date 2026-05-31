@@ -13,6 +13,8 @@ class ProductTypeRequest extends ApiFormRequest
             'id'          => 'nullable|integer',
             'name'        => 'required|string|max:100|unique:dairy_product_types,name,' . $id . ',id',
             'description' => 'nullable|string|max:255',
+            'icon'        => 'nullable|string|max:20',
+            'color'       => 'nullable|string|max:20',
             'is_active'   => 'required|boolean',
         ];
     }
@@ -26,6 +28,10 @@ class ProductTypeRequest extends ApiFormRequest
             'name.unique'        => 'El :attribute ya existe.',
             'description.string' => 'La :attribute debe ser una cadena de texto.',
             'description.max'    => 'La :attribute no debe exceder los :max caracteres.',
+            'icon.string'        => 'El :attribute debe ser una cadena de texto.',
+            'icon.max'           => 'El :attribute no debe exceder los :max caracteres.',
+            'color.string'       => 'El :attribute debe ser una cadena de texto.',
+            'color.max'          => 'El :attribute no debe exceder los :max caracteres.',
             'is_active.required' => 'El :attribute es requerido.',
             'is_active.boolean'  => 'El :attribute debe ser verdadero o falso.',
         ];
@@ -37,6 +43,8 @@ class ProductTypeRequest extends ApiFormRequest
             'id'          => 'ID',
             'name'        => 'Nombre',
             'description' => 'Descripción',
+            'icon'        => 'Ícono',
+            'color'       => 'Color',
             'is_active'   => 'Estado',
         ];
     }

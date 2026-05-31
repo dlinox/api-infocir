@@ -2,8 +2,10 @@
 
 namespace App\Models\Core;
 
+use App\Models\Auth\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Person extends Model
 {
@@ -22,10 +24,12 @@ class Person extends Model
         'address',
         'city',
         'country',
+        'user_id',
     ];
 
     protected $casts = [
         'date_birth' => 'date',
+        'user_id' => 'integer',
     ];
 
     public function documentTypeRelation(): BelongsTo
@@ -46,6 +50,16 @@ class Person extends Model
     public function countryRelation(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country', 'code');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function profiles(): HasMany
+    {
+        return $this->hasMany(Profile::class, 'person_id');
     }
 
     public function getFullNameAttribute(): string

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shared\Http\Resources\Person;
 
+use App\Common\Helpers\Mask;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PersonSearchResource extends JsonResource
@@ -9,29 +10,33 @@ class PersonSearchResource extends JsonResource
     public function toArray($request)
     {
         $person = $this->resource['person'];
-        $user = $this->resource['user'] ?? null;
+        $user   = $this->resource['user'] ?? null;
 
         return [
+            'exists'               => $this->resource['exists'] ?? true,
+            'profileAlreadyExists' => (bool) ($this->resource['profileAlreadyExists'] ?? false),
             'person' => [
-                'id' => $person->id,
-                'documentType' => $person->document_type,
-                'documentNumber' => $person->document_number,
-                'name' => $person->name,
-                'paternalSurname' => $person->paternal_surname,
-                'maternalSurname' => $person->maternal_surname,
-                'email' => $person->email,
-                'cellphone' => $person->cellphone,
-                'dateBirth' => $person->date_birth?->format('Y-m-d'),
-                'gender' => $person->gender,
-                'address' => $person->address,
+                'id'                    => $person->id,
+                'documentType'          => $person->document_type,
+                'documentNumber'        => $person->document_number,
+                'nameMasked'            => Mask::name($person->name),
+                'paternalSurnameMasked' => Mask::name($person->paternal_surname),
+                'maternalSurnameMasked' => Mask::name($person->maternal_surname),
+                'emailMasked'           => Mask::email($person->email),
+                'cellphoneMasked'       => Mask::phone($person->cellphone),
             ],
-            'profiles' => $this->resource['profiles'],
             'user' => $user ? [
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email,
-                'isActive' => (bool) $user->is_active,
+                'id'           => $user->id,
+                'usernameMasked' => Mask::username($user->username),
+                'emailMasked'  => Mask::email($user->email),
+                'isActive'     => (bool) $user->is_active,
             ] : null,
+            'profiles' => array_map(fn ($p) => [
+                'type'             => $p['type'],
+                'typeLabel'        => $p['typeLabel'],
+                'entityName'       => $p['entityName'],
+                'roleDisplayNames' => $p['roleDisplayNames'],
+            ], $this->resource['profiles'] ?? []),
         ];
     }
 }

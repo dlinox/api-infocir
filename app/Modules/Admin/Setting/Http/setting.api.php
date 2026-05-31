@@ -22,14 +22,14 @@ use App\Modules\Admin\Setting\Http\Controllers\WorkingCapitalCatalogController;
 Route::middleware(['auth:api', 'check.session'])->prefix('/genders')->group(function () {
     Route::post('/data-table', [GenderController::class, 'dataTable'])->name('genders.dataTable');
     Route::post('/save', [GenderController::class, 'save'])->name('genders.save');
-    Route::delete('/delete/{id}', [GenderController::class, 'delete'])->name('genders.delete');
+    Route::delete('/delete/{code}', [GenderController::class, 'delete'])->name('genders.delete');
     Route::get('/select-items', [GenderController::class, 'getSelectItems'])->name('genders.selectItems');
 });
 
 Route::middleware(['auth:api', 'check.session'])->prefix('/document-types')->group(function () {
     Route::post('/data-table', [DocumentTypeController::class, 'dataTable'])->name('document-types.dataTable');
     Route::post('/save', [DocumentTypeController::class, 'save'])->name('document-types.save');
-    Route::delete('/delete/{id}', [DocumentTypeController::class, 'delete'])->name('document-types.delete');
+    Route::delete('/delete/{code}', [DocumentTypeController::class, 'delete'])->name('document-types.delete');
     Route::get('/select-items', [DocumentTypeController::class, 'getSelectItems'])->name('document-types.selectItems');
 });
 
@@ -94,6 +94,7 @@ Route::middleware(['auth:api', 'check.session'])->prefix('/supplies')->group(fun
     Route::post('/save', [SupplyController::class, 'save'])->name('supplies.save');
     Route::delete('/delete/{id}', [SupplyController::class, 'delete'])->name('supplies.delete');
     Route::get('/select-items', [SupplyController::class, 'getSelectItems'])->name('supplies.selectItems');
+    Route::get('/primary-supply', [SupplyController::class, 'getPrimarySupply'])->name('supplies.primarySupply');
 });
 
 Route::middleware(['auth:api', 'check.session'])->prefix('/areas')->group(function () {

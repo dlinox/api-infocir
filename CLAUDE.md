@@ -21,6 +21,7 @@ Leer ambos archivos con `read_file` **antes** de generar cualquier archivo `.vue
 - **Organización de modelos**:
   - Modelos core/settings: `app/Models/Core/` (Gender, DocumentType, etc.)
   - Modelos del módulo Dairy: `app/Models/Dairy/` (Plant, CompanyType, Position, etc.)
+  - Modelos del módulo Learning: `app/Models/Learning/` (Area, TrainingType, etc.)
 - **Organización de módulos**:
   - Settings simples: `app/Modules/Admin/Setting/` (Gender, DocumentType, Profession, CompanyType, Position, ProductType, etc.)
   - Entidades Dairy complejas: `app/Modules/Admin/Dairy/{Area}/{Entity}/` — agrupadas por área funcional:
@@ -72,14 +73,38 @@ Leer ambos archivos con `read_file` **antes** de generar cualquier archivo `.vue
 
 ### Código
 - Usar `ApiResponse::success($data, $message)` para TODAS las respuestas exitosas
+- **`save()` y `delete()` en CRUDs simples retornan `null`**: `ApiResponse::success(null, 'Entidad guardada correctamente')`. En catálogos y settings el frontend solo necesita confirmar que no hubo error. Si un flujo específico requiere recibir el objeto guardado (ej: para actualizar el store sin recargar), se retorna el dato correspondiente.
 - Mensajes de respuesta SIEMPRE en español: "Género guardado correctamente"
 - FormRequests SIEMPRE extienden `ApiFormRequest` (no `FormRequest` directamente)
 - **Claves en `rules()`, `messages()` y `attributes()` SIEMPRE en `snake_case`**: `ApiFormRequest` convierte automáticamente el JSON camelCase entrante a snake_case antes de la validación. Por lo tanto usar `course_id`, `is_active`, `duration_min` — NUNCA `courseId`, `isActive`, `durationMin`
 - Modelos de catálogo: `public $timestamps = false` solo si la migración NO tiene `$table->timestamps()`, usar trait `HasDataTable`
+- **`$searchColumns` siempre tipado**: `public static array $searchColumns = [...]` (nunca sin tipo)
 - Controllers NO extienden ninguna clase base
-- Inyección de dependencias vía constructor con PHP 8 promoted properties
+- **Inyección de dependencias vía constructor con nombres descriptivos**: usar `$genderService`, `$preOperativeCatalogService` — NUNCA nombres genéricos como `$service` o `$repository`
 - Validación: `messages()` y `attributes()` en español
 - En Resources, para concatenar nombres usar `collect([$name, $paternal, $maternal])->filter()->implode(' ')` (nunca `trim()` con interpolación)
+- **Registros `is_system`**: en `save()` del Service, si el registro es de sistema solo se permite actualizar `is_active`. Patrón:
+  ```php
+  $existing = Entity::find($data['code']); // o findOrFail para id
+  if ($existing?->is_system) {
+      $existing->update(['is_active' => $data['is_active']]);
+      return $existing;
+  }
+  return $this->entityRepository->createOrUpdate($data);
+  ```
+
+### Resources
+Hay dos tipos de Resource según el contexto de uso:
+- **`{Entity}DataTableItemResource`** — para la tabla paginada. Incluye todos los campos relevantes con relaciones como objetos.
+- **`{Entity}SelectItemResource`** — para dropdowns/selects. Siempre expone `title` y `value` como mínimo. Puede incluir campos extra que el frontend necesita al seleccionar (ej: para calcular o pre-rellenar otros campos del formulario). NUNCA usar `DataTableItemResource` en `getSelectItems()`.
+
+Estructura mínima de un `SelectItemResource`:
+```php
+return [
+    'title' => $this->name,
+    'value' => $this->id, // o 'code' si es PK string
+];
+```
 
 ### Resources (DataTableItemResource)
 - **Relaciones como objetos**: NUNCA exponer IDs planos de FKs si ya existe el objeto de la relación. Usar acceso directo nullable:
@@ -104,13 +129,17 @@ Leer ambos archivos con `read_file` **antes** de generar cualquier archivo `.vue
 Cada entidad tiene un **conjunto base** de 3 endpoints:
 - `POST /{prefix}/data-table` — listar con paginación
 - `POST /{prefix}/save` — crear o actualizar (no usar PUT/PATCH separados)
-- `DELETE /{prefix}/delete/{id}` — eliminar
+- `DELETE /{prefix}/delete/{id}` — eliminar. **Excepción**: entidades con PK string usan `{code}` en lugar de `{id}` (ej: Gender → `/delete/{code}`, DocumentType → `/delete/{code}`)
 
 **Endpoints opcionales** según necesidad:
 - `GET /{prefix}/get/{id}` — obtener por ID. Solo para formularios complejos donde la tabla no envía todos los datos necesarios para el formulario de edición
 - `GET /{prefix}/select-items` — items para dropdowns/selects (entidades referenciadas como FK en otras)
 
 SIEMPRE protegidas con middleware `auth:api`.
+
+### Repositorios
+- **Orden por defecto en `dataTable`**: cuando el frontend no envía `sortBy`, ordenar por PK descendente: `orderBy('id', 'desc')` o `orderBy('code', 'desc')` para entidades con PK string. **Excepción** permitida: entidades con campo `sort_order` explícito pueden usar ese campo.
+- **`getSelectItems()`**: ordenar por `name` asc (orden alfabético para dropdowns).
 
 ### Base de datos
 - No usar timestamps en tablas de catálogo/setting

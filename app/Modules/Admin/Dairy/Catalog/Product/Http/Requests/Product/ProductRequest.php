@@ -10,14 +10,15 @@ class ProductRequest extends ApiFormRequest
     {
         $id = $this->id ?? 'NULL';
         return [
-            'id'                   => 'nullable|integer',
-            'name'                 => 'required|string|max:100|unique:dairy_products,name,' . $id . ',id',
-            'description'          => 'nullable|string|max:255',
-            'product_type_id'      => 'nullable|integer|exists:dairy_product_types,id',
-            'created_by'           => 'nullable|integer|exists:auth_users,id',
-            'is_active'            => 'required|boolean',
-            'contains_milk'        => 'required|boolean',
-            'milk_liters_per_unit' => 'nullable|numeric|min:0.001|required_if:contains_milk,true',
+            'id'                    => 'nullable|integer',
+            'name'                  => 'required|string|max:100|unique:dairy_products,name,' . $id . ',id',
+            'description'           => 'nullable|string|max:255',
+            'product_type_id'       => 'nullable|integer|exists:dairy_product_types,id',
+            'created_by'            => 'nullable|integer|exists:auth_users,id',
+            'is_active'             => 'required|boolean',
+            'contains_milk'         => 'required|boolean',
+            'milk_liters_per_unit'  => 'nullable|numeric|min:0.001|required_if:contains_milk,true',
+            'unit_measure_id'       => 'nullable|integer|exists:core_unit_measures,id',
         ];
     }
 
@@ -39,6 +40,7 @@ class ProductRequest extends ApiFormRequest
             'milk_liters_per_unit.numeric'        => 'Los :attribute deben ser un número.',
             'milk_liters_per_unit.min'            => 'Los :attribute deben ser mayor a cero.',
             'milk_liters_per_unit.required_if'    => 'Los :attribute son requeridos cuando el producto contiene leche.',
+            'unit_measure_id.exists'              => 'La unidad de medida seleccionada no existe.',
         ];
     }
 
@@ -53,6 +55,7 @@ class ProductRequest extends ApiFormRequest
             'is_active'            => 'Estado',
             'contains_milk'        => 'Contiene leche',
             'milk_liters_per_unit' => 'litros de leche por unidad',
+            'unit_measure_id'      => 'unidad de medida',
         ];
     }
 }

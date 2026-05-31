@@ -4,7 +4,10 @@ namespace App\Models\Auth;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\Behavior\BehaviorProfile;
+use App\Models\Core\Person;
+use App\Common\Traits\HasDataTable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -12,7 +15,18 @@ class User extends Authenticatable implements JWTSubject
 {
 
     use HasApiTokens;
+    use HasDataTable;
+
     protected $table = 'auth_users';
+
+    public static array $searchColumns = [
+        'auth_users.username',
+        'auth_users.email',
+        'core_persons.name',
+        'core_persons.paternal_surname',
+        'core_persons.maternal_surname',
+        'core_persons.document_number',
+    ];
 
     protected $fillable = [
         'username',
@@ -63,5 +77,10 @@ class User extends Authenticatable implements JWTSubject
     public function profiles(): HasMany
     {
         return $this->hasMany(BehaviorProfile::class, 'user_id');
+    }
+
+    public function person(): HasOne
+    {
+        return $this->hasOne(Person::class, 'user_id');
     }
 }

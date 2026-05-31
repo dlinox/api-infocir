@@ -30,7 +30,7 @@ class Supply extends Model
         'is_primary'      => 'boolean',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'name',
     ];
 

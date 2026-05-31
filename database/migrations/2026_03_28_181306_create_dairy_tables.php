@@ -84,6 +84,7 @@ return new class extends Migration
             $table->id();
             $table->char('ruc', 11)->unique();
             $table->string('name', 100)->unique();
+            $table->string('owner_name', 100)->nullable();
             $table->string('trade_name', 100)->nullable();
             $table->enum('type', ['A', 'B', 'C'])->default('A');
             $table->string('brand', 100)->nullable();
@@ -103,6 +104,7 @@ return new class extends Migration
             $table->boolean('has_tdd_training')->default(false);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->timestamp('onboarding_completed_at')->nullable();
             $table->unsignedBigInteger('company_type_id')->nullable();
             $table->unsignedBigInteger('training_level_id')->nullable();
             $table->unsignedBigInteger('institution_type_id')->nullable();
@@ -184,6 +186,7 @@ return new class extends Migration
             $table->string('description', 255)->nullable();
             $table->unsignedBigInteger('product_type_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreignId('unit_measure_id')->nullable()->constrained('core_unit_measures')->nullOnDelete();
 
             $table->boolean('is_active')->default(true);
             $table->boolean('contains_milk')->default(false);
@@ -194,6 +197,7 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
             $table->index('name');
             $table->index('product_type_id');
+            $table->index('unit_measure_id');
             $table->index('is_active');
         });
 
@@ -235,6 +239,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('presentation_id');
             $table->unsignedBigInteger('supply_id');
+            $table->foreignId('unit_measure_id')->nullable()->constrained('core_unit_measures')->nullOnDelete();
             $table->decimal('quantity', 10, 3);
             $table->decimal('unit_price', 10, 3);
             $table->unsignedInteger('version')->default(1);
@@ -246,6 +251,7 @@ return new class extends Migration
             $table->unique(['presentation_id', 'supply_id', 'version']);
             $table->index('presentation_id');
             $table->index('supply_id');
+            $table->index('unit_measure_id');
             $table->index('version');
             $table->index('is_current');
         });
@@ -500,10 +506,75 @@ return new class extends Migration
             $table->index('period_end');
             $table->index('status');
         });
+
+        Schema::create('dairy_supplier_milk_registrations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('supplier_id');
+            $table->date('registration_date');
+            $table->enum('shift', ['morning', 'afternoon'])->default('morning');
+            $table->decimal('quantity_liters', 10, 2);
+            $table->unsignedSmallInteger('number_of_cows')->nullable();
+            $table->text('observations')->nullable();
+            $table->timestamps();
+
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->index('supplier_id');
+            $table->index('registration_date');
+        });
+
+        Schema::create('dairy_supplier_cattle_breeds', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('supplier_id');
+            $table->string('breed_name', 100);
+            $table->unsignedSmallInteger('count')->nullable();
+            $table->text('notes')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('supplier_id')->references('id')->on('dairy_suppliers')->onDelete('cascade');
+            $table->index('supplier_id');
+            $table->index('breed_name');
+            $table->index('is_active');
+        });
+
+        Schema::create('dairy_worker_payments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('plant_id');
+            $table->unsignedBigInteger('worker_person_id');
+            $table->unsignedSmallInteger('period_year');
+            $table->unsignedTinyInteger('period_month');
+            $table->decimal('base_salary', 10, 2);
+            $table->decimal('bonuses', 10, 2)->default(0);
+            $table->decimal('deductions', 10, 2)->default(0);
+            $table->decimal('net_amount', 12, 2);
+            $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
+            $table->timestamp('paid_at')->nullable();
+            $table->unsignedBigInteger('paid_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->text('observations')->nullable();
+            $table->timestamps();
+
+            $table->foreign('plant_id')->references('id')->on('dairy_plants')->onDelete('cascade');
+            $table->foreign('worker_person_id')->references('person_id')->on('dairy_workers')->onDelete('cascade');
+            $table->foreign('paid_by')->references('id')->on('auth_users')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('auth_users')->onDelete('set null');
+
+            $table->unique(
+                ['plant_id', 'worker_person_id', 'period_year', 'period_month'],
+                'dairy_worker_payments_unique'
+            );
+            $table->index('plant_id');
+            $table->index('worker_person_id');
+            $table->index(['period_year', 'period_month']);
+            $table->index('status');
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('dairy_worker_payments');
+        Schema::dropIfExists('dairy_supplier_cattle_breeds');
+        Schema::dropIfExists('dairy_supplier_milk_registrations');
         Schema::dropIfExists('dairy_supplier_payments');
         Schema::dropIfExists('dairy_batch_suppliers');
         Schema::dropIfExists('dairy_production_batches');

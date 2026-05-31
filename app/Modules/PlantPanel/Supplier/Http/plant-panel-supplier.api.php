@@ -5,6 +5,7 @@ use App\Modules\PlantPanel\Supplier\Http\Controllers\PlantPanelSupplierControlle
 
 Route::middleware(['auth:api', 'check.session'])->prefix('/plant-panel/my-suppliers')->group(function () {
     Route::get('/',                          [PlantPanelSupplierController::class, 'list']);
+    Route::post('/save',                     [PlantPanelSupplierController::class, 'save']);
     Route::patch('/{supplierId}/toggle',     [PlantPanelSupplierController::class, 'toggleActive']);
     Route::patch('/{supplierId}/price',      [PlantPanelSupplierController::class, 'updatePrice']);
 });

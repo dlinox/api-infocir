@@ -4,11 +4,12 @@ namespace App\Modules\Shared\Http\Controllers;
 
 use App\Common\Http\Responses\ApiResponse;
 use App\Modules\Shared\Http\Requests\Person\SearchByDocumentRequest;
+use App\Modules\Shared\Http\Resources\Person\PersonResource;
 use App\Modules\Shared\Http\Resources\Person\PersonSearchResource;
 use App\Modules\Shared\Http\Resources\PersonItemResource;
 use App\Modules\Shared\Services\PersonService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PersonController
 {
@@ -35,5 +36,11 @@ class PersonController
         return ApiResponse::success(
             $result ? new PersonSearchResource($result) : null
         );
+    }
+
+    public function get(int $id): JsonResponse
+    {
+        $person = $this->personService->getById($id);
+        return ApiResponse::success($person ? new PersonResource($person) : null);
     }
 }

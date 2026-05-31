@@ -28,7 +28,7 @@ class PreOperativeCatalog extends Model
         'is_public' => 'boolean',
     ];
 
-    public static $searchColumns = [
+    public static array $searchColumns = [
         'name',
         'issuing_entity',
     ];

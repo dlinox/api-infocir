@@ -27,12 +27,11 @@ class SupplierRepository
         Supplier::findOrFail($id)->delete();
     }
 
-    public function getSelectItems(): array
+    public function getSelectItems()
     {
         return Supplier::where('is_active', true)
             ->orderBy('name')
-            ->get(['id as value', 'name as title'])
-            ->toArray();
+            ->get();
     }
 }
 

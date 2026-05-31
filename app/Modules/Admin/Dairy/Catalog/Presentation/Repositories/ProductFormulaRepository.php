@@ -132,9 +132,10 @@ class ProductFormulaRepository
             }
 
             $item->update([
-                'supply_id' => $data['supply_id'],
-                'quantity' => $data['quantity'],
-                'unit_price' => $data['unit_price'],
+                'supply_id'       => $data['supply_id'],
+                'unit_measure_id' => $data['unit_measure_id'] ?? null,
+                'quantity'        => $data['quantity'],
+                'unit_price'      => $data['unit_price'],
             ]);
 
             return $item;
@@ -176,11 +177,12 @@ class ProductFormulaRepository
             foreach ($currentItems as $item) {
                 ProductFormula::create([
                     'presentation_id' => $presentationId,
-                    'supply_id' => $item->supply_id,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->unit_price,
-                    'version' => $newVersion,
-                    'is_current' => true,
+                    'supply_id'       => $item->supply_id,
+                    'unit_measure_id' => $item->unit_measure_id,
+                    'quantity'        => $item->quantity,
+                    'unit_price'      => $item->unit_price,
+                    'version'         => $newVersion,
+                    'is_current'      => true,
                 ]);
             }
 

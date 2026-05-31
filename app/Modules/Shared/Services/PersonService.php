@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shared\Services;
 
+use App\Models\Core\Person;
 use App\Modules\Shared\Repositories\PersonRepository;
 
 class PersonService
@@ -18,5 +19,10 @@ class PersonService
     public function searchByDocument(string $documentType, string $documentNumber, string $profile, ?int $id = null): ?array
     {
         return $this->personRepository->searchByDocument($documentType, $documentNumber, $profile, $id);
+    }
+
+    public function getById(int $id): ?Person
+    {
+        return $this->personRepository->getById($id);
     }
 }

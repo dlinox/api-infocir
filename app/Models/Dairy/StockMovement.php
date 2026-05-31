@@ -54,4 +54,37 @@ class StockMovement extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    /**
+     * Stock disponible de una presentación: entradas - salidas/mermas + ajustes.
+     */
+    public static function available(int $presentationId): int
+    {
+        return self::availableFor([$presentationId])[$presentationId] ?? 0;
+    }
+
+    /**
+     * Mapa presentation_id => stock disponible para varias presentaciones.
+     *
+     * @param  int[]  $presentationIds
+     * @return array<int,int>
+     */
+    public static function availableFor(array $presentationIds): array
+    {
+        if (empty($presentationIds)) {
+            return [];
+        }
+
+        $rows = self::whereIn('presentation_id', $presentationIds)
+            ->selectRaw('presentation_id')
+            ->selectRaw("SUM(CASE WHEN type = 'entry' THEN quantity WHEN type = 'adjustment' THEN quantity ELSE -quantity END) as available")
+            ->groupBy('presentation_id')
+            ->pluck('available', 'presentation_id');
+
+        $map = [];
+        foreach ($presentationIds as $id) {
+            $map[$id] = (int) ($rows[$id] ?? 0);
+        }
+        return $map;
+    }
 }

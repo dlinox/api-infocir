@@ -20,6 +20,18 @@ class PlantCatalogProductController
         return ApiResponse::success($items);
     }
 
+    public function plantProduct(int $id)
+    {
+        $item = $this->service->plantProduct($id);
+        return ApiResponse::success($item);
+    }
+
+    public function plantProductsWithPresentations()
+    {
+        $items = $this->service->plantProductsWithPresentations();
+        return ApiResponse::success($items);
+    }
+
     public function availableProducts()
     {
         $items = $this->service->availableProducts();
